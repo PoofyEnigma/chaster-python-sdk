@@ -354,9 +354,8 @@ class ChasterAPI:
     Extensions
     """
 
-    # TODO: Need to flush out return obj
-    def get_all_known_extensions(self) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper('extensions', self.passthrough)
+    def get_all_known_extensions(self) -> tuple[requests.models.Response, list[extensions.KnownExtension]]:
+        return self._tester_get_wrapper('extensions', extensions.known_extension_list_update)
 
     """
     Session Offer

@@ -531,3 +531,35 @@ class GuessTheTimer:
         obj = self.__dict__.copy()
         obj['config'] = self.config.dump()
         return obj
+
+
+def known_extension_list_update(obj):
+    out = []
+    for item in obj:
+        out.append(KnownExtension().update(item))
+
+
+class KnownExtension:
+    def __init__(self):
+        self.defaultConfig: dict = {}  # TODO: Flush out based on known extensions
+        self.partnerExtensionId: str = ''
+        self.configIframeUrl: str = ''
+        self.isTesting: bool = True
+        self.isPartner: bool = True
+        self.isDevelopedByCommunity: bool = True
+        self.subtitle: str = ''
+        self.summary: str = ''
+        self.displayName: str = ''
+        self.icon: str = ''
+        self.slug: str = ''
+        self.availableModes: list[str] = []
+        self.defaultRegularity: int = 3600
+        self.isEnabled: bool = True
+        self.isPremium: bool = False
+        self.isFeatured: bool = False
+        self.isCountedInExtensionsLimit: bool = True
+        self.hasActions: bool = True
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self

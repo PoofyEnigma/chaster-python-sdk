@@ -11,9 +11,9 @@
 | trigger_extension_actions         |         |            |        |          |
 | Lock Creation                     | done    |            |        |          |
 | profile                           | done    |            |        |          |
-| Files                             | ip      |            |        |          |
-| Combinations                      | ip      |            |        |          |
-| Extensions                        | ip      |            |        |          |
+| Files                             |         |            |        |          |
+| Combinations                      |         |            |        |          |
+| Extensions                        | done    |            |        |          |
 | Session Offer                     | ip      |            |        |          |
 | Messaging                         | ip      |            |        |          |
 | Extensions - Temporary Opening    |         |            |        |          |
@@ -51,6 +51,11 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 ### Testing
 
 - needs two dedicated accounts for integration testing
+
+### Authentication
+
+- Credentials stack object
+- Other authentication support
 
 # Credits
 
