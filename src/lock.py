@@ -205,6 +205,7 @@ class LockId:
         self.__dict__ = obj.__dict__
         return self
 
+
 class LockInfo:
     def __init__(self):
         self.password: str = ''

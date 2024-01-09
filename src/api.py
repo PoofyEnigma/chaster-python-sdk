@@ -320,29 +320,23 @@ class ChasterAPI:
     def get_user_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
         return self._tester_get_wrapper(f'locks/user/{user_id}', lock.update)
 
-    # TODO: Need to flush out return obj
-    def get_profile(self, user_id: str) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper(f'users/profile/by-id/{user_id}', self.passthrough)
+    def get_profile(self, user_id: str) -> tuple[requests.models.Response, user.User]:
+        return self._tester_get_wrapper(f'users/profile/by-id/{user_id}', user.User().update)
 
-    # TODO: Need to flush out return obj
-    def find_profile(self, username: str) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper(f'users/profile/{username}', self.passthrough)
+    def find_profile(self, username: str) -> tuple[requests.models.Response, user.User]:
+        return self._tester_get_wrapper(f'users/profile/{username}', user.User().update)
 
-    # TODO: Need to flush out return obj
-    def find_profile_detailed(self, username: str) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper(f'users/profile/{username}/details', self.passthrough)
+    def find_profile_detailed(self, username: str) -> tuple[requests.models.Response, user.DetailedUser]:
+        return self._tester_get_wrapper(f'users/profile/{username}/details', user.DetailedUser().update)
 
-    # TODO: Need to flush out return obj
-    def get_badges(self) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper('users/badge/count', self.passthrough)
+    def get_badges(self) -> tuple[requests.models.Response, user.Badges]:
+        return self._tester_get_wrapper('users/badge/count', user.Badges.update)
 
-    # TODO: Need to flush out return obj
-    def update_profile(self) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper('auth/profile/update', self.passthrough)
+    def update_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
+        return self._tester_get_wrapper('auth/profile/update', user.AuthProfile().update)
 
-    # TODO: Need to flush out return obj
-    def get_your_profile(self) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper('auth/profile', self.passthrough)
+    def get_your_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
+        return self._tester_get_wrapper('auth/profile', user.AuthProfile().update)
 
     """
     Files

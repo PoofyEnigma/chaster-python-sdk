@@ -10,7 +10,7 @@
 | Locks                             | done    |            |        |          |
 | trigger_extension_actions         |         |            |        |          |
 | Lock Creation                     | done    |            |        |          |
-| profile                           | ip      |            |        |          |
+| profile                           | done    |            |        |          |
 | Files                             | ip      |            |        |          |
 | Combinations                      | ip      |            |        |          |
 | Extensions                        | ip      |            |        |          |
