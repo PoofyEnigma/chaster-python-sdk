@@ -8,14 +8,18 @@ import uuid
 import logging
 import os
 
-
-chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'))
+chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='PythonSDKDeveloplment/1.0')
 other_user_id = '65873830075fc043537113ee'
+
 
 class ApiTestCases(unittest.TestCase):
 
     def out_test(self, response, data):
         time.sleep(0)
+
+    """
+    Shared Locks
+    """
 
     @unittest.SkipTest
     def test_get_shared_locks_active(self):
@@ -85,6 +89,9 @@ class ApiTestCases(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertTrue(len(data.results) > 0)
 
+    """
+    Locks
+    """
 
     @unittest.SkipTest
     def test_get_locks_and_details(self):
@@ -116,6 +123,34 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_unlock(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def lock_settings(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def set_max_limit_date(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def set_keyholder_as_trusted(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def get_lock_combination(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def get_lock_history(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def is_test_lock(self):
+        self.assertFalse(True)
+
+    @unittest.SkipTest
+    def get_extension_information(self, lock_id, extension_id):
         self.assertFalse(True)
 
 

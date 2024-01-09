@@ -195,3 +195,21 @@ class ExtensionInformation:
         eh.add(obj.extension)
         self.extension = eh.dump()[0]
         return self
+
+
+class LockId:
+    def __init__(self):
+        self.lockId: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__
+        return self
+
+class LockInfo:
+    def __init__(self):
+        self.password: str = ''
+        self.combinationId: str = ''
+        self.isTestLock: bool = False
+
+    def dump(self):
+        return self.__dict__.copy()

@@ -2,6 +2,17 @@ mode_non_cumulative = 'non_cumulative'
 mode_unlimited = 'unlimited'
 
 
+class Extensions:
+    def __init__(self):
+        self.extensions = []
+
+    def dump(self):
+        obj = []
+        for extension in self.extensions:
+            obj.append(extension.dump())
+        return obj
+
+
 class ExtensionsHandler:
 
     # Do these need to be arrays?
@@ -74,6 +85,9 @@ class Params:
     def __init__(self, time):
         self.duration: int = time
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class Punishment:
     def __init__(self, name):
@@ -83,6 +97,9 @@ class Punishment:
         pass
 
     def set_time(self, time: int):
+        pass
+
+    def dump(self):
         pass
 
 
@@ -97,6 +114,11 @@ class PunishmentPillory(Punishment):
     def set_time(self, time: int):
         self.params.duration = time
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['params'] = self.params.dump()
+        return obj
+
 
 class PunishmentAddTime(Punishment):
     def __init__(self, time):
@@ -109,10 +131,16 @@ class PunishmentAddTime(Punishment):
     def set_time(self, time: int):
         self.params = time
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class PunishmentFreeze(Punishment):
     def __init__(self):
         super().__init__('freeze')
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class ShareLinksConfig:
@@ -122,6 +150,9 @@ class ShareLinksConfig:
         self.enableRandom: bool = True
         self.nbVisits: int = 25
         self.limitToLoggedUsers: bool = True
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class ShareLinks:
@@ -135,11 +166,19 @@ class ShareLinks:
         self.__dict__ = obj.__dict__
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return obj
+
 
 class PilloryConfig:
     def __init__(self):
         self.timeToAdd: int = 3600
         self.limitToLoggedUser: bool = True
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class Pillory:
@@ -153,12 +192,19 @@ class Pillory:
         self.__dict__ = obj.__dict__
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+
 
 class HygieneOpeningConfig:
     def __init__(self):
         self.openingTime: int = 900
         self.penaltyTime: int = 43200
         self.allowOnlyKeyholderToOpen: bool = False
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class HygieneOpening:
@@ -172,10 +218,18 @@ class HygieneOpening:
         self.__dict__ = obj.__dict__
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return self
+
 
 class DiceConfig:
     def __init__(self):
         self.multiplier: int = 3600
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class Dice:
@@ -186,6 +240,11 @@ class Dice:
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
+        return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
         return self
 
 
@@ -203,10 +262,20 @@ class WheelOfFortuneSegment:
         self.text: str = text
         self.duration: int = duration
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class WheelOfFortuneConfig:
     def __init__(self):
         self.segments: list[WheelOfFortuneSegment] = []
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['segments'] = []
+        for segment in self.segments:
+            obj['segments'].append(segment.dump())
+        return obj
 
 
 class WheelOfFortune:
@@ -220,11 +289,19 @@ class WheelOfFortune:
         self.__dict__.update(obj.__dict__)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return self
+
 
 class Task:
     def __init__(self):
         self.task: str = ''
         self.points: int = 0
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class TasksConfig:
@@ -248,6 +325,16 @@ class TasksConfig:
             self.actionsOnAbandonedTask.append(generate_punishment(punishment))
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['tasks'] = []
+        for task in self.tasks:
+            obj['tasks'].append(task.dump())
+        obj['actionsOnAbandonedTask'] = []
+        for action in self.actionsOnAbandonedTask:
+            obj['actionsOnAbandonedTask'].append(action.dump())
+        return obj
+
 
 class Tasks:
     def __init__(self):
@@ -261,11 +348,19 @@ class Tasks:
         self.config = TasksConfig().update(obj.config)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return obj
+
 
 class PenaltyParams:
     def __init__(self):
         self.nbActions: int = 1
         self.frequency: int = 86400
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class Penalty:
@@ -282,6 +377,14 @@ class Penalty:
             self.punishments.append(generate_punishment(punishment))
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['params'] = self.params.dump()
+        obj['punishments'] = []
+        for punishment in self.punishments:
+            obj['punishments'].append(punishment.dump())
+        return obj
+
 
 class PenaltiesConfig:
     def __init__(self):
@@ -292,6 +395,13 @@ class PenaltiesConfig:
         for penalty in obj.penalties:
             self.penalties.append(Penalty().update(penalty))
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['penalties'] = []
+        for penalty in self.penalties:
+            obj['penalties'].append(penalty.dump())
+        return obj
 
 
 class Penalties:
@@ -306,6 +416,11 @@ class Penalties:
         self.config = PenaltiesConfig().update(obj.config)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return obj
+
 
 class PeerVerification:
     def __init__(self):
@@ -319,6 +434,13 @@ class PeerVerification:
             self.punishments.append(generate_punishment(punishment))
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['punishment'] = []
+        for punishment in self.punishments:
+            obj['punishment'].append(punishment.dump())
+        return obj
+
 
 class VerificationPictureConfig:
     def __init__(self):
@@ -329,6 +451,11 @@ class VerificationPictureConfig:
         self.__dict__ = obj.__dict__
         self.peerVerification = PeerVerification().update(obj.peerVerification)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['peerVerification'] = self.peerVerification.dump()
+        return obj
 
 
 class VerificationPicture:
@@ -346,6 +473,11 @@ class VerificationPicture:
         self.config = VerificationPictureConfig().update(obj.config)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return obj
+
 
 difficulty_normal = 'normal'
 
@@ -353,6 +485,9 @@ difficulty_normal = 'normal'
 class RandomEventsConfig:
     def __init__(self):
         self.difficulty: str = difficulty_normal
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class RandomEvents:
@@ -366,11 +501,19 @@ class RandomEvents:
         self.__dict__ = obj.__dict__
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return obj
+
 
 class GuessTheTimerConfig:
     def __init__(self):
         self.minRandomTime: int = 10800
         self.maxRandomTime: int = 21600
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class GuessTheTimer:
@@ -383,3 +526,8 @@ class GuessTheTimer:
     def update(self, obj):
         self.__dict__ = obj.__dict__
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['config'] = self.config.dump()
+        return obj

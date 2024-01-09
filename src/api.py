@@ -10,25 +10,12 @@ import time
 from types import SimpleNamespace
 from urllib.parse import urlparse, urljoin
 from . import user
+from . import extensions
 
-
-# TODO
-# test and tweak retry
-# change delay function into an internal rate limiter?
-
-# TODO: Reduce number of files
-# TODO: dumps and update in every obj
-# TODO: update to array as a global function in the class it creates and array of
-
-# Mocks
-# measure I/O
-# prevalidate requests
-# connection pool
-# cancellation tokens, do I need them?
-# circuit breaker
 
 class ChasterAPI:
-    def __init__(self, bearer, delay=5, root_api='https://api.chaster.app/', request_logger=None):
+    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/',
+                 request_logger=None):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.root_api = urlparse(root_api)
         self.delay = delay
@@ -37,7 +24,7 @@ class ChasterAPI:
             'Authorization': f'Bearer {bearer}',
             'accept': 'application/json',
             'Content-Type': 'application/json',
-            'User-Agent': 'PythonSDKDeveloplment/1.0'
+            'User-Agent': user_agent
         }
         retries = Retry(total=3,
                         backoff_factor=0.1,
@@ -142,7 +129,7 @@ class ChasterAPI:
         return response, data
 
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
-        requests.models.Response, list[shared_lock.SharedLock]]:
+        requests.models.Response, shared_lock.SharedLock]:
 
         response = self._get(f'/lock/shared-locks/{shared_lock_id}')
         data = None
@@ -174,6 +161,8 @@ class ChasterAPI:
     # shared-locks
     def get_favorited_shared_locks(self, limit: int = 15, lastId: str = None) -> tuple[
         requests.models.Response, shared_lock.PageinatedSharedLockList]:
+        if limit < 0:
+            raise ValueError('limit cannot be zero')
         response = self._post('favorites/shared-locks', {'limit': limit, 'lastId': lastId})
 
         data = None
@@ -285,32 +274,32 @@ class ChasterAPI:
 
     # TODO: Flush out data?
     def trigger_extension_actions(self, lock_id, extension_id, data):
-        return self._post(f'locks/{lock_id}/extensions/f{extension_id}/action', data=data)
+        return self._post(f'locks/{lock_id}/extensions/{extension_id}/action', data=data)
 
     """
     Lock Creation
     """
 
-    # TODO: Flush out return obj
-    def create_personal_lock(self, lock: lock.Lock) -> tuple[requests.models.Response, any]:
-        response = self._post('locks', data=lock.dump())
+    def create_personal_lock(self, self_lock: lock.Lock) -> tuple[requests.models.Response, lock.LockId]:
+        response = self._post('locks', data=self_lock.dump())
 
         data = None
         if response.status_code == 201:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = lock.LockId().update(data)
         return response, data
 
-    # TODO: Type hinting
-    def add_extensions(self, id, extensions) -> requests.models.Response:
-        return self._post(f'locks/{id}/extensions', data=extensions)
+    def add_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
+        return self._post(f'locks/{lock_id}/extensions', data=ext.dump())
 
-    # TODO: Flush out return obj
-    def create_lock_from_shared_lock(self, shared_lock_id) -> tuple[requests.models.Response, any]:
-        response = self._post(f'public-locks/{shared_lock_id}/create-lock', data=lock.dump())
+    def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
+        requests.models.Response, lock.LockId]:
+        response = self._post(f'public-locks/{shared_lock_id}/create-lock', data=lock_details.dump())
 
         data = None
         if response.status_code == 201:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = lock.LockId().update(data)
         return response, data
 
     """
