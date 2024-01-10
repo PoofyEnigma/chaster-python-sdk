@@ -218,3 +218,28 @@ class AuthProfile:
         if obj.birthDate is not None:
             self.birthDate = dateutil.parser.isoparse(obj.birthDate)
         return self
+
+
+def keyholder_offer_list_update(obj):
+    out = []
+    for item in obj:
+        out.append(KeyholderOfferEntry().update(item))
+    return out
+
+
+class KeyholderOfferEntry:
+    def __init__(self):
+        self.keyholder: User = None
+        self.lock: str = ''
+        self.status: str = ''
+        self.validatedAt: datetime.datetime = None
+        self.archivedAt: datetime.datetime = None
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.keyholder = User().update(obj.keyholder)
+        if obj.validatedAt is not None:
+            self.validatedAt = dateutil.parser.isoparse(obj.validatedAt)
+        if obj.archivedAt is not None:
+            self.archivedAt = dateutil.parser.isoparse(obj.archivedAt)
+        return self

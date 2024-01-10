@@ -58,6 +58,7 @@ class ExtensionsHandler:
     def dump(self):
         extensions = []
         for item in self.__dict__:
+            item = self.__dict__[item]
             for entry in item:
                 extensions.append(entry)
         return extensions

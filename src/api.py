@@ -1,3 +1,5 @@
+import trace
+
 from . import conversation
 import datetime
 import json
@@ -6,16 +8,19 @@ import logging
 import requests
 from requests.adapters import HTTPAdapter, Retry
 from . import shared_lock
+from . import triggers
 import time
 from types import SimpleNamespace
 from urllib.parse import urlparse, urljoin
 from . import user
 from . import extensions
+import opentelemetry
 
 
 class ChasterAPI:
     def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/',
                  request_logger=None):
+
         self.logger = logging.getLogger(self.__class__.__name__)
         self.root_api = urlparse(root_api)
         self.delay = delay
@@ -24,7 +29,11 @@ class ChasterAPI:
             'Authorization': f'Bearer {bearer}',
             'accept': 'application/json',
             'Content-Type': 'application/json',
-            'User-Agent': user_agent
+            'User-Agent': user_agent,
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Connection': 'keep-alive',
+            'traceparent': '00-0af7651916cd43dd8448eb211c80319c-00f067aa0ba902b7-01',
+            'tracestate': ''
         }
         retries = Retry(total=3,
                         backoff_factor=0.1,
@@ -38,9 +47,13 @@ class ChasterAPI:
             self._request_logger = request_logger
 
     def _request_logger_default(self, response: requests.models.Response, *args, **kwargs):
+        chaster_transaction_id = ''
+        if 'x-chaster-transaction-id' in response.headers:
+            chaster_transaction_id = response.headers['x-chaster-transaction-id']
+            pass
+
         self.logger.info(
-            f'{response.status_code} {response.request.url} {response.request.method} {len(response.content)}')
-        self.logger.info(f'{response.text}')
+            f'{response.status_code} {response.request.url} {response.request.method} {len(response.content)} {chaster_transaction_id}')
         if 200 <= response.status_code < 300:
             return
 
@@ -74,6 +87,20 @@ class ChasterAPI:
 
     def _post_request_handler(self, response: requests.models.Response, *args, **kwargs):
         time.sleep(self.delay)
+        if 'retry-after' in response.headers:
+            pass
+        if 'x-ratelimit-limit' in response.headers:
+            pass
+        if 'retry-after' in response.headers:
+            pass
+        if 'x-ratelimit-limit' in response.headers:
+            pass
+        if 'x-ratelimit-remaining' in response.headers:
+            pass
+        if 'x-ratelimit-reset' in response.headers:
+            pass
+        if 'x-chaster-transaction-id' in response.headers:
+            pass
 
     def _get(self, path: str) -> requests.models.Response:
         response = self.session.get(urljoin(self.root_api.geturl(), path),
@@ -179,10 +206,10 @@ class ChasterAPI:
     def get_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.Lock]]:
         path = '/locks'
         if status != '':
-            if status == 'active' or status == 'archived':
+            if status == 'active' or status == 'archived' or status == 'all':
                 path = f'/locks?status={status}'
             else:
-                raise ValueError('status must be one of: active, archived, or empty string')
+                raise ValueError('status must be one of: active, archived, all, or empty string')
 
         response = self._get(path)
         data = None
@@ -262,7 +289,7 @@ class ChasterAPI:
         return self._put(f'locks/{lock_id}/is-test-lock', data={})
 
     # TODO: The reason for this API is unclear. Does it send more data than what is already present in the lock?
-    def get_extension_information(self, lock_id, extension_id) -> tuple[
+    def get_extension_information(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, lock.ExtensionInformation]:
         response = self._get(f'locks/{lock_id}/extensions/{extension_id}')
 
@@ -273,8 +300,99 @@ class ChasterAPI:
         return response, data
 
     # TODO: Flush out data?
-    def trigger_extension_actions(self, lock_id, extension_id, data):
+    def trigger_extension_actions(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
+        """
+        See triggers
+        :param lock_id:
+        :param extension_id:
+        :param data:
+        :return:
+        """
         return self._post(f'locks/{lock_id}/extensions/{extension_id}/action', data=data)
+
+    """
+    Triggers
+    """
+
+    def _tester_post_request_helper(self, response, update):
+        data = None
+        if response.status_code == 201:
+            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = update(data)
+        return response, data
+
+    def vote_in_share_links(self, lock_id: str, extension_id: str, data: triggers.ShareLinksVote) -> tuple[
+        requests.models.Response, triggers.ShareLinksVoteReturn]:
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
+
+    def get_share_link_url_to_vote(self, lock_id: str, extension_id: str) -> tuple[
+        requests.models.Response, triggers.ShareLinkUrlResponse]:
+        data = triggers.ActionRequest()
+        data.action = 'getLink'
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
+
+    def get_share_link_info(self, lock_id: str, extension_id: str) -> tuple[
+        requests.models.Response, triggers.ShareLinkGetInfoResponse]:
+        data = triggers.ActionRequest()
+        data.action = 'getInfo'
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.ShareLinkGetInfoResponse().update)
+
+    def place_user_into_pillory(self, lock_id: str, extension_id: str,
+                                data: triggers.PilloryParameters) -> requests.models.Response:
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
+        requests.models.Response, triggers.PilloryVotes]:
+        data = triggers.ActionRequest()
+        data.action = 'getStatus'
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.PilloryVotes().update)
+
+    def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
+        data = triggers.ActionRequest()
+        data.action = 'keyholderOpen'
+        if is_you:
+            data.action = 'submit'
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
+        requests.models.Response, triggers.DiceRollResult]:
+        data = triggers.ActionRequest()
+        data.action = 'submit'
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
+
+    def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
+        requests.models.Response, triggers.DiceRollResult]:
+        data = triggers.ActionRequest()
+        data.action = 'submit'
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
+
+    def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
+        data = {"action": "submit", "payload": {"requestVote": False}}
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
+        data = {"action": "submit", "payload": {"requestVote": True, "voteDuration": vote_duration}}
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def mark_task_done(self, lock_id: str, extension_id: str, succeeded: bool) -> requests.models.Response:
+        data = {"action": "completeTask", "payload": {"isCompleted": succeeded}}
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def trigger_new_verification(self, lock_id: str, extension_id: str) -> requests.models.Response:
+        data = {"action": "createVerificationRequest", "payload": {}}
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
+        requests.models.Response, triggers.GuessTheTimerResponse]:
+        data = {"action": "createVerificationRequest", "payload": {}}
+        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        return self._tester_post_request_helper(response, triggers.GuessTheTimerResponse().update)
 
     """
     Lock Creation
@@ -347,7 +465,7 @@ class ChasterAPI:
     """
     Combinations
     """
-    # /combinaions/image
+    # /combinations/image
     # /combinations/code
 
     """
@@ -361,20 +479,20 @@ class ChasterAPI:
     Session Offer
     """
 
-    # TODO: Flush out return obj
-    # TODO: Need to flush out input obj
-    def create_keyholding_offer(self, lock_id, keyholder) -> requests.models.Response:
-        return self._post(f'session-offer/lock/{lock_id}', data=keyholder)
+    def create_keyholding_offer(self, lock_id, keyholder: str) -> requests.models.Response:
+        return self._post(f'session-offer/lock/{lock_id}', data={
+            'keyholder': keyholder
+        })
 
-    def accept_keyholding_request(self, offer_token) -> requests.models.Response:
+    def accept_keyholding_request(self, offer_token: str) -> requests.models.Response:
         return self._get(f'session-offer/token/{offer_token}/accept')
 
-    def get_keyholding_offers(self, lock_id) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper(f'session-offer/lock/{lock_id}/status', self.passthrough)
+    def get_keyholding_offers(self, lock_id: str) -> tuple[requests.models.Response, list[user.KeyholderOfferEntry]]:
+        return self._tester_get_wrapper(f'session-offer/lock/{lock_id}/status', user.keyholder_offer_list_update)
 
-    # session-offer/token/offertoken
-    def retrieve_keyholder_request_lock_info(self, offer_token) -> tuple[requests.models.Response, any]:
-        return self._tester_get_wrapper(f'session-offer/token/{offer_token}', self.passthrough)
+    # TODO HERE
+    def retrieve_keyholder_request_lock_info(self, offer_token: str) -> tuple[requests.models.Response, lock.Lock]:
+        return self._tester_get_wrapper(f'session-offer/token/{offer_token}', lock.Lock().update)
 
     # session-offer/sessionRequestId
     def handle_keyholding_offer(self, session_request_id, do_accept) -> requests.models.Response:

@@ -129,24 +129,7 @@ class LockedUsers:
         return self
 
 
-"""
-{
-  "results": [
-
-  ],
-}
-"""
-
-
 class ActionLog:
-    """
-
-        {
-
-
-    }
-    """
-
     def __init__(self):
         self._id: str = ''
         self.type: str = ''
