@@ -1,5 +1,5 @@
 import datetime
-import extensions
+from . import extensions
 import dateutil.parser
 
 

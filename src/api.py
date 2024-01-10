@@ -1,5 +1,3 @@
-import trace
-
 from . import conversation
 import datetime
 import json
@@ -7,24 +5,30 @@ from . import lock
 import logging
 import requests
 from requests.adapters import HTTPAdapter, Retry
-from . import shared_lock
 from . import triggers
 import time
 from types import SimpleNamespace
 from urllib.parse import urlparse, urljoin
 from . import user
 from . import extensions
-import opentelemetry
 
 
 class ChasterAPI:
+
     def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/',
                  request_logger=None):
-
+        """
+        Not thread safe. Will need a ChasterAPI object per thread.
+        :param bearer:
+        :param user_agent:
+        :param delay:
+        :param root_api:
+        :param request_logger:
+        """
         self.logger = logging.getLogger(self.__class__.__name__)
         self.root_api = urlparse(root_api)
         self.delay = delay
-        self.session = requests.Session()
+        self.session = requests.Session()  # generally not multithread safe https://github.com/psf/requests/issues/1871
         self.session.headers = {
             'Authorization': f'Bearer {bearer}',
             'accept': 'application/json',
@@ -32,12 +36,11 @@ class ChasterAPI:
             'User-Agent': user_agent,
             'Accept-Language': 'en-US,en;q=0.5',
             'Connection': 'keep-alive',
-            'traceparent': '00-0af7651916cd43dd8448eb211c80319c-00f067aa0ba902b7-01',
-            'tracestate': ''
         }
         retries = Retry(total=3,
                         backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504])
+                        status_forcelist=[500, 502, 503, 504],
+                        respect_retry_after_header=True)
         retries.backoff_jitter = 0.01
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
@@ -47,6 +50,7 @@ class ChasterAPI:
             self._request_logger = request_logger
 
     def _request_logger_default(self, response: requests.models.Response, *args, **kwargs):
+        print('?')
         chaster_transaction_id = ''
         if 'x-chaster-transaction-id' in response.headers:
             chaster_transaction_id = response.headers['x-chaster-transaction-id']
@@ -92,6 +96,7 @@ class ChasterAPI:
         if 'x-ratelimit-limit' in response.headers:
             pass
         if 'retry-after' in response.headers:
+            # this is honored in the retry object
             pass
         if 'x-ratelimit-limit' in response.headers:
             pass
@@ -127,7 +132,7 @@ class ChasterAPI:
     Shared Locks
     """
 
-    def get_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[shared_lock.SharedLock]]:
+    def get_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
         path = 'locks/shared-locks'
         if status != '':
             if status == 'active' or status == 'archived':
@@ -140,32 +145,32 @@ class ChasterAPI:
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = shared_lock.shared_locks(x)
+            data = lock.shared_locks(x)
 
         return response, data
 
-    def create_shared_lock(self, create: shared_lock.CreateSharedLock) -> tuple[
-        requests.models.Response, shared_lock.IdResponse]:
+    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[
+        requests.models.Response, lock.IdResponse]:
 
         create.validate()
         response = self._post('/locks/shared-locks', create.dump())
         data = None
         if response.status_code == 201:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = shared_lock.IdResponse().update(x)
+            data = lock.IdResponse().update(x)
         return response, data
 
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
-        requests.models.Response, shared_lock.SharedLock]:
+        requests.models.Response, lock.SharedLock]:
 
         response = self._get(f'/lock/shared-locks/{shared_lock_id}')
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = shared_lock.SharedLock().update(x)
+            data = lock.SharedLock().update(x)
         return response, data
 
-    def update_shared_lock(self, shared_lock_id: str, update: shared_lock.CreateSharedLock) -> requests.models.Response:
+    def update_shared_lock(self, shared_lock_id: str, update: lock.CreateSharedLock) -> requests.models.Response:
         update.validate()
         return self._put(f'/lock/shared-lock/{shared_lock_id}', update.dump())
 
@@ -187,7 +192,7 @@ class ChasterAPI:
 
     # shared-locks
     def get_favorited_shared_locks(self, limit: int = 15, lastId: str = None) -> tuple[
-        requests.models.Response, shared_lock.PageinatedSharedLockList]:
+        requests.models.Response, lock.PageinatedSharedLockList]:
         if limit < 0:
             raise ValueError('limit cannot be zero')
         response = self._post('favorites/shared-locks', {'limit': limit, 'lastId': lastId})
@@ -196,7 +201,7 @@ class ChasterAPI:
         if response.status_code == 201:
             y = response.json()
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = shared_lock.PageinatedSharedLockList().update(x)
+            data = lock.PageinatedSharedLockList().update(x)
         return response, data
 
     """

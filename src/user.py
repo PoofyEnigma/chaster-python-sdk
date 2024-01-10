@@ -1,7 +1,6 @@
 import datetime
-from . import shared_lock
 import dateutil.parser
-
+from . import lock
 
 def update(obj):
     users = []
@@ -114,13 +113,13 @@ class DetailedUser:
         self.user: User = None
         self.stats: Stats = None
         self.achievements: list[Achievement] = []
-        self.sharedLocks: list[shared_lock.SharedLock] = []
+        self.sharedLocks: list[lock.SharedLock] = []
         self.chastikeyStats: ChastikeyStats = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.user = User().update(obj.user)
-        self.sharedLocks = shared_lock.shared_locks(obj.sharedLocks)
+        self.sharedLocks = lock.shared_locks(obj.sharedLocks)
         return self
 
 

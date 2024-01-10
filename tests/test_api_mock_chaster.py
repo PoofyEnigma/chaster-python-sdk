@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 from requests import Response
 import json
 from src.api import ChasterAPI
-import src.shared_lock as shared_lock
+import src.lock as lock
 from types import SimpleNamespace
 
 
@@ -353,7 +353,7 @@ class MyTestCase(unittest.TestCase):
 
     def generate_csl(self, min_duration=10, max_duration=15, maxLimitDuration=None,
                      minDate=None, maxDate=None, maxLimitDate=None, limitLockTime=False):
-        csl = shared_lock.CreateSharedLock()
+        csl = lock.CreateSharedLock()
         csl.minDuration = min_duration
         csl.maxDuration = max_duration
         csl.maxLimitDuration = maxLimitDuration

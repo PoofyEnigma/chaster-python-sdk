@@ -2,7 +2,7 @@ import datetime
 import time
 
 import src.api as api
-import src.shared_lock as shared_lock
+import src.lock as lock
 import unittest
 import uuid
 import logging
@@ -35,7 +35,7 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_create_get_update_get_archive_shared_lock(self):
-        csl = shared_lock.CreateSharedLock()
+        csl = lock.CreateSharedLock()
         csl.minDuration = 3600
         csl.maxDuration = 7200
         csl.maxLimitDuration = None

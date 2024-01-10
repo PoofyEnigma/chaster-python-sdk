@@ -15,13 +15,13 @@
 | Combinations                      |         |           |            |        |
 | Extensions                        | done    |           |            |        |
 | Session Offer                     | done    |           |            |        |
-| Messaging                         | ip      |           |            |        |
+| Messaging                         | done    |           |            |        |
 | Extensions - Temporary Opening    |         |           |            |        |
 | Community Events                  |         |           |            |        |
 | Partner Extensions                |         |           |            |        |
 | Settings                          |         |           |            |        |
 | Users                             |         |           |            |        |
-| Keyholder                         |         |           |            |        |
+| Keyholder                         | ip      |           |            |        |
 | Reports                           |         |           |            |        |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      |         |           |            |        |
@@ -33,24 +33,11 @@ Integrated - Integration tests written and requests pre-validated for common 400
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
 
-### HTTP
-
-- measure I/O
-- connection pool
-- cancellation tokens, do I need them?
-- circuit breaker
-- test and tweak retry
-- change delay function into an internal rate limiter?
-- query builder
-- match headers with Chaster's headers
-- implement w3c tracing protocol
-
 ### File/Class Organization
 
-- Reduce number of files
-- dumps and update in every obj
 - update to array as a global function in the class it creates and array of
 - more debug logging
+- https://github.com/pydantic/pydantic
 
 ### Testing
 
@@ -60,7 +47,17 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 
 - Credentials stack object
 - Other authentication support
-- - Need to cycle your bearer token
+- Need to cycle your bearer token
+
+### Backlog
+
+- find a URL object hopefully with query building capabilities
+- connection pool, thread safety of SDK
+- test and tweak retry
+- implement w3c tracing protocol
+- measure I/O
+- circuit breaker: https://github.com/danielfm/pybreaker
+- cancellation tokens: https://github.com/pomponchik/cantok
 
 # Credits
 

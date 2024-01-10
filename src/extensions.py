@@ -10,7 +10,7 @@ class Extensions:
         obj = []
         for extension in self.extensions:
             obj.append(extension.dump())
-        return obj
+        return {'extensions': obj}
 
 
 class ExtensionsHandler:
