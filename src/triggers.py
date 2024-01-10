@@ -95,15 +95,20 @@ class Vote:
             self.createdAt = dateutil.parser.isoparse(obj.createdAt)
         return self
 
+    @staticmethod
+    def generate_array(obj_list):
+        votes = []
+        for vote in obj_list:
+            votes.append(Vote().update(vote))
+        return votes
+
 
 class PilloryVotes:
     def __init__(self):
         self.votes: list[Vote] = []
 
     def update(self, obj):
-        self.votes = []
-        for vote in obj.votes:
-            self.votes.append(Vote().update(vote))
+        self.votes = Vote.generate_array(obj.votes)
         return self
 
 

@@ -64,15 +64,6 @@ class ExtensionsHandler:
         return extensions
 
 
-def update(obj):
-    if 'extensions' in obj.__dict__:
-        h = ExtensionsHandler()
-        for extension in obj.extensions:
-            h.add(extension)
-        return h.dump()
-    return []
-
-
 def generate_punishment(punishment):
     if punishment.name == 'freeze':
         return PunishmentFreeze()
@@ -80,6 +71,15 @@ def generate_punishment(punishment):
         return PunishmentAddTime(punishment.params)
     if punishment.name == 'pillory':
         return PunishmentPillory(punishment.params.duration)
+
+
+class Extension:
+    @staticmethod
+    def generate_array(obj_list):
+        h = ExtensionsHandler()
+        for extension in obj_list:
+            h.add(extension)
+        return h.dump()
 
 
 class Params:
@@ -102,6 +102,13 @@ class Punishment:
 
     def dump(self):
         pass
+
+    @staticmethod
+    def generate_array(obj_list):
+        punishments = []
+        for punishment in obj_list:
+            punishments.append(generate_punishment(punishment))
+        return punishments
 
 
 class PunishmentPillory(Punishment):
@@ -320,10 +327,8 @@ class TasksConfig:
         self.actionsOnAbandonedTask: list[Punishment] = []
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
-        self.actionsOnAbandonedTask = []
-        for punishment in obj.actionsOnAbandonedTask:
-            self.actionsOnAbandonedTask.append(generate_punishment(punishment))
+        self.__dict__ = obj.__dict__.copy()
+        self.actionsOnAbandonedTask = Punishment.generate_array(obj.actionsOnAbandonedTask)
         return self
 
     def dump(self):
@@ -345,7 +350,7 @@ class Tasks:
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        self.__dict__ = obj.__dict__.copy()
         self.config = TasksConfig().update(obj.config)
         return self
 
@@ -372,10 +377,8 @@ class Penalty:
         self.punishments: list[Punishment] = []
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
-        self.punishments = []
-        for punishment in obj.punishments:
-            self.punishments.append(generate_punishment(punishment))
+        self.__dict__ = obj.__dict__.copy()
+        self.punishments = Punishment.generate_array(obj.punishments)
         return self
 
     def dump(self):
@@ -386,15 +389,20 @@ class Penalty:
             obj['punishments'].append(punishment.dump())
         return obj
 
+    @staticmethod
+    def generate_array(obj_list):
+        penalties = []
+        for penalty in obj_list:
+            penalties.append(Penalty().update(penalty))
+        return penalties
+
 
 class PenaltiesConfig:
     def __init__(self):
         self.penalties: list[Penalty] = []
 
     def update(self, obj):
-        self.penalties = []
-        for penalty in obj.penalties:
-            self.penalties.append(Penalty().update(penalty))
+        self.penalties = Penalty.generate_array(obj.penalties)
         return self
 
     def dump(self):
@@ -430,9 +438,7 @@ class PeerVerification:
 
     def update(self, obj):
         self.enabled = obj.enabled
-        self.punishments = []
-        for punishment in obj.punishments:
-            self.punishments.append(generate_punishment(punishment))
+        self.punishments = Punishment.generate_array(obj.punishments)
         return self
 
     def dump(self):

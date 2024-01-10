@@ -2,6 +2,7 @@ import datetime
 from . import user
 from dateutil.parser import isoparse
 
+
 class LastMessage:
     def __init__(self):
         self._id: str = ''
@@ -28,6 +29,13 @@ class Conversation:
         self.lastMessageAt = isoparse(obj.lastMessageAt)
         return self
 
+    @staticmethod
+    def generate_array(obj_list):
+        conversations = []
+        for item in obj_list:
+            conversations.append(Conversation().update(item))
+        return conversations
+
 
 class Message:
     def __init__(self):
@@ -46,6 +54,13 @@ class Message:
         self.updatedAt = isoparse(obj.updatedAt)
         return self
 
+    @staticmethod
+    def generate_array(obj_list):
+        messages = []
+        for item in obj_list:
+            messages.append(Message().update(item))
+        return messages
+
 
 class ConversationMessages:
     def __init__(self):
@@ -55,10 +70,9 @@ class ConversationMessages:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
-        self.results = []
-        for result in obj.results:
-            self.results.append(Message().update(result))
+        self.results = Message.generate_array(obj.results)
         return self
+
 
 class Conversations:
     def __init__(self):
@@ -68,7 +82,5 @@ class Conversations:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
-        self.results = []
-        for result in obj.results:
-            self.results.append(Conversation().update(result))
+        self.results = Conversation.generate_array(obj.results)
         return self

@@ -35,7 +35,6 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 
 ### File/Class Organization
 
-- update to array as a global function in the class it creates and array of
 - more debug logging
 - https://github.com/pydantic/pydantic
 

@@ -7,18 +7,8 @@ from . import user
 from dateutil.parser import isoparse
 
 
-def update(obj):
-    locks = []
-    if type(obj) is not list:
-        for lock in obj.locks:
-            locks.append(Lock().update(lock))
-    else:
-        for lock in obj:
-            locks.append(Lock().update(lock))
-    return locks
-
-
 class Lock:
+    # TODO: Dates need to be datetime objects
     def __init__(self):
         self._id: str = ''
         self.startDate: str = ''
@@ -73,8 +63,9 @@ class Lock:
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
-        self.extensions = extensions.update(obj)
-        self.availableHomeActions = update_available_home_actions(obj)
+        self.extensions = extensions.Extension.generate_array(obj.extensions)
+        if 'availableHomeActions' in obj.__dict__:
+            self.availableHomeActions = AvailableHomeAction.generate_array(obj.availableHomeActions)
         if obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
         if obj.unlockedAt is not None:
@@ -86,6 +77,13 @@ class Lock:
         if obj.deletedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.deletedAt)
         return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        locks = []
+        for lock in obj_list:
+            locks.append(Lock().update(lock))
+        return locks
 
 
 class LastVerificationPicture:
@@ -110,13 +108,12 @@ class AvailableHomeAction:
         self.__dict__.update(obj.__dict__)
         return self
 
-
-def update_available_home_actions(obj):
-    available_home_actions = []
-    if 'availableHomeActions' in obj.__dict__:
-        for availableHomeAction in obj.availableHomeActions:
+    @staticmethod
+    def generate_array(obj_list):
+        available_home_actions = []
+        for availableHomeAction in obj_list:
             available_home_actions.append(AvailableHomeAction().update(availableHomeAction))
-    return available_home_actions
+        return available_home_actions
 
 
 class LockedUsers:
@@ -127,7 +124,7 @@ class LockedUsers:
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
-        self.locks = update(obj)
+        self.locks = Lock.generate_array(obj.locks)
         return self
 
 
@@ -154,6 +151,13 @@ class ActionLog:
         self.user = user.User().update(obj.user)
         return self
 
+    @staticmethod
+    def generate_array(obj_list):
+        action_logs = []
+        for item in obj_list:
+            action_logs.append(ActionLog().update(item))
+        return action_logs
+
 
 class PageinatedLockHistory:
     def __init__(self):
@@ -163,7 +167,7 @@ class PageinatedLockHistory:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
-        self.results = []
+        self.results = ActionLog.generate_array(obj.results)
         for result in obj.results:
             self.results.append(ActionLog().update(result))
         return self
@@ -199,13 +203,6 @@ class LockInfo:
 
     def dump(self):
         return self.__dict__.copy()
-
-
-def shared_locks(obj):
-    out = []
-    for entry in obj:
-        out.append(SharedLock().update(entry))
-    return out
 
 
 class UnsplashPhoto:
@@ -287,7 +284,7 @@ class CreateSharedLock:
 
 class SharedLock:
     def __init__(self):
-        self._id: str = '65827bb4d1f699fb821e915f'
+        self._id: str = ''
         self.minDuration: int = 86400
         self.maxDuration: int = 90000
         self.maxLimitDuration: int = None
@@ -314,7 +311,7 @@ class SharedLock:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
-        self.extensions = extensions.update(obj)
+        self.extensions = extensions.Extension.generate_array(obj.extensions)
         if obj.maxDate is not None:
             self.maxDate = isoparse(obj.maxDate)
         if obj.minDate is not None:
@@ -324,6 +321,13 @@ class SharedLock:
         if obj.lastSavedAt is not None:
             self.lastSavedAt = isoparse(obj.lastSavedAt)
         return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        shared_locks = []
+        for entry in obj_list:
+            shared_locks.append(SharedLock().update(entry))
+        return shared_locks
 
 
 class PageinatedSharedLockList:
@@ -335,7 +339,5 @@ class PageinatedSharedLockList:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
-        self.results = []
-        for item in obj.results:
-            self.results.append(SharedLock().update(item))
+        self.results = SharedLock.generate_array(obj.results)
         return self

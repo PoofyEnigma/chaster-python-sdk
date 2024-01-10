@@ -145,7 +145,7 @@ class ChasterAPI:
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.shared_locks(x)
+            data = lock.SharedLock.generate_array(x)
 
         return response, data
 
@@ -220,7 +220,7 @@ class ChasterAPI:
         data = None
         if response.status_code == 200:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.update(data)
+            data = lock.Lock.generate_array(data)
         return response, data
 
     def get_lock_details(self, lock_id: str) -> tuple[requests.models.Response, lock.Lock]:
@@ -441,7 +441,7 @@ class ChasterAPI:
         return response, data
 
     def get_user_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
-        return self._tester_get_wrapper(f'locks/user/{user_id}', lock.update)
+        return self._tester_get_wrapper(f'locks/user/{user_id}', lock.Lock.generate_array)
 
     def get_profile(self, user_id: str) -> tuple[requests.models.Response, user.User]:
         return self._tester_get_wrapper(f'users/profile/by-id/{user_id}', user.User().update)
