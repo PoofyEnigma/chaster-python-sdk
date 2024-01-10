@@ -31,7 +31,7 @@ class Lock:
         self.limitLockTime: bool = False
         self.status: str = ''
         self.combination: str = ''
-        self.shared_lock: shared_lock.SharedLock = shared_lock.SharedLock()
+        self.sharedLock: shared_lock.SharedLock = shared_lock.SharedLock()
         self.createdAt: str = ''
         self.updatedAt: str = ''
         self.unlockedAt: datetime.datetime = None
@@ -57,6 +57,7 @@ class Lock:
         self.availableHomeActions: list[AvailableHomeAction] = []
         self.reasonsPreventingUnlocking = []
         self.extensionsAllowUnlocking: bool = True
+        self.deletedAt: datetime.datetime = None
 
     # TODO: Figure this out. Would the extension handler have a reference to this
     # TODO cont.: object and be allowed to edit this object's extension array?
@@ -83,6 +84,8 @@ class Lock:
             self.archivedAt = isoparse(obj.archivedAt)
         if obj.keyholderArchivedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.keyholderArchivedAt)
+        if obj.deletedAt is not None:
+            self.keyholderArchivedAt = isoparse(obj.deletedAt)
         return self
 
 

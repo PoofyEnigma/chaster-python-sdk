@@ -243,3 +243,4 @@ class KeyholderOfferEntry:
         if obj.archivedAt is not None:
             self.archivedAt = dateutil.parser.isoparse(obj.archivedAt)
         return self
+

@@ -14,7 +14,7 @@
 | Files                             |         |           |            |        |
 | Combinations                      |         |           |            |        |
 | Extensions                        | done    |           |            |        |
-| Session Offer                     | ip      |           |            |        |
+| Session Offer                     | done    |           |            |        |
 | Messaging                         | ip      |           |            |        |
 | Extensions - Temporary Opening    |         |           |            |        |
 | Community Events                  |         |           |            |        |
