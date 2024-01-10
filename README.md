@@ -60,6 +60,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 
 - Credentials stack object
 - Other authentication support
+- - Need to cycle your bearer token
 
 # Credits
 

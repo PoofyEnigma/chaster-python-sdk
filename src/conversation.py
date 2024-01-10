@@ -59,3 +59,16 @@ class ConversationMessages:
         for result in obj.results:
             self.results.append(Message().update(result))
         return self
+
+class Conversations:
+    def __init__(self):
+        self.count: int = 12
+        self.hasMore: bool = False
+        self.results: list[Message] = []
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__
+        self.results = []
+        for result in obj.results:
+            self.results.append(Conversation().update(result))
+        return self

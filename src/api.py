@@ -506,70 +506,38 @@ class ChasterAPI:
     Messaging
     """
 
-    def get_conversations(self):
-        response = requests.get('https://api.chaster.app/conversations?limit=50&status=approved',
-                                headers={
-                                    'accept': 'application/json',
-                                    'Authorization': 'Bearer 8N3d2pzH9n4PlYgm9DH27KuFecC2rM17',
-                                })
-        return response.json()
+    def get_conversations(self, limit: int = 15, status: str = 'approved') -> tuple[
+        requests.models.Response, conversation.Conversations]:
+        path = 'conversations'
+        if limit is not None or status is not None:
+            path += "?"
+        if limit is not None:
+            path += f'limit={limit}&'
+        if status is not None:
+            path += f'status={status}&'
+        return self._tester_get_wrapper(path, conversation.Conversations().update)
 
-    def create_conversation(self, user, message) -> tuple[requests.models.Response, conversation.Conversation]:
-        response = requests.post('https://api.chaster.app/conversations',
-                                 headers={
-                                     'accept': '*/*',
-                                     'Authorization': 'Bearer 8N3d2pzH9n4PlYgm9DH27KuFecC2rM17',
-                                     'Content-Type': 'application/json'
-                                 }, data=json.dumps({'users': [user],
-                                                     'type': "private",
-                                                     "message": message}))
+    # TODO: Input object? Are there multiple types?
+    def create_conversation(self, user_id: str, message: str) -> tuple[
+        requests.models.Response, conversation.Conversation]:
+        response = self._post('conversations',
+                              {'users': [user_id],
+                               'type': "private",
+                               "message": message})
 
-        data = None
-        if response.status_code == 201:
-            x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = conversation.Conversation().update(x)
+        return self._tester_post_request_helper(response, conversation.Conversation().update)
 
-        return response, data
+    def get_user_conversation(self, user_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
+        return self._tester_get_wrapper(f'conversations/by-user/{user_id}', conversation.Conversation().update)
 
-    def get_conversation(self, user_id) -> tuple[requests.models.Response, conversation.Conversation]:
-        response = requests.get(f'https://api.chaster.app/conversations/by-user/{user_id}',
-                                headers={
-                                    'accept': 'application/json',
-                                    'Authorization': 'Bearer 8N3d2pzH9n4PlYgm9DH27KuFecC2rM17',
-                                })
+    def post_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
+        response = self._post(f'conversations/{conversation_id}',
+                              {"message": message})
 
-        data = None
-        if response.status_code == 200:
-            x = json.loads(json.dumps(response.json()), object_hook=lambda d: SimpleNamespace(**d))
-            data = conversation.Conversation().update(x)
+        return self._tester_post_request_helper(response, conversation.Message().update)
 
-        return response, data
-
-    def post_message(self, conversation_id, message):
-        data = '{"message": "' + message + '"}'
-        json.loads(data)
-        response = requests.post(f'https://api.chaster.app/conversations/{conversation_id}',
-                                 headers={
-                                     'accept': 'application/json',
-                                     'Authorization': 'Bearer 8N3d2pzH9n4PlYgm9DH27KuFecC2rM17',
-                                     'Content-Type': 'application/json'
-                                 }, data=data)
-
-        return response, response.json()
-
-    def get_conversation_messages(self, conversation_id) -> tuple[
-        requests.models.Response, conversation.ConversationMessages]:
-        response = requests.get(f'https://api.chaster.app/conversations/{conversation_id}/messages?limit=50',
-                                headers={
-                                    'accept': 'application/json',
-                                    'Authorization': 'Bearer 8N3d2pzH9n4PlYgm9DH27KuFecC2rM17',
-                                })
-        data = None
-        if response.status_code == 200:
-            x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = conversation.ConversationMessages().update(x)
-
-        return response, data
+    def get_conversation(self, conversation_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
+        return self._tester_get_wrapper(f'conversations/{conversation_id}', conversation.Conversation().update)
 
     def set_conversation_status(self, conversation_id, status: str) -> requests.models.Response:
         return self._put(f'conversations/{conversation_id}/status', data={'status': status})
@@ -578,11 +546,12 @@ class ChasterAPI:
     def set_conversation_unread(self, conversation_id, unread: bool):
         return self._put(f'conversations/{conversation_id}/status', data={'unread': unread})
 
-    # TODO: Finish stub
-    # TODO: Find a query builder object
-    def find_message_in_a_conversation(self, conversation_id, limit: int, last_id: str):
-        return self._tester_get_wrapper(f'conversations/{conversation_id}/message?limit={limit}&lastI{last_id}|',
-                                        self.passthrough)
+    def get_conversation_messages(self, conversation_id: str, limit=15, lastId=None) -> tuple[
+        requests.models.Response, conversation.ConversationMessages]:
+        path = f'conversations/{conversation_id}/messages?limit={limit}'
+        if lastId is not None:
+            path += f'&lastId={lastId}'
+        return self._tester_get_wrapper(path, conversation.ConversationMessages().update)
 
     """
     Extensions - Temporary Opening
