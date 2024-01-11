@@ -24,7 +24,7 @@
 | Keyholder                         | done    |           |            |        |
 | Reports                           | done    | done      | done       | done   | done     |
 | Partner Configurations            |         |           |            |        |
-| Public Locks                      |         |           |            |        |
+| Public Locks                      | done    |           |            |        |
 | Extensions - Verification Picture |         |           |            |        |
 
 Stubbed - API call functions, DTOs defined<br>

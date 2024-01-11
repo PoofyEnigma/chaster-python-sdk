@@ -340,4 +340,142 @@ class PageinatedSharedLockList:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.results = SharedLock.generate_array(obj.results)
+        if 'lastId' not in obj.__dict__ and len(self.results) > 0:
+            self.lastId = self.results[-1]._id
         return self
+
+
+class JoinRules:
+    def __init__(self):
+        self.canBeJoined: bool = True
+        self.containsPremiumExtension: bool = True
+        self.exceedsExtensionLimit: bool = True
+        self.oneOfExtensionsDisabled: bool = True
+
+
+class PublicSharedLockInfo:
+    def __init__(self):
+        self.joinRules: JoinRules = None
+        self.locks: list[Lock] = []
+        self._id: str = ''
+        self.minDuration: int = 86400
+        self.maxDuration: int = 90000
+        self.maxLimitDuration: int = None
+        self.minDate: datetime = None
+        self.maxDate: datetime = None
+        self.maxLimitDate: datetime = None
+        self.displayRemainingTime: bool = True
+        self.limitLockTime: bool = False
+        self.maxLockedUsers: int = None
+        self.isPublic: bool = True
+        self.requireContact: bool = False
+        self.name: str = ''
+        self.description: str = ''
+        self.unsplashPhoto: UnsplashPhoto = UnsplashPhoto()
+        self.hideTimeLogs: bool = False
+        self.lastSavedAt: datetime = None
+        self.requirePassword: bool = False
+        self.user: user.User = user.User()
+        self.durationMode: str = ''
+        self.isFindom: bool = False
+        self.calculatedMaxLimitDuration: int = None
+        self.extensions = []
+        self.createdAt: datetime.datetime = None
+        self.updatedAt: datetime.datetime = None
+        self.unlockedAt: datetime.datetime = None
+        self.deletedAt: datetime.datetime = None
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__
+        self.extensions = extensions.Extension.generate_array(obj.extensions)
+        self.locks = Lock.generate_array(obj.locks)
+        if obj.maxDate is not None:
+            self.maxDate = isoparse(obj.maxDate)
+        if obj.minDate is not None:
+            self.minDate = isoparse(obj.minDate)
+        if obj.maxLimitDate is not None:
+            self.maxLimitDate = isoparse(obj.maxLimitDate)
+        if obj.lastSavedAt is not None:
+            self.lastSavedAt = isoparse(obj.lastSavedAt)
+        if obj.maxLimitDate is not None:
+            self.maxLimitDate = isoparse(obj.maxLimitDate)
+        if obj.unlockedAt is not None:
+            self.unlockedAt = isoparse(obj.unlockedAt)
+        if obj.deletedAt is not None:
+            self.deletedAt = isoparse(obj.deletedAt)
+        if obj.createdAt is not None:
+            self.createdAt = isoparse(obj.createdAt)
+        if obj.deletedAt is not None:
+            self.deletedAt = isoparse(obj.deletedAt)
+        return self
+
+
+class ExplorePageLock:
+    def __init__(self):
+        self.locks: list[Lock] = []
+        self._id: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__
+        self.locks = Lock.generate_array(obj.locks)
+        return self
+
+
+class SearchPublicLockCriteriaDuration:
+    def __init__(self):
+        self.minDuration: int = -1
+        self.maxDuration: int = -1
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        return obj
+
+
+class SearchPublicLockCriteriaExtensions:
+    def __init__(self):
+        self.extensions: list[str] = []
+        self.all: bool = False
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        return obj
+
+
+class SearchPublicLockCriteriaFindom:
+    def __init__(self):
+        self.isFindom: bool = True
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        return obj
+
+
+class SearchPublicLockCriteria:
+    def __init__(self):
+        self.extensions: SearchPublicLockCriteriaExtensions = None
+        self.isFindom: SearchPublicLockCriteriaFindom = None
+        self.duration: SearchPublicLockCriteriaDuration = None
+
+    def dump(self):
+        obj = {}
+        if self.extensions is not None:
+            obj['extensions'] = self.extensions.dump()
+        if self.isFindom is not None:
+            obj['isFindom'] = self.isFindom.dump()
+        if self.duration is not None:
+            obj['duration'] = self.duration.dump()
+        return obj
+
+
+class SearchPublicLock:
+    def __init__(self):
+        self.limit: int = 0
+        self.lastId: str = ''
+        self.criteria: SearchPublicLockCriteria = None
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['criteria'] = {}
+        if self.criteria is not None:
+            obj['criteria'] = self.criteria.dump()
+        return obj

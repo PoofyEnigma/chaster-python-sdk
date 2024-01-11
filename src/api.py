@@ -643,7 +643,6 @@ class ChasterAPI:
 
     def post_report(self):
         self.logger.error('This API is deliberately not supported. Please use the website for reporting other users.')
-        assert False
 
     """
     Partner Configurations
@@ -653,10 +652,28 @@ class ChasterAPI:
     """
     Public Locks
     """
-    # /public-locks/{sharedLockId}
-    # /public-locks/images/{sharedLockId}
-    # /public-locks/search
-    # /explore/categories
+
+    def find_public_shared_lock(self, shared_lock_id: str) -> tuple[
+        requests.models.Response, lock.PublicSharedLockInfo]:
+        return self._tester_get_wrapper(f'/public-locks/{shared_lock_id}', lock.PublicSharedLockInfo().update)
+
+    # TODO: Need to handle file with other file apis
+    def generate_public_shared_lock_flyer(self, shared_lock_id: str) -> requests.models.Response:
+        response = self._get(f'/public-locks/images/{shared_lock_id}')
+        return response
+
+    def search_for_public_locks(self, searchPublicLock: lock.SearchPublicLock) -> \
+            tuple[requests.models.Response, lock.PageinatedSharedLockList]:
+        response = self._post('/public-locks/search', data=searchPublicLock.dump())
+
+        data = None
+        if response.status_code == 200:
+            x = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = lock.PageinatedSharedLockList().update(x)
+        return response, data
+
+    def find_explore_page_locks(self) -> tuple[requests.models.Response, lock.ExplorePageLock]:
+        return self._tester_get_wrapper('/explore/categories', lock.ExplorePageLock().update)
 
     """
     Extensions - Verification Picture
