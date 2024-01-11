@@ -176,9 +176,11 @@ class WheelOfFortuneResult:
 # {"action":"completeTask","payload":{"isCompleted":false}}
 
 
+
 # verification photo
 # signal to submit new verification
 # request {"action":"createVerificationRequest","payload":{}}
+
 
 # Guess the Timer
 # request {"action":"submit","payload":{}}

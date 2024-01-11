@@ -394,7 +394,7 @@ class ChasterAPI:
 
     def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.GuessTheTimerResponse]:
-        data = {"action": "createVerificationRequest", "payload": {}}
+        data = {"action": "submit", "payload": {}}
         response = self.trigger_extension_actions(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.GuessTheTimerResponse().update)
 
@@ -678,8 +678,15 @@ class ChasterAPI:
     """
     Extensions - Verification Picture
     """
-    # /extensions/verification-picture/{lockId}/submit
+
+    def submit_verification(self, lock_id: str) -> requests.models.Response:
+        return self._post(f'/extensions/verification-picture/{lock_id}/submit', {})
+
     # /locks/{lockId}/verification-pictures
+    def get_verification_history(self, lock_id: str) -> tuple[
+        requests.models.Response, list[lock.VerificationPhotoHistory]]:
+        return self._tester_get_wrapper(f'/locks/{lock_id}/verification-pictures',
+                                        lock.VerificationPhotoHistory.generate_array)
 
 
 class MockChasterData:

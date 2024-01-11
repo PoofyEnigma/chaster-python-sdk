@@ -479,3 +479,37 @@ class SearchPublicLock:
         if self.criteria is not None:
             obj['criteria'] = self.criteria.dump()
         return obj
+
+
+class VerificationPhotoHistoryVotes:
+    def __init__(self):
+        self.status: str = ''
+        self._id: str = ''
+        self.verifiedVotes: int = 0
+        self.rejectedVotes: int = 0
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+
+class VerificationPhotoHistory:
+    def __init__(self):
+        self.verificationCode: str = ''
+        self.peerVerificationId: str = ''
+        self.imageKey: str = ''
+        self.submittedAt: datetime.datetime = None
+        self.votes: VerificationPhotoHistoryVotes = None
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.submittedAt = dateutil.parser.isoparse(obj.submittedAt)
+        self.votes = VerificationPhotoHistoryVotes().update(obj.votes)
+        return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        history = []
+        for account in obj_list:
+            history.append(VerificationPhotoHistory().update(account))
+        return history

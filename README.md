@@ -25,7 +25,7 @@
 | Reports                           | done    | done      | done       | done   | done     |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      | done    |           |            |        |
-| Extensions - Verification Picture |         |           |            |        |
+| Extensions - Verification Picture | done    |           |            |        |
 
 Stubbed - API call functions, DTOs defined<br>
 Validated - tested with mocked chaster http response<br>
