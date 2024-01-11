@@ -463,14 +463,26 @@ class ChasterAPI:
     """
     Files
     """
-    # /files/upload
-    # /files/filekey
+
+    # TODO: Handle Files
+    def upload_file(self) -> tuple[requests.models.Response, user.FileToken]:
+        response = self._post(f'/files/upload', {})
+        return self._tester_post_request_helper(response, user.FileToken().update)
+
+    def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
+        return self._tester_get_wrapper(f'/files/{file_key}', user.FileUrl().update)
 
     """
     Combinations
     """
-    # /combinations/image
-    # /combinations/code
+
+    def upload_combination_image(self) -> tuple[requests.models.Response, lock.Combination]:
+        response = self._post(f'combinations/image', {})
+        return self._tester_post_request_helper(response, lock.Combination().update)
+
+    def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
+        response = self._post(f'combinations/image', {'code': code})
+        return self._tester_post_request_helper(response, lock.Combination().update)
 
     """
     Extensions
@@ -682,7 +694,6 @@ class ChasterAPI:
     def submit_verification(self, lock_id: str) -> requests.models.Response:
         return self._post(f'/extensions/verification-picture/{lock_id}/submit', {})
 
-    # /locks/{lockId}/verification-pictures
     def get_verification_history(self, lock_id: str) -> tuple[
         requests.models.Response, list[lock.VerificationPhotoHistory]]:
         return self._tester_get_wrapper(f'/locks/{lock_id}/verification-pictures',

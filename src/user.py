@@ -359,3 +359,19 @@ class AppSettings:
         self.communityEvent = CommunityEvent().update(obj.communityEvent)
         self.time = dateutil.parser.isoparse(obj.time)
         return self
+
+class FileToken:
+    def __init__(self):
+        self.token: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+class FileUrl:
+    def __init__(self):
+        self.url: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self

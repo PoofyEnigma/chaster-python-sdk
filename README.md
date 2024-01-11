@@ -11,8 +11,8 @@
 | trigger_extension_actions         | done    |           |            |        |
 | Lock Creation                     | done    |           |            |        |
 | profile                           | done    |           |            |        |
-| Files                             |         |           |            |        |
-| Combinations                      |         |           |            |        |
+| Files                             | done    |           |            |        |
+| Combinations                      | done    |           |            |        |
 | Extensions                        | done    |           |            |        |
 | Session Offer                     | done    |           |            |        |
 | Messaging                         | done    |           |            |        |
@@ -37,6 +37,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 
 - async funcs?
 - play with swagger codegen
+- how to handle files?
 
 ### File/Class Organization
 

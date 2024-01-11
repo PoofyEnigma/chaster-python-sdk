@@ -513,3 +513,12 @@ class VerificationPhotoHistory:
         for account in obj_list:
             history.append(VerificationPhotoHistory().update(account))
         return history
+
+
+class Combination:
+    def __init__(self):
+        self.combinationId: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
