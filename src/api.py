@@ -174,7 +174,7 @@ class ChasterAPI:
         update.validate()
         return self._put(f'/lock/shared-lock/{shared_lock_id}', update.dump())
 
-    def archive_shared_lock(self, shared_lock_id: str):
+    def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
         return self._post(f'/locks/shared-locks/{shared_lock_id}/archive', {})
 
     def check_if_favorited(self, shared_lock_id: str) -> tuple[requests.models.Response, bool]:
@@ -190,7 +190,6 @@ class ChasterAPI:
     def remove_favorite(self, shared_lock_id: str) -> requests.models.Response:
         return self._delete(f'/shared-locks/{shared_lock_id}/favorite')
 
-    # shared-locks
     def get_favorited_shared_locks(self, limit: int = 15, lastId: str = None) -> tuple[
         requests.models.Response, lock.PageinatedSharedLockList]:
         if limit < 0:

@@ -311,7 +311,8 @@ class SharedLock:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
-        self.extensions = extensions.Extension.generate_array(obj.extensions)
+        if 'extensions' in obj.__dict__:
+            self.extensions = extensions.Extension.generate_array(obj.extensions)
         if obj.maxDate is not None:
             self.maxDate = isoparse(obj.maxDate)
         if obj.minDate is not None:

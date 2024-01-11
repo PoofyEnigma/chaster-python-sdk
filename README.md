@@ -6,7 +6,7 @@
 
 | API Group                         | Stubbed | Validated | Integrated | Mocked | Tutorial |
 |-----------------------------------|---------|-----------|------------|--------|----------|
-| Shared Locks                      | done    |           | done       |        |
+| Shared Locks                      | done    | done      | done       |        |
 | Locks                             | done    |           |            |        |
 | trigger_extension_actions         | done    |           |            |        |
 | Lock Creation                     | done    |           |            |        |
@@ -28,8 +28,8 @@
 | Extensions - Verification Picture | done    |           |            |        |
 
 Stubbed - API call functions, DTOs defined<br>
-Validated - tested with mocked chaster http response<br>
-Integrated - Integration tests written and requests pre-validated for common 400 causing errors<br>
+Validated - tested with mocked chaster http response, obj and function naming refined<br>
+Integrated - Integration tests written<br>
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
 
@@ -64,6 +64,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 - measure I/O
 - circuit breaker: https://github.com/danielfm/pybreaker
 - cancellation tokens: https://github.com/pomponchik/cantok
+- validate sdk against the
 
 # Credits
 
