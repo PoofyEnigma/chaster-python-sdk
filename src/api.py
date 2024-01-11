@@ -607,6 +607,13 @@ class ChasterAPI:
     Users
     """
 
+    def search_for_users(self, search: str) -> tuple[requests.models.Response, list[user.User]]:
+        response = self._post('users/search/by-username', {'search': search})
+        return self._tester_post_request_helper(response, user.User.generate_array)
+
+    def search_for_users_by_discord(self, discord_id: str) -> tuple[requests.models.Response, user.User]:
+        return self._tester_get_wrapper(f'users/search/by-discord-id/{discord_id}', user.User().update)
+
     """
     Keyholder
     """
@@ -630,6 +637,7 @@ class ChasterAPI:
     """
     Reports
     """
+
     def post_report(self):
         self.logger.error('This API is deliberately not supported. Please use the website for reporting other users.')
         assert False
@@ -637,14 +645,21 @@ class ChasterAPI:
     """
     Partner Configurations
     """
+    # TODO: Gain access
 
     """
     Public Locks
     """
+    # /public-locks/{sharedLockId}
+    # /public-locks/images/{sharedLockId}
+    # /public-locks/search
+    # /explore/categories
 
     """
     Extensions - Verification Picture
     """
+    # /extensions/verification-picture/{lockId}/submit
+    # /locks/{lockId}/verification-pictures
 
 
 class MockChasterData:

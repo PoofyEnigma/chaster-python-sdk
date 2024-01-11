@@ -43,6 +43,12 @@ class User:
         self.__dict__ = obj.__dict__
         return self
 
+    @staticmethod
+    def generate_array(obj_list):
+        users = []
+        for user in obj_list:
+            users.append(User().update(user))
+        return users
 
 class Metadata:
     def __init__(self):

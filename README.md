@@ -19,8 +19,8 @@
 | Extensions - Temporary Opening    | done    |           |            |        |
 | Community Events                  | done    |           |            |        |
 | Partner Extensions                |         |           |            |        |
-| Settings                          |         |           |            |        |
-| Users                             |         |           |            |        |
+| Settings                          | done    |           |            |        |
+| Users                             | done    |           |            |        |
 | Keyholder                         | ip      |           |            |        |
 | Reports                           | done    | done      | done       | done   | done     |
 | Partner Configurations            |         |           |            |        |
