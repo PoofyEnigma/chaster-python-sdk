@@ -627,6 +627,9 @@ class ChasterAPI:
     """
     Reports
     """
+    def post_report(self):
+        self.logger.error('This API is deliberately not supported. Please use the website for reporting other users.')
+        assert False
 
     """
     Partner Configurations

@@ -22,7 +22,7 @@
 | Settings                          |         |           |            |        |
 | Users                             |         |           |            |        |
 | Keyholder                         | ip      |           |            |        |
-| Reports                           |         |           |            |        |
+| Reports                           | done    | done      | done       | done   | done     |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      |         |           |            |        |
 | Extensions - Verification Picture |         |           |            |        |
@@ -32,6 +32,11 @@ Validated - tested with mocked chaster http response<br>
 Integrated - Integration tests written and requests pre-validated for common 400 causing errors<br>
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
+
+### HTTP
+
+- async funcs?
+- play with swagger codegen
 
 ### File/Class Organization
 
