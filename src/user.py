@@ -298,3 +298,57 @@ class CommunityEventDetails:
         self.__dict__ = obj.__dict__.copy()
         self.start = dateutil.parser.isoparse(obj.start)
         self.end = dateutil.parser.isoparse(obj.end)
+
+
+class CommunityEventTier:
+    def __init__(self):
+        self.name: str = ''
+        self.requiredPoints: int = 0
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        tiers = []
+        for tier in obj_list:
+            tiers.append(CommunityEventTier().update(tier))
+        return tiers
+
+
+class CommunityEvent:
+    def __init__(self):
+        self.enabled: bool = True
+        self.slug: str = ''
+        self.name: str = ''
+        self.color: str = ''
+        self.lightColor: str = ''
+        self.icon: str = ''
+        self.tiers: list[CommunityEventTier] = []
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.tiers = CommunityEventTier.generate_array(obj.tiers)
+        return self
+
+
+class AppSettings:
+    def __init__(self):
+        self.features: list[str] = []
+        self.features: list[str] = []
+        self.nonPremiumMaxLocks: int = 0
+        self.nonPremiumMaxExtensions: int = 0
+        self.maxAttachments: int = 0
+        self.registerRequiresAccessKey: bool = True
+        self.recaptchaClientKey: str = ''
+        self.time: datetime.datetime = None
+        self.version: str = ''
+        self.communityEvent: CommunityEvent = None
+        self.stripePublicKey: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.communityEvent = CommunityEvent().update(obj.communityEvent)
+        self.time = dateutil.parser.isoparse(obj.time)
+        return self
