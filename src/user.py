@@ -2,6 +2,7 @@ import datetime
 import dateutil.parser
 from . import lock
 
+
 def update(obj):
     users = []
 
@@ -243,3 +244,57 @@ class KeyholderOfferEntry:
             self.archivedAt = dateutil.parser.isoparse(obj.archivedAt)
         return self
 
+
+class CommunityEventAction:
+    def __init__(self):
+        self.name: str = ''
+        self.title: str = ''
+        self.description: str = ''
+        self.points: int = 0
+        self.maxPerPeriod: int = 0
+        self.group: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        actions = []
+        for action in obj_list:
+            actions.append(CommunityEventAction().update(action))
+        return actions
+
+
+class CommunityEventCategory:
+    def __init__(self):
+        self.name: str = ''
+        self.title: str = ''
+        self.maxPoints: int = 0
+        self.actions: list[CommunityEventAction] = []
+        self.hidden: bool = True
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.actions = CommunityEventAction.generate_array(obj.actions)
+        return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        cecs = []
+        for cec in obj_list:
+            cecs.append(CommunityEventCategory().update(cec))
+        return cecs
+
+
+class CommunityEventDetails:
+    def __init__(self):
+        self.categories: dict[str, int] = {}
+        self.actions: dict[str, int] = {}
+        self.start: datetime.datetime = None
+        self.end: datetime.datetime = None
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.start = dateutil.parser.isoparse(obj.start)
+        self.end = dateutil.parser.isoparse(obj.end)

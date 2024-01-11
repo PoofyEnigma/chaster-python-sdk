@@ -199,7 +199,6 @@ class ChasterAPI:
 
         data = None
         if response.status_code == 201:
-            y = response.json()
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
             data = lock.PageinatedSharedLockList().update(x)
         return response, data
@@ -548,7 +547,7 @@ class ChasterAPI:
         return self._put(f'conversations/{conversation_id}/status', data={'status': status})
 
     # /conversation/conversationid/unread
-    def set_conversation_unread(self, conversation_id, unread: bool):
+    def set_conversation_unread(self, conversation_id, unread: bool) -> requests.models.Response:
         return self._put(f'conversations/{conversation_id}/status', data={'unread': unread})
 
     def get_conversation_messages(self, conversation_id: str, limit=15, lastId=None) -> tuple[
@@ -565,6 +564,19 @@ class ChasterAPI:
     """
     Community Events
     """
+
+    def get_community_event_categories(self) -> tuple[
+        requests.models.Response, user.CommunityEventCategory]:
+        return self._tester_get_wrapper('/community-event/categories', user.CommunityEventCategory.generate_array)
+
+    def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
+        requests.models.Response, user.CommunityEventDetails]:
+        response = self._put(f'/community-event/details', data={'date': date.isoformat()})
+        data = None
+        if response.status_code == 201:
+            x = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = user.CommunityEventDetails().update(x)
+        return response, data
 
     """
     Partner Extensions
