@@ -50,6 +50,7 @@ class User:
             users.append(User().update(user))
         return users
 
+
 class Metadata:
     def __init__(self):
         self.locktober2020Points: int = 0

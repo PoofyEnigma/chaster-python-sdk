@@ -21,7 +21,7 @@
 | Partner Extensions                |         |           |            |        |
 | Settings                          | done    |           |            |        |
 | Users                             | done    |           |            |        |
-| Keyholder                         | ip      |           |            |        |
+| Keyholder                         | done    |           |            |        |
 | Reports                           | done    | done      | done       | done   | done     |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      |         |           |            |        |
@@ -42,6 +42,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 
 - more debug logging
 - https://github.com/pydantic/pydantic
+- Enums?
 
 ### Testing
 

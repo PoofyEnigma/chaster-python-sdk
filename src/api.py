@@ -618,21 +618,24 @@ class ChasterAPI:
     Keyholder
     """
 
-    def post_keyholder_locks_search(self) -> tuple[any, lock.LockedUsers]:
-        response = requests.post('https://api.chaster.app/keyholder/locks/search',
-                                 headers={
-                                     'accept': '*/*',
-                                     'Authorization': 'Bearer 8N3d2pzH9n4PlYgm9DH27KuFecC2rM17',
-                                     'Content-Type': 'application/json'
-                                 }, data=json.dumps({'criteria': {},
-                                                     'status': "locked",
-                                                     "page": 0,
-                                                     "limit": 10}))
-        data = None
-        if response.status_code == 201:
-            x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.LockedUsers().update(x)
-        return response, data
+    status_deserted = 'deserted'
+    status_archived = 'archived'
+    status_unlocked = 'unlocked'
+    status_locked = 'locked'
+
+    def post_keyholder_locks_search(self, page: int = 0, status: str = 'locked', limit: int = 15, criteria: dict = {},
+                                    search: str = None) -> tuple[requests.models.Response, lock.LockedUsers]:
+        data = {
+            'page': page,
+            'status': status,
+            'limit': limit,
+            'criteria': criteria
+        }
+        if search is not None:
+            data['search'] = search
+
+        response = self._post('keyholder/locks/search', data)
+        return self._tester_post_request_helper(response, lock.LockedUsers().update)
 
     """
     Reports
