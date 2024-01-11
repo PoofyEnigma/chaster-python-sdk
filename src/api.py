@@ -561,6 +561,19 @@ class ChasterAPI:
     Extensions - Temporary Opening
     """
 
+    def get_temporary_opening_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
+        return self._tester_get_wrapper(f'/extensions/temporary-opening/{lock_id}/combination',
+                                        user.LockCombination().update)
+
+    def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
+        return self._post(f'/extensions/temporary-opening/{lock_id}/combination', {'combinationId': combination_id})
+
+    def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
+        requests.models.Response, user.LockCombination]:
+        return self._tester_get_wrapper(
+            f'/extensions/temporary-opening/{lock_id}/action-log/{action_log_id}/combination',
+            user.LockCombination().update)
+
     """
     Community Events
     """

@@ -16,8 +16,8 @@
 | Extensions                        | done    |           |            |        |
 | Session Offer                     | done    |           |            |        |
 | Messaging                         | done    |           |            |        |
-| Extensions - Temporary Opening    |         |           |            |        |
-| Community Events                  |         |           |            |        |
+| Extensions - Temporary Opening    | done    |           |            |        |
+| Community Events                  | done    |           |            |        |
 | Partner Extensions                |         |           |            |        |
 | Settings                          |         |           |            |        |
 | Users                             |         |           |            |        |
