@@ -1,3 +1,10 @@
+guess_the_timer_result = """{"canBeUnlocked":false}"""
+wheel_of_fortune_result = """{"index":0,"action":{"segment":{"type":"add-time","text":"","duration":3600}},"text":"Added 1 hour"}"""
+dice_roll_result = """{"adminDice":5,"playerDice":4,"duration":3600}"""
+pillory_info = """{"votes":[{"_id":"659ee3029e46da74718e83b8","nbVotes":0,"totalDurationAdded":0,"voteEndsAt":"2024-01-10T18:48:38.396Z","canVote":true,"reason":"puppy was bad","createdAt":"2024-01-10T18:33:38.397Z"}]}"""
+share_link_info_response = """{"lockId":"659ee2ce9e46da74718e5f2d","extensionId":"659ee2ce9e46da74718e5f34","votes":1,"minVotes":0,"canVote":false}"""
+share_link_url_response = """{"link":"https://chaster.app/sessions/z3lyGWVABT6VYmXs"}"""
+share_link_vote_ack = """{"duration":3600}"""
 lock_with_extension = """
 {
   "lock": {

@@ -90,7 +90,7 @@ class Vote:
         self.createdAt: datetime.datetime = None
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__.copy
+        self.__dict__ = obj.__dict__.copy()
         if obj.createdAt is not None:
             self.createdAt = dateutil.parser.isoparse(obj.createdAt)
         return self
@@ -128,7 +128,7 @@ class PilloryParameters(ActionRequest):
 # hygience opening
 # unlock
 # request {"action":"submit","payload":{}}
-# {"action":"keyholderOpen","payload":{}}
+# request {"action":"keyholderOpen","payload":{}}
 
 
 # dice
@@ -151,11 +151,14 @@ class DiceRollResult:
 # request {"action":"submit","payload":{}}
 # response {"index":0,"action":{"segment":{"type":"add-time","text":"","duration":3600}},"text":"Added 1 hour"}
 
-# TODO: Need to flush out action obj?
 
 class WheelOfFortuneAction:
     def __init__(self):
         self.segment: extensions.WheelOfFortuneSegment = None
+
+    def update(self, obj):
+        self.segment = extensions.WheelOfFortuneSegment().update(obj.segment)
+        return self
 
 
 class WheelOfFortuneResult:
@@ -163,6 +166,11 @@ class WheelOfFortuneResult:
         self.index: int = 0
         self.action: WheelOfFortuneAction = None
         self.text: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.action = WheelOfFortuneAction().update(obj.action)
+        return self
 
 # tasks
 # get a random task

@@ -369,11 +369,11 @@ class ChasterAPI:
         return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
 
     def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.DiceRollResult]:
+        requests.models.Response, triggers.WheelOfFortuneResult]:
         data = triggers.ActionRequest()
         data.action = 'submit'
         response = self.trigger_extension_actions(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
+        return self._tester_post_request_helper(response, triggers.WheelOfFortuneResult().update)
 
     def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
         data = {"action": "submit", "payload": {"requestVote": False}}

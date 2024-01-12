@@ -9,6 +9,7 @@ from requests import Response
 import json
 from src.api import ChasterAPI
 import src.lock as lock
+import src.triggers as triggers
 from types import SimpleNamespace
 from . import response_examples
 
@@ -209,92 +210,77 @@ class MyTestCase(unittest.TestCase):
         api._delete = MagicMock(return_value=response)
         return api
 
-    # def get_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.Lock]]:
     def test_get_locks(self):
         api = self.response_factory(200, response_examples.list_of_user_locks)
         response, data = api.get_locks()
         self.assertEqual(len(data), 1)
         self.assertEqual(response.status_code, 200)
 
-    # def get_lock_details(self, lock_id: str) -> tuple[requests.models.Response, lock.Lock]:
     def test_get_lock_details(self):
         api = self.response_factory(200, response_examples.user_lock)
         response, data = api.get_lock_details('')
         self.assertEqual(response.status_code, 200)
 
-    # def archive_lock(self, lock_id: str) -> requests.models.Response:
     def test_archive_lock(self):
         api = self.response_factory(204, '')
         response = api.archive_lock('')
         self.assertEqual(response.status_code, 204)
 
-    # def archive_lock_as_keyholder(self, lock_id: str) -> requests.models.Response:
     def test_archive_lock_as_keyholder(self):
         api = self.response_factory(204, '')
         response = api.archive_lock_as_keyholder('')
         self.assertEqual(response.status_code, 204)
 
-    # def update_lock_time(self, lock_id: str, time_seconds: int):
     def test_update_lock_time(self):
         api = self.response_factory(204, '')
         response = api.update_lock_time('', 1)
         self.assertEqual(response.status_code, 204)
 
-    # def freeze(self, lock_id: str, freeze: bool) -> requests.models.Response:
     def test_freeze(self):
         api = self.response_factory(204, '')
         response = api.freeze('', True)
         self.assertEqual(response.status_code, 204)
 
-    # def unlock(self, lock_id: str) -> requests.models.Response:
     def test_unlock(self):
         api = self.response_factory(204, '')
         response = api.unlock('')
         self.assertEqual(response.status_code, 204)
 
-    # def lock_settings(self, lock_id: str, display_remaining_time: bool, hide_time_logs: bool) -> requests.models.Response:
     def test_lock_settings(self):
         api = self.response_factory(204, '')
         response = api.lock_settings('', False, False)
         self.assertEqual(response.status_code, 204)
 
-    # def set_max_limit_date(self, lock_id: str, max_limit_date: datetime.datetime, disable_max_time_limit: bool) -> requests.models.Response:
     def test_set_max_limit_date(self):
         api = self.response_factory(204, '')
         response = api.set_max_limit_date('', datetime.datetime.now(), False)
         self.assertEqual(response.status_code, 204)
 
-    # def set_keyholder_as_trusted(self, lock_id: str) -> requests.models.Response:
     def test_set_keyholder_as_trusted(self):
         api = self.response_factory(204, '')
         response = api.set_keyholder_as_trusted('')
         self.assertEqual(response.status_code, 204)
 
-    # def get_lock_combination(self, lock_id: str) -> tuple[requests.models.Response, any]:
     def test_get_lock_combination(self):
         api = self.response_factory(200, response_examples.lock_combination)
         response, data = api.get_lock_combination('')
         self.assertEqual(response.status_code, 200)
 
-    # def get_lock_history(self, lock_id: str, extension: str = None, limit: int = None, last_id: str = None) -> tuple[
     def test_get_lock_history(self):
         api = self.response_factory(201, response_examples.lock_history)
         response, data = api.get_lock_history('')
         self.assertEqual(response.status_code, 201)
 
-    # def is_test_lock(self, lock_id) -> requests.models.Response:
     def test_is_test_lock(self):
         api = self.response_factory(200, '')
         response = api.is_test_lock('')
         self.assertEqual(response.status_code, 200)
 
-    # def get_extension_information(self, lock_id: str, extension_id: str) -> tuple[
     def test_get_extension_information(self):
         api = self.response_factory(200, response_examples.lock_with_extension)
         response, data = api.get_extension_information('', '')
         self.assertEqual(response.status_code, 200)
 
-    # def trigger_extension_actions(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
     def test_trigger_extension_actions(self):
         api = self.response_factory(201, '')
         response = api.trigger_extension_actions('', '', {})
@@ -304,33 +290,103 @@ class MyTestCase(unittest.TestCase):
     Triggers
     """
 
-    # def _tester_post_request_helper(self, response, update):
-
     # def vote_in_share_links(self, lock_id: str, extension_id: str, data: triggers.ShareLinksVote) -> tuple[
+    def test_vote_in_share_links(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.share_link_vote_ack)
+        slv = triggers.ShareLinksVote()
+        slv.payload = triggers.ShareLinksVotePayload()
+        slv.payload.action = 'add'
+        response, data = api.vote_in_share_links('', '', slv)
+        self.assertEqual(response.status_code, status_code)
 
     # def get_share_link_url_to_vote(self, lock_id: str, extension_id: str) -> tuple[
+    def test_get_share_link_url_to_vote(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.share_link_url_response)
+        response, data = api.get_share_link_url_to_vote('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def get_share_link_info(self, lock_id: str, extension_id: str) -> tuple[
+    def test_get_share_link_info(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.share_link_info_response)
+        response, data = api.get_share_link_info('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def place_user_into_pillory(self, lock_id: str, extension_id: str,
+    def test_place_user_into_pillory(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        pp = triggers.PilloryParameters()
+        pp.payload = triggers.PilloryPayload()
+        pp.payload.reason = 'mlem'
+        pp.payload.duration = 3600
+        response = api.place_user_into_pillory('', '', pp)
+        self.assertEqual(response.status_code, status_code)
 
     # def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
+    def test_get_current_pillory_info(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.pillory_info)
+        response, data = api.get_current_pillory_info('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
+    def test_unlock_for_hygiene(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.unlock_for_hygiene('', '', True)
+        self.assertEqual(response.status_code, status_code)
 
     # def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
+    def test_roll_dice(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.dice_roll_result)
+        response, data = api.roll_dice('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
+    def test_spin_wheel_of_fortune(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.wheel_of_fortune_result)
+        response, data = api.spin_wheel_of_fortune('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
+    def test_request_a_random_task(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.request_a_random_task('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
+    def test_community_vote_next_task(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.community_vote_next_task('', '', 3600)
+        self.assertEqual(response.status_code, status_code)
 
     # def mark_task_done(self, lock_id: str, extension_id: str, succeeded: bool) -> requests.models.Response:
+    def test_mark_task_done(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.mark_task_done('', '', True)
+        self.assertEqual(response.status_code, status_code)
 
     # def trigger_new_verification(self, lock_id: str, extension_id: str) -> requests.models.Response:
+    def test_trigger_new_verification(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.trigger_new_verification('', '')
+        self.assertEqual(response.status_code, status_code)
 
     # def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
+    def test_trigger_guess_the_timer(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.guess_the_timer_result)
+        response, data = api.trigger_guess_the_timer('', '')
+        self.assertEqual(response.status_code, status_code)
 
     """
     Lock Creation

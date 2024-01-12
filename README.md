@@ -1,6 +1,6 @@
 # Chaster Python SDK
 
-## Progress
+## Layer 1 Progress
 
 ### API Calls
 
@@ -8,7 +8,7 @@
 |-----------------------------------|---------|-----------|------------|--------|----------|
 | Shared Locks                      | done    | done      | done       |        |
 | Locks                             | done    | done      |            |        |
-| trigger_extension_actions         | done    |           |            |        |
+| trigger_extension_actions         | done    | done      |            |        |
 | Lock Creation                     | done    |           |            |        |
 | profile                           | done    |           |            |        |
 | Files                             | done    |           |            |        |
@@ -44,7 +44,8 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 - more debug logging
 - https://github.com/pydantic/pydantic
 - Enums?
-- Templatize Result object to avoid returning a tuple? https://stackoverflow.com/questions/6725868/generics-templates-in-python
+- Templatize Result object to avoid returning a
+  tuple? https://stackoverflow.com/questions/6725868/generics-templates-in-python
 
 ### Testing
 
@@ -66,6 +67,33 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 - circuit breaker: https://github.com/danielfm/pybreaker
 - cancellation tokens: https://github.com/pomponchik/cantok
 - validate sdk against the
+
+## Layer 2 Progress
+To obfuscate the API calls into function calls on the object itself. For example, rather than having to call
+the trigger API to spin the wheel of fortune, instead the interface would be lock.spin_wheel_of_fortune().
+
+| API Group                         | OOP Actions | 
+|-----------------------------------|-------------|
+| Shared Locks                      |             |   
+| Locks                             |             |    
+| trigger_extension_actions         |             |         
+| Lock Creation                     |             |    
+| profile                           |             |          
+| Files                             |             |        
+| Combinations                      |             |      
+| Extensions                        |             |
+| Session Offer                     |             |
+| Messaging                         |             |
+| Extensions - Temporary Opening    |             |
+| Community Events                  |             |
+| Partner Extensions                |             |
+| Settings                          |             |
+| Users                             |             |
+| Keyholder                         |             |
+| Reports                           |             |
+| Partner Configurations            |             |
+| Public Locks                      |             |
+| Extensions - Verification Picture |             |
 
 # Credits
 

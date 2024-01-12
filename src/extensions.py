@@ -265,13 +265,17 @@ class WheelOfFortuneSegment:
     set_unfreeze = 'set-unfreeze'
     pillory = 'pillory'
 
-    def __init__(self, name: str, text: str, duration: int):
-        self.type: str = name
-        self.text: str = text
-        self.duration: int = duration
+    def __init__(self):
+        self.type: str = ''
+        self.text: str = ''
+        self.duration: int = 0
 
     def dump(self):
         return self.__dict__.copy()
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 
 class WheelOfFortuneConfig:

@@ -1,7 +1,7 @@
 import datetime
 import json
 import unittest
-from src.api import conversation, lock, user
+from src.api import conversation, lock, user, triggers
 from types import SimpleNamespace
 from . import response_examples
 
@@ -13,6 +13,10 @@ class DTOsTest(unittest.TestCase):
             self.assertTrue(entry in dictionary, msg=f'{entry} is not present in source dictionary')
         for entry in dictionary:
             self.assertTrue(entry in obj.__dict__)
+
+    """
+    Shared Locks
+    """
 
     def test_response_id_params(self):
         base = json.loads(response_examples.created_shared_lock)
@@ -33,6 +37,10 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.get_favorited_share_locks)
         cmp = lock.PageinatedSharedLockList()
         self.compare_obj_params(cmp, base)
+
+    """
+    Locks
+    """
 
     def test_lock_params(self):
         base = json.loads(response_examples.user_lock)
@@ -56,12 +64,49 @@ class DTOsTest(unittest.TestCase):
         cmp = lock.ExtensionInformation()
         self.compare_obj_params(cmp, base)
 
+    """
+    Triggers
+    """
+
+    def test_ShareLinksVote_params(self):
+        base = json.loads(response_examples.share_link_vote_ack)
+        cmp = triggers.ShareLinksVoteReturn()
+        self.compare_obj_params(cmp, base)
+
+    def test_ShareLinkUrlResponse_params(self):
+        base = json.loads(response_examples.share_link_url_response)
+        cmp = triggers.ShareLinkUrlResponse()
+        self.compare_obj_params(cmp, base)
+
+    def test_ShareLinkGetInfoResponse_params(self):
+        base = json.loads(response_examples.share_link_info_response)
+        cmp = triggers.ShareLinkGetInfoResponse()
+        self.compare_obj_params(cmp, base)
+
+    def test_PilloryVotes_params(self):
+        base = json.loads(response_examples.pillory_info)
+        cmp = triggers.PilloryVotes()
+        self.compare_obj_params(cmp, base)
+
+    def test_DiceRollResult_params(self):
+        base = json.loads(response_examples.dice_roll_result)
+        cmp = triggers.DiceRollResult()
+        self.compare_obj_params(cmp, base)
+
+    def test_WheelOfFortuneResult_params(self):
+        base = json.loads(response_examples.wheel_of_fortune_result)
+        cmp = triggers.WheelOfFortuneResult()
+        self.compare_obj_params(cmp, base)
+
+    def test_GuessTheTimerResponse_params(self):
+        base = json.loads(response_examples.guess_the_timer_result)
+        cmp = triggers.GuessTheTimerResponse()
+        self.compare_obj_params(cmp, base)
+
     def test_base_conversation_message_has_correct_params(self):
         base = json.loads(_conversation_messages)
         cmp = conversation.ConversationMessages()
         self.compare_obj_params(cmp, base)
-
-
 
 
 _conversation_messages = """
