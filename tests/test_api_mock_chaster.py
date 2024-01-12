@@ -380,21 +380,18 @@ class MyTestCase(unittest.TestCase):
     Lock Creation
     """
 
-    # def create_personal_lock(self, self_lock: lock.Lock) -> tuple[requests.models.Response, lock.LockId]:
     def test_create_personal_lock(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.lock_id_response)
         response, data = api.create_personal_lock(lock.Lock())
         self.assertEqual(response.status_code, status_code)
 
-    # def add_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
     def test_add_extensions(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.add_extensions('', extensions.Extensions())
         self.assertEqual(response.status_code, status_code)
 
-    # def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
     def test_create_lock_from_shared_lock(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.lock_id_response)
@@ -405,19 +402,47 @@ class MyTestCase(unittest.TestCase):
     profile
     """
 
-    # def get_user_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
+    def test_get_user_locks(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.list_of_user_locks)
+        response, data = api.get_user_locks('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_profile(self, user_id: str) -> tuple[requests.models.Response, user.User]:
+    def test_get_profile(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_profile)
+        response, data = api.get_profile('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def find_profile(self, username: str) -> tuple[requests.models.Response, user.User]:
+    def test_find_profile(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_profile)
+        response, data = api.find_profile('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def find_profile_detailed(self, username: str) -> tuple[requests.models.Response, user.DetailedUser]:
+    def test_find_profile_detailed(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.detailed_user_profile)
+        response, data = api.find_profile_detailed('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_badges(self) -> tuple[requests.models.Response, user.Badges]:
+    def test_get_badges(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_badges)
+        response, data = api.get_badges()
+        self.assertEqual(response.status_code, status_code)
 
-    # def update_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
+    def test_update_profile(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_auth_profile)
+        response, data = api.update_profile()
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_your_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
+    def test_get_your_profile(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_auth_profile)
+        response, data = api.get_your_profile()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Files

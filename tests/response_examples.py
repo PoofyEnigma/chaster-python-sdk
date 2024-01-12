@@ -1,4 +1,504 @@
-lock_info_input="""
+user_auth_profile = """
+{
+  "_id": "64e5b481b533a5ccfe61567f",
+  "keycloakId": "ed1a6151-c5b8-4863-adc5-b83a01df62db",
+  "username": "PupHimbo",
+  "email": "maxwright378@gmail.com",
+  "emailVerified": true,
+  "subscriptionEnd": null,
+  "customSubscriptionEnd": null,
+  "hasPastDueSubscription": false,
+  "description": "Pup looking for more friends, cuddles, and cum, and maybe a cage. Aspiring to be a slutty Himbo pup",
+  "location": "San Francisco ",
+  "gender": "male",
+  "birthDate": "1996-08-10T00:00:00.000Z",
+  "role": "switch",
+  "avatarUrl": "https://cdn01.chaster.app/app/uploads/avatars/EfcMg0h1HiLUc67j.jpg",
+  "isPremium": false,
+  "isDeveloper": true,
+  "subscriptionCancelAfterEnd": false,
+  "discordId": "1153172669559214141",
+  "discordUsername": "puphimbo",
+  "isAdmin": false,
+  "isModerator": false,
+  "isFindom": false,
+  "settings": {
+    "showLocksOnProfile": false,
+    "showOnlineStatus": false,
+    "showDiscordOnProfile": true,
+    "emailOnWearerUsesSharedLock": true,
+    "messageOnWearerUsesSharedLock": true,
+    "discordNotifications": true,
+    "discordMessagingNotifications": true,
+    "displayNsfw": true,
+    "showAge": true
+  },
+  "metadata": {
+    "locktober2020Points": 0,
+    "locktober2021Points": 0,
+    "chastityMonth2022Points": 0,
+    "locktober2022Points": 0,
+    "locktober2023Points": 1240
+  },
+  "country": {
+    "countryName": "United States",
+    "countryShortCode": "US"
+  },
+  "region": {
+    "name": "California",
+    "shortCode": "CA"
+  },
+  "privateMetadata": {
+    "locktoberPlusModalPending": false
+  },
+  "hasAcceptedCommunityRules": true,
+  "features": [],
+  "needsDiscordMigration": true,
+  "canEditUsername": true
+}
+"""
+
+
+user_badges = """
+{
+  "pendingMessages": 0,
+  "unreadMessages": 0,
+  "keyholdingRequests": 0
+}"""
+
+detailed_user_profile= """
+{
+  "user": {
+    "_id": "64e5b481b533a5ccfe61567f",
+    "username": "PupHimbo",
+    "isPremium": false,
+    "description": "Pup looking for more friends, cuddles, and cum, and maybe a cage. Aspiring to be a slutty Himbo pup",
+    "location": "San Francisco ",
+    "gender": "Male",
+    "age": 27,
+    "role": "switch",
+    "isFindom": false,
+    "avatarUrl": "https://cdn01.chaster.app/app/uploads/avatars/EfcMg0h1HiLUc67j.jpg",
+    "online": false,
+    "lastSeen": null,
+    "isAdmin": false,
+    "isModerator": false,
+    "metadata": {
+      "locktober2020Points": 0,
+      "locktober2021Points": 0,
+      "chastityMonth2022Points": 0,
+      "locktober2022Points": 0,
+      "locktober2023Points": 1240
+    },
+    "fullLocation": "San Francisco , California, United States",
+    "discordId": "1153172669559214141",
+    "discordUsername": "puphimbo",
+    "isDisabled": false,
+    "isSuspended": false,
+    "features": [],
+    "joinedAt": "2023-08",
+    "isNewMember": false,
+    "isSuspendedOrDisabled": false
+  },
+  "stats": {
+    "nbStartedLocks": 42,
+    "nbEndedLocks": 28,
+    "totalTimeLocked": 5318548,
+    "maxTimeLocked": 2677341,
+    "keyholderNbLocks": 38
+  },
+  "achievements": [
+    {
+      "name": "Early member",
+      "slug": "early_member",
+      "description": "Member since the launch of Chaster",
+      "category": "chaster",
+      "progressEnabled": false,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": null,
+      "total": null,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "Welcome to the adventure",
+      "slug": "wearer_first_lock_started",
+      "description": "Start your first lock session as a wearer",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": null,
+      "total": null,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "My first session",
+      "slug": "wearer_first_lock_ended",
+      "description": "End your first lock session",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": null,
+      "total": null,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "My first day",
+      "slug": "wearer_1_day",
+      "description": "Achieve a cumulative locked time of one day",
+      "category": "wearer",
+      "progressEnabled": true,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 5318548,
+      "total": 86400,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "Seven days locked",
+      "slug": "wearer_7_days",
+      "description": "Achieve a cumulative locked time of seven days",
+      "category": "wearer",
+      "progressEnabled": true,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 5318548,
+      "total": 604800,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "How long will it last?",
+      "slug": "wearer_30_days",
+      "description": "Achieve a cumulative locked time of 30 days",
+      "category": "wearer",
+      "progressEnabled": true,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 5318548,
+      "total": 2592000,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "It was a long day",
+      "slug": "wearer_max_1_day",
+      "description": "Stay locked an entire day",
+      "category": "wearer",
+      "progressEnabled": true,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 2677341,
+      "total": 86400,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "A week locked",
+      "slug": "wearer_max_7_days",
+      "description": "Stay locked 7 days in a row",
+      "category": "wearer",
+      "progressEnabled": true,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 2677341,
+      "total": 604800,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "A whole month",
+      "slug": "wearer_max_30_days",
+      "description": "Stay locked 30 days in a row",
+      "category": "wearer",
+      "progressEnabled": true,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 2677341,
+      "total": 2592000,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "Control another one",
+      "slug": "keyholder_first_lock",
+      "description": "Create a shared lock and lock a user",
+      "category": "keyholder",
+      "progressEnabled": false,
+      "hideIfNotGranted": false,
+      "granted": true,
+      "progress": 38,
+      "total": 1,
+      "grantedAt": "2023-08-23T12:06:06.619Z"
+    },
+    {
+      "name": "Locktober 2023",
+      "slug": "locktober_2023_participation",
+      "description": "Participate in the Locktober 2023 event",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": true,
+      "progress": null,
+      "total": null,
+      "grantedAt": "2023-11-05T22:17:26.982Z"
+    },
+    {
+      "name": "Locktober keyholder",
+      "slug": "locktober_2023_keyholder",
+      "description": "Have a wearer locked during the entire Locktober 2023",
+      "category": "keyholder",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": true,
+      "progress": null,
+      "total": null,
+      "grantedAt": "2023-11-05T22:17:26.982Z"
+    },
+    {
+      "name": "Locktober 2020",
+      "slug": "locktober_2020_participation",
+      "description": "Participate in the Locktober 2020 event",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "I did Locktober 2020!",
+      "slug": "locktober_2020",
+      "description": "Stay locked all October 2020",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Locktober 2021",
+      "slug": "locktober_2021_participation",
+      "description": "Participate in the Locktober 2021 event",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Locktober keyholder",
+      "slug": "locktober_2021_keyholder",
+      "description": "Have a wearer locked during the entire Locktober",
+      "category": "keyholder",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "I did Locktober 2021!",
+      "slug": "locktober_2021",
+      "description": "Stay locked all October 2021",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Chastity Month 2022",
+      "slug": "chastity_month_2022_participation",
+      "description": "Participate in the Chastity Month 2022 event",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Chastity Month keyholder",
+      "slug": "chastity_month_2022_keyholder",
+      "description": "Have a wearer locked during the entire Chastity Month",
+      "category": "keyholder",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Chastity Month 2022 Challenger",
+      "slug": "chastity_month_2022",
+      "description": "Stay locked during the entire Chastity Month 2022",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Locktober 2022",
+      "slug": "locktober_2022_participation",
+      "description": "Participate in the Locktober 2022 event",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Locktober keyholder",
+      "slug": "locktober_2022_keyholder",
+      "description": "Have a wearer locked during the entire Locktober 2022",
+      "category": "keyholder",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "I did Locktober 2022!",
+      "slug": "locktober_2022",
+      "description": "Stay locked all October 2022",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "Challenge Master - Locktober 2023",
+      "slug": "locktober_2023_challenge",
+      "description": "Obtain the most votes in a community challenge",
+      "category": "chaster",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    },
+    {
+      "name": "I did Locktober 2023!",
+      "slug": "locktober_2023",
+      "description": "Stay locked all October 2023",
+      "category": "wearer",
+      "progressEnabled": false,
+      "hideIfNotGranted": true,
+      "granted": false,
+      "progress": null,
+      "total": null,
+      "grantedAt": null
+    }
+  ],
+  "chastikeyStats": null,
+  "sharedLocks": [
+    {
+      "_id": "65139d7d1a72a968b46338e4",
+      "minDuration": 0,
+      "maxDuration": 0,
+      "maxLimitDuration": null,
+      "minDate": "2023-11-01T06:59:00.000Z",
+      "maxDate": "2023-11-01T06:59:02.312Z",
+      "maxLimitDate": null,
+      "displayRemainingTime": true,
+      "limitLockTime": true,
+      "maxLockedUsers": null,
+      "isPublic": true,
+      "requireContact": false,
+      "name": "Pup Locktober",
+      "description": "",
+      "unsplashPhoto": {
+        "id": "4cirNi6WvRg",
+        "name": "David Izquierdo",
+        "url": "https://images.unsplash.com/photo-1572290603512-cd1d7dad06e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMzE4NDZ8MHwxfGFsbHx8fHx8fHx8fDE2OTU3ODQzMTd8&ixlib=rb-4.0.3&q=80&w=1080",
+        "username": "davidiz"
+      },
+      "hideTimeLogs": false,
+      "lastSavedAt": "2023-09-27T03:11:57.595Z",
+      "requirePassword": false,
+      "durationMode": "date",
+      "isFindom": false,
+      "calculatedMaxLimitDuration": 0,
+      "extensions": [
+        {
+          "slug": "temporary-opening",
+          "config": {
+            "openingTime": 900,
+            "penaltyTime": 43200,
+            "allowOnlyKeyholderToOpen": false
+          },
+          "mode": "non_cumulative",
+          "regularity": 172800,
+          "name": "Hygiene opening",
+          "textConfig": "Time allowed: 15 minutes, penalty for exceeding time: 12 hours"
+        }
+      ],
+      "joinRules": {
+        "canBeJoined": true,
+        "oneOfExtensionsDisabled": false,
+        "containsPremiumExtension": false,
+        "exceedsExtensionLimit": false
+      }
+    }
+  ]
+}
+"""
+
+user_profile = """
+{
+  "_id": "64e5b481b533a5ccfe61567f",
+  "username": "PupHimbo",
+  "isPremium": false,
+  "description": "Pup looking for more friends, cuddles, and cum, and maybe a cage. Aspiring to be a slutty Himbo pup",
+  "location": "San Francisco ",
+  "gender": "Male",
+  "age": 27,
+  "role": "switch",
+  "isFindom": false,
+  "avatarUrl": "https://cdn01.chaster.app/app/uploads/avatars/EfcMg0h1HiLUc67j.jpg",
+  "online": false,
+  "lastSeen": null,
+  "isAdmin": false,
+  "isModerator": false,
+  "metadata": {
+    "locktober2020Points": 0,
+    "locktober2021Points": 0,
+    "chastityMonth2022Points": 0,
+    "locktober2022Points": 0,
+    "locktober2023Points": 1240
+  },
+  "fullLocation": "San Francisco , California, United States",
+  "discordId": "1153172669559214141",
+  "discordUsername": "puphimbo",
+  "isDisabled": false,
+  "isSuspended": false,
+  "features": [],
+  "joinedAt": "2023-08",
+  "isNewMember": false,
+  "isSuspendedOrDisabled": false
+}
+"""
+
+lock_info_input = """
 {
   "password": "string",
   "combinationId": "string",
@@ -16,7 +516,7 @@ extensions_input = """{
   ]
 }
   """
-lock_id_response="""{"lockId": "string"}"""
+lock_id_response = """{"lockId": "string"}"""
 
 guess_the_timer_result = """{"canBeUnlocked":false}"""
 wheel_of_fortune_result = """{"index":0,"action":{"segment":{"type":"add-time","text":"","duration":3600}},"text":"Added 1 hour"}"""

@@ -123,6 +123,30 @@ class DTOsTest(unittest.TestCase):
         self.compare_obj_params(cmp, base)
 
     """
+    profile
+    """
+    def test_User_params(self):
+        base = json.loads(response_examples.user_profile)
+        cmp = user.User()
+        self.compare_obj_params(cmp, base)
+
+    def test_DetailedUser_params(self):
+        base = json.loads(response_examples.detailed_user_profile)
+        cmp = user.DetailedUser()
+        self.compare_obj_params(cmp, base)
+
+    def test_Badges_params(self):
+        base = json.loads(response_examples.user_badges)
+        cmp = user.Badges()
+        self.compare_obj_params(cmp, base)
+
+    def test_AuthProfile_params(self):
+        base = json.loads(response_examples.user_auth_profile)
+        cmp = user.AuthProfile()
+        self.compare_obj_params(cmp, base)
+
+
+    """
     """
 
     def test_base_conversation_message_has_correct_params(self):

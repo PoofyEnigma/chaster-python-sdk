@@ -427,9 +427,6 @@ class ChasterAPI:
     profile
     """
 
-    def passthrough(self, obj):
-        return obj
-
     def _tester_get_wrapper(self, path, func):
         response = self._get(path)
         data = None
@@ -451,7 +448,7 @@ class ChasterAPI:
         return self._tester_get_wrapper(f'users/profile/{username}/details', user.DetailedUser().update)
 
     def get_badges(self) -> tuple[requests.models.Response, user.Badges]:
-        return self._tester_get_wrapper('users/badge/count', user.Badges.update)
+        return self._tester_get_wrapper('users/badge/count', user.Badges().update)
 
     def update_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
         return self._tester_get_wrapper('auth/profile/update', user.AuthProfile().update)

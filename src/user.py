@@ -127,7 +127,7 @@ class DetailedUser:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.user = User().update(obj.user)
-        self.sharedLocks = lock.shared_locks(obj.sharedLocks)
+        self.sharedLocks = lock.SharedLock.generate_array(obj.sharedLocks)
         return self
 
 
