@@ -125,6 +125,7 @@ class DTOsTest(unittest.TestCase):
     """
     profile
     """
+
     def test_User_params(self):
         base = json.loads(response_examples.user_profile)
         cmp = user.User()
@@ -164,6 +165,7 @@ class DTOsTest(unittest.TestCase):
     """
     Extensions
     """
+
     def test_AuthProfile_params(self):
         base = json.loads(response_examples.all_known_extensions)
         cmp = extensions.KnownExtension()
@@ -172,6 +174,7 @@ class DTOsTest(unittest.TestCase):
     """
     Session Offer
     """
+
     def test_KeyholderOfferEntry_params(self):
         base = json.loads(response_examples.keyholder_offers)
         cmp = user.KeyholderOfferEntry()
@@ -223,4 +226,13 @@ class DTOsTest(unittest.TestCase):
     def test_CommunityEventDetails_params(self):
         base = json.loads(response_examples.community_event_details)
         cmp = user.CommunityEventDetails()
+        self.compare_obj_params(cmp, base)
+
+    """
+    Settings
+    """
+
+    def test_CommunityEventDetails_params(self):
+        base = json.loads(response_examples.app_settings)
+        cmp = user.AppSettings()
         self.compare_obj_params(cmp, base)

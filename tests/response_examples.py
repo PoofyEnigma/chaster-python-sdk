@@ -1,3 +1,23 @@
+app_settings = """
+{
+  "nonPremiumMaxLocks": 1,
+  "nonPremiumMaxExtensions": 3,
+  "registerRequiresAccessKey": false,
+  "recaptchaClientKey": "6LeEsG8aAAAAANaK0mpTYcb1kog6nDWuj4Hty5Um",
+  "maxAttachments": 6,
+  "time": "2024-01-12T17:55:32.522Z",
+  "version": "0.12.5+build.66",
+  "communityEvent": null,
+  "features": [
+    "partner_extensions",
+    "can_join_shared_lock_status",
+    "require_plus_for_findoms",
+    "block_registration_with_disposable_email"
+  ],
+  "stripePublicKey": "pk_live_2Hyuont09wgPQuCZgubGYRZo00wvMXWPsq"
+}
+"""
+
 community_event_details = """
 {
   "categories": {

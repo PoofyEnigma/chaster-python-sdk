@@ -617,6 +617,11 @@ class MyTestCase(unittest.TestCase):
     """
 
     # def get_app_settings(self) -> tuple[requests.models.Response, user.AppSettings]:
+    def test_get_app_settings(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.app_settings)
+        response, data = api.get_app_settings()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Users

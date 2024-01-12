@@ -610,7 +610,7 @@ class ChasterAPI:
     """
 
     def get_app_settings(self) -> tuple[requests.models.Response, user.AppSettings]:
-        return self._tester_get_wrapper('/settings', user.AppSettings.update)
+        return self._tester_get_wrapper('/settings', user.AppSettings().update)
 
     """
     Users

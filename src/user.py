@@ -227,9 +227,6 @@ class AuthProfile:
         return self
 
 
-
-
-
 class KeyholderOfferEntry:
     def __init__(self):
         self.keyholder: User = None
@@ -253,6 +250,8 @@ class KeyholderOfferEntry:
         for item in obj_list:
             out.append(KeyholderOfferEntry().update(item))
         return out
+
+
 class CommunityEventAction:
     def __init__(self):
         self.name: str = ''
@@ -359,9 +358,11 @@ class AppSettings:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
-        self.communityEvent = CommunityEvent().update(obj.communityEvent)
+        if self.communityEvent is not None:
+            self.communityEvent = CommunityEvent().update(obj.communityEvent)
         self.time = dateutil.parser.isoparse(obj.time)
         return self
+
 
 class FileToken:
     def __init__(self):
@@ -370,6 +371,7 @@ class FileToken:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
 
 class FileUrl:
     def __init__(self):
