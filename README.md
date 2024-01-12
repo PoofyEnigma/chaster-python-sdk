@@ -13,7 +13,7 @@
 | profile                           | done    | done      |            |        |
 | Files                             | done    |           |            |        |
 | Combinations                      | done    |           |            |        |
-| Extensions                        | done    |           |            |        |
+| Extensions                        | done    | done      |            |        |
 | Session Offer                     | done    |           |            |        |
 | Messaging                         | done    |           |            |        |
 | Extensions - Temporary Opening    | done    |           |            |        |

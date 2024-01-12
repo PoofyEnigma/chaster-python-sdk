@@ -1,3 +1,3980 @@
+all_known_extensions = """
+[
+  {
+    "subtitle": "Share your lock with others",
+    "summary": "Share a link to other people to ask them to add or remove time to your lock.",
+    "displayName": "Share links",
+    "icon": "link",
+    "slug": "link",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "timeToAdd": 3600,
+      "timeToRemove": 3600,
+      "enableRandom": true,
+      "nbVisits": 0,
+      "limitToLoggedUsers": false
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": false,
+    "isPartner": false,
+    "isFeatured": false,
+    "isTesting": false,
+    "hasActions": false,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Be displayed publicly when you receive a penalty",
+    "summary": "When you receive a penalty, be displayed publicly for a specified period of time. Other users will be able to add time to your lock.",
+    "displayName": "Pillory",
+    "icon": "user-friends",
+    "slug": "pillory",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "timeToAdd": 3600,
+      "limitToLoggedUsers": true
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": false,
+    "isPartner": false,
+    "isFeatured": false,
+    "isTesting": false,
+    "hasActions": false,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Roll the dice and try to reduce your time locked",
+    "summary": "With every action, you and the bot roll a dice. If you do more than the bot, time is removed. If the bot does more, time is added.",
+    "displayName": "Dice",
+    "icon": "dice",
+    "slug": "dice",
+    "availableModes": [
+      "non_cumulative",
+      "cumulative",
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "multiplier": 3600
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Try your luck by spinning the Wheel of Fortune",
+    "summary": "Turn the wheel of fortune and change the duration of your lock. Configure actions for each cell of the wheel of fortune: time added or removed, frozen timer or custom text for your dares.",
+    "displayName": "Wheel of Fortune",
+    "icon": "/static/assets/images/icons/extensions/wheel-of-fortune.svg",
+    "slug": "wheel-of-fortune",
+    "availableModes": [
+      "non_cumulative",
+      "cumulative",
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "segments": [
+        {
+          "type": "add-time",
+          "text": "",
+          "duration": 3600
+        },
+        {
+          "type": "remove-time",
+          "text": "",
+          "duration": 3600
+        }
+      ]
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Receive tasks and earn points to be unlocked",
+    "summary": "Spice up your session by receiving tasks. Configure the tasks you want to do, and receive a random task, or ask other users to vote.",
+    "displayName": "Tasks",
+    "icon": "tasks",
+    "slug": "tasks",
+    "availableModes": [
+      "non_cumulative",
+      "cumulative",
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "tasks": [
+        {
+          "task": "",
+          "points": 0
+        }
+      ],
+      "voteEnabled": false,
+      "voteDuration": 43200,
+      "startVoteAfterLastVote": false,
+      "enablePoints": false,
+      "pointsRequired": 0,
+      "allowWearerToEditTasks": false,
+      "allowWearerToConfigureTasks": false,
+      "preventWearerFromAssigningTasks": false,
+      "allowWearerToChooseTasks": false,
+      "actionsOnAbandonedTask": []
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Receive penalties when you do not perform actions on time",
+    "summary": "Receive penalties when you do not perform actions on time.",
+    "displayName": "Penalties",
+    "icon": "gavel",
+    "slug": "penalty",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "penalties": []
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": false,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Temporarily unlock yourself",
+    "summary": "Because hygiene is important, unlock yourself regularly to clean your chastity device. Be careful, if you exceed the allowed time, you will receive a penalty.",
+    "displayName": "Hygiene opening",
+    "icon": "soap",
+    "slug": "temporary-opening",
+    "availableModes": [
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "openingTime": 900,
+      "penaltyTime": 43200,
+      "allowOnlyKeyholderToOpen": false
+    },
+    "defaultRegularity": 172800,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": false,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Regularly take a picture of your device to show that you are locked",
+    "summary": "Regularly take a picture of your chastity device to show that you are locked.",
+    "displayName": "Verification picture",
+    "icon": "camera",
+    "slug": "verification-picture",
+    "availableModes": [
+      "non_cumulative",
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "visibility": "all",
+      "peerVerification": {
+        "enabled": false,
+        "punishments": []
+      }
+    },
+    "defaultRegularity": 86400,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Add randomness to your lock",
+    "summary": "Random events can happen and change your timer. Time added or removed, frozen lock, many things can happen. You don't know when it will happen, it's a surprise.",
+    "displayName": "Random Events",
+    "icon": "random",
+    "slug": "random-events",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "difficulty": "normal"
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": false,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "With the timer hidden, guess when you think the timer is finished",
+    "summary": "Guess correctly the timer, or time is added. The timer is hidden, press the unlock button when you think the timer is finished. If the timer is still running, random time is added!",
+    "displayName": "Guess the Timer",
+    "icon": "clock",
+    "slug": "guess-timer",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "minRandomTime": 10800,
+      "maxRandomTime": 21600
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": true,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": true,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "Play cards",
+    "summary": "The interactive card game",
+    "displayName": "Cards",
+    "icon": "/static/assets/images/icons/extensions/cards.svg",
+    "slug": "cards",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "regularity": 60,
+      "cards": [
+        {
+          "type": "green",
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "red",
+          "min": 5,
+          "max": 5
+        }
+      ],
+      "mode": "non_cumulative",
+      "nbKeysRequired": 1
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": false,
+    "hasActions": true,
+    "configIframeUrl": "https://app.chaster.cards/configuration",
+    "partnerExtensionId": "625163f6115da438303d2ece"
+  },
+  {
+    "subtitle": "The Vince Evil bot",
+    "summary": "Try the Vince's Evil bot!",
+    "displayName": "VinceBot",
+    "icon": "puzzle-piece",
+    "slug": "vincebot",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aadba994e50f462c13b737"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aae284c20678feb39a885d"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Aetherial Gaol",
+    "icon": "puzzle-piece",
+    "slug": "aetherial-gaol",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aae4dcc969a47608272467"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "KittenLocksTest",
+    "icon": "puzzle-piece",
+    "slug": "kittenlockstest",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aaed97a83c310210dc754a"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "TestExtension",
+    "icon": "puzzle-piece",
+    "slug": "testextension",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aaf7bf03eb4996090826b0"
+  },
+  {
+    "subtitle": "Play a game to determine your lock time",
+    "summary": "",
+    "displayName": "Lucky Case",
+    "icon": "puzzle-piece",
+    "slug": "lucky-case",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "difficulty": 1
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:4200/lucky-case/config",
+    "partnerExtensionId": "64aaf7f651a2526070e11edd"
+  },
+  {
+    "subtitle": "Additional and improved random events.",
+    "summary": "Incorporate randomness into your lock with new and improved events based off the already existing Chaster Random Events extension.",
+    "displayName": "Random Events++",
+    "icon": "puzzle-piece",
+    "slug": "random-events-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "minimum": 1800,
+      "maximum": 3600,
+      "events": {
+        "add-time": {
+          "bias": 1,
+          "minimum": 1800,
+          "maximum": 3600
+        },
+        "remove-time": {
+          "bias": 1,
+          "minimum": 1800,
+          "maximum": 3600
+        },
+        "disorientate": {
+          "bias": 1,
+          "minimum": 1800,
+          "maximum": 3600
+        },
+        "freeze": {
+          "bias": 1
+        },
+        "unfreeze": {
+          "bias": 1
+        },
+        "toggle-freeze": {
+          "bias": 1
+        },
+        "pillory": {
+          "bias": 1,
+          "minimum": 1800,
+          "maximum": 3600
+        }
+      },
+      "manualTriggerWait": 1800,
+      "canWearerManuallyTrigger": false
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:3000/configuration/randomevents",
+    "partnerExtensionId": "64aafa20c20678feb39e41e9"
+  },
+  {
+    "subtitle": "",
+    "summary": "Force your lockees to watch Porns ! ",
+    "displayName": "Forced Voyeur",
+    "icon": "puzzle-piece",
+    "slug": "forced-voyeur",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab0328617b7d05e9b1d764"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Skaldik's Tasks",
+    "icon": "puzzle-piece",
+    "slug": "skaldiks-tasks",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab045f637e4ea5ce33a4c0"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "RandomizerExtension",
+    "icon": "puzzle-piece",
+    "slug": "randomizerextension",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab104294e50daafc0ac7c2"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test extension enderaxis",
+    "icon": "puzzle-piece",
+    "slug": "test-extension-enderaxis",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab13b7784350dbcb6eaf10"
+  },
+  {
+    "subtitle": "Take a quiz to determine your lock time",
+    "summary": "",
+    "displayName": "Quiz",
+    "icon": "puzzle-piece",
+    "slug": "quiz",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:4200/quiz/config",
+    "partnerExtensionId": "64ab2006784350dbcb70d303"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-2",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab21d2678683e4d88a5a4b"
+  },
+  {
+    "subtitle": "Manage secondary lockboxes",
+    "summary": "Got additional locks for your cuffs and chains? Manage them alongside your primary lockbox.",
+    "displayName": "Multi-Lock",
+    "icon": "puzzle-piece",
+    "slug": "multi-lock",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://xandren.org/api/chaster/multi-lock/config",
+    "partnerExtensionId": "64ab32fc74c692fe463ac090"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Forced Watch",
+    "icon": "puzzle-piece",
+    "slug": "forced-watch",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "videos": [
+        {
+          "name": "Lucie preferred one",
+          "url": "https://www.tubebdsm.com/out/?l=3AAQJ84SiXrCq3NLRjZVRDhQT05NAtlnaHR0cHM6Ly92aWRlb3Vwb3JuaWEuY29tL3ZpZGVvcy80OTAwNzUzL2RpLW1hcmNvLWFuZC1oYWxleS13aWxkZS10aGUtdHJhaW5pbmctb2YtZGF5LXRocmVlLz9wcm9tbz0zMTEzNM0B66J0YwHNA6incG9wdWxhcgLZJ3sib3JpZW50YXRpb24iOiJzdHJhaWdodCIsInByaWNpbmciOiIifc0auM5kt0mNqHBvcm5zdGFyzRH1&c=345333ad&v=3&",
+          "watched": false
+        }
+      ]
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://127.0.0.1:5173/configuration",
+    "partnerExtensionId": "64ab38a86047fed011c44cc9"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-3",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab3a4039a1dcddc78e4a4e"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-4",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ab68a694e50daafc152af0"
+  },
+  {
+    "subtitle": "Get Zaps to get free",
+    "summary": "Send Commands to your PiShock from Chaster. Enabling your KH to force you to endure shocks. ",
+    "displayName": "ChasterShock",
+    "icon": "puzzle-piece",
+    "slug": "chastershock",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 28800,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64abc8af678683e4d89a6e63"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-6",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ad55296047fed011001d85"
+  },
+  {
+    "subtitle": "Automatically require paypal payments on findom locks",
+    "summary": "Automatically require paypal payments for your findom lock.",
+    "displayName": "Paypal verification",
+    "icon": "puzzle-piece",
+    "slug": "paypal-verification",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ad68dfe9d359bd489ab47c"
+  },
+  {
+    "subtitle": "Purchase you feedom.",
+    "summary": "",
+    "displayName": "Shop",
+    "icon": "puzzle-piece",
+    "slug": "shop",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "rate": 1,
+      "intervals": 3600,
+      "items": [
+        {
+          "id": "1",
+          "price": 100,
+          "discount": 1,
+          "stock": 10,
+          "isInfinite": true,
+          "events": [
+            {
+              "slug": "remove-time",
+              "config": {
+                "minimum": 1800,
+                "maximum": 3600
+              }
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "price": 100,
+          "discount": 1,
+          "stock": 10,
+          "isInfinite": true,
+          "events": [
+            {
+              "slug": "unfreeze",
+              "config": {}
+            }
+          ]
+        }
+      ]
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:5000/extension",
+    "partnerExtensionId": "64ad8254b8fdcbd1becb4c7a"
+  },
+  {
+    "subtitle": "The Classic Card Game",
+    "summary": "",
+    "displayName": "Black Jack",
+    "icon": "puzzle-piece",
+    "slug": "black-jack",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ad869b960e15ccef448492"
+  },
+  {
+    "subtitle": "Track how many steps were made.",
+    "summary": "This extension counts steps by connecting to smart wearables.Currently Supported: - MiBand 4",
+    "displayName": "Steps",
+    "icon": "puzzle-piece",
+    "slug": "steps",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "requiredSteps": 0
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:5173/config",
+    "partnerExtensionId": "64ad952a6047fed0110942a3"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-7",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64adb6c8960e15ccef4b7caa"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Timer",
+    "icon": "puzzle-piece",
+    "slug": "timer",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ae7bfeb8fdcbd1bee6928c"
+  },
+  {
+    "subtitle": "Roll the (definitely fair) dice and try to reduce your time locked",
+    "summary": "Ever worried that your lockee would accidentally 'get lucky' when rolling the dice? No longer! ",
+    "displayName": "Weighted Dice",
+    "icon": "puzzle-piece",
+    "slug": "weighted-dice",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": {
+      "chances": [
+        9.09,
+        9.09,
+        9.09,
+        9.09,
+        9.09,
+        9.1,
+        9.09,
+        9.09,
+        9.09,
+        9.09,
+        9.09
+      ],
+      "multiplier": 60,
+      "multiplierText": "1 hour"
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://strawberria-extensions.github.io/chaster/weighted-dice/configuration",
+    "partnerExtensionId": "64af0eae37d58b6e1f991612"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "freeze tag",
+    "icon": "puzzle-piece",
+    "slug": "freeze-tag",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64af1aa02c028aed953a5ab1"
+  },
+  {
+    "subtitle": "Obedience Shop Rewards",
+    "summary": "Do you want to pick up a reward for obedience and locking up? Now you have the opportunity with this extension.",
+    "displayName": "Obedience shop rewards",
+    "icon": "puzzle-piece",
+    "slug": "obedience-shop-rewards",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64af702d74ea9db9cc788cb0"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Alfred",
+    "icon": "puzzle-piece",
+    "slug": "alfred",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://alfred.localho.st/chaster/configuration",
+    "partnerExtensionId": "64b04760635caf5bc0d861b9"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Alfred",
+    "icon": "puzzle-piece",
+    "slug": "alfred-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64b1182efb7dbf391953b8ae"
+  },
+  {
+    "subtitle": "Complete tech domination",
+    "summary": "Let your keyholder restrict your devices with Qustodio. Works with most devices: Phones, Tablets and PCs (iOS, Android, Windows, Chromebooks).",
+    "displayName": "Qustodio",
+    "icon": "phone-laptop",
+    "slug": "qustodio",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "capabilities": [
+        "FILTER_CONTENT",
+        "SHOW_HISTORY"
+      ]
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://benevolent-rolypoly-6c077b.netlify.app/qustodio/config",
+    "partnerExtensionId": "64b203b07922dc18c4858cad"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Dice Roll",
+    "icon": "puzzle-piece",
+    "slug": "dice-roll",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64b3cbe2dc26d6f14eea632c"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Qustodio Dev",
+    "icon": "puzzle-piece",
+    "slug": "qustodio-dev",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "capabilities": [
+        "FILTER_CONTENT",
+        "SHOW_HISTORY"
+      ]
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:5173/qustodio/config",
+    "partnerExtensionId": "64b3f9cbdc26d6f14ef12dee"
+  },
+  {
+    "subtitle": "User Chaster like you used Chastikey",
+    "summary": "",
+    "displayName": "The Old Cards Game",
+    "icon": "puzzle-piece",
+    "slug": "the-old-cards-game",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://cuffed.cf/theoldcardgame/configuration.php",
+    "partnerExtensionId": "64b47de31c5bdb5c3dd9424d"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Extended Chat Logs",
+    "icon": "puzzle-piece",
+    "slug": "extended-chat-logs",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64b4c8ee88a049802a390331"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "WriteForMe",
+    "icon": "puzzle-piece",
+    "slug": "writeforme",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64b4fa06060ad853855ef647"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Jigsaw Puzzle",
+    "icon": "puzzle-piece",
+    "slug": "jigsaw-puzzle",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "images": [
+        "https://cdni.pornpics.de/1280/7/427/75245688/75245688_098_c8b6.jpg",
+        "https://media.discordapp.net/attachments/937623725728231454/1131268883328794684/bdsmlr-10785268-NUJhzNdhr3.jpg"
+      ],
+      "pieces": 60
+    },
+    "defaultRegularity": 86400,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://jigsaw.enteofdeath.com/#/config",
+    "partnerExtensionId": "64b6e673267e8345a044617b"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Jigsaw Puzzle (Dev)",
+    "icon": "puzzle-piece",
+    "slug": "jigsaw-puzzle-dev",
+    "availableModes": [
+      "non_cumulative",
+      "cumulative",
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "images": [
+        "https://cdni.pornpics.de/1280/7/427/75245688/75245688_098_c8b6.jpg"
+      ],
+      "pieces": 100
+    },
+    "defaultRegularity": 86400,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:5173/#/config",
+    "partnerExtensionId": "64b829c9c7712c5e28297276"
+  },
+  {
+    "subtitle": "Try your luck spinning the Extended Wheel of Fortune, now with multiple wheels and expanded actions!",
+    "summary": "An extended Wheel of Fortune with more wheels and more features!",
+    "displayName": "Extended Wheel of Fortune",
+    "icon": "puzzle-piece",
+    "slug": "extended-wheel-of-fortune",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "wheels": {},
+      "text": ""
+    },
+    "defaultRegularity": 0,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://127.0.0.1:5173/chaster/extended-wheel/configuration",
+    "partnerExtensionId": "64b8d3b37ead8f0540d6a807"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Jigsaw Puzzle (Test)",
+    "icon": "puzzle-piece",
+    "slug": "jigsaw-puzzle-test",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "images": [
+        "https://cdni.pornpics.de/1280/7/427/75245688/75245688_098_c8b6.jpg"
+      ],
+      "pieces": 100
+    },
+    "defaultRegularity": 86400,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://jigsaw-test.enteofdeath.com/#/config",
+    "partnerExtensionId": "64b99c7981795a85fd0cf281"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "HWJ",
+    "icon": "puzzle-piece",
+    "slug": "hwj",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ba12bf67bd12aeec582511"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Wheel of Fortune +",
+    "icon": "puzzle-piece",
+    "slug": "wheel-of-fortune-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64bab6bbbd0a0d39d852c8eb"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Hellscape",
+    "icon": "puzzle-piece",
+    "slug": "hellscape",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64bf1404eb08bc1b0750e0ab"
+  },
+  {
+    "subtitle": "Fully configurable Random Events",
+    "summary": "A fully configurable random events system that can prevent unlocking before a configurable number of events has occurred, allows for manually triggered events, and can penalize the wearer for not having enough random events triggered in a time period.",
+    "displayName": "Better Random Events",
+    "icon": "puzzle-piece",
+    "slug": "better-random-events",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "slug": "better-random-events",
+      "minTime": "P0Y0M0DT2H0M0S",
+      "maxTime": "P0Y0M0DT12H0M0S",
+      "weightIntervalHigher": true,
+      "addTime": true,
+      "removeTime": true,
+      "freeze": true,
+      "unfreeze": true,
+      "pillory": true,
+      "addTimeMin": "P0Y0M0DT0H1M0S",
+      "addTimeMax": "P0Y0M0DT0H20M0S",
+      "addTimeWeightHigher": true,
+      "removeTimeMin": "P0Y0M0DT0H1M0S",
+      "removeTimeMax": "P0Y0M0DT0H20M0S",
+      "removeTimeWeightLower": true,
+      "removeTimeNegative": false,
+      "alwaysUnfreezeIfFrozen": true,
+      "alwaysUnfreezeIfFrozenFor": "P0Y0M0DT0H15M0S",
+      "totalOdds": 100,
+      "addTimeOdds": 0.6,
+      "removeTimeOdds": 0.2,
+      "freezeOdds": 0.1,
+      "pilloryOdds": 0.1,
+      "pilloryLengthMin": "P0Y0M0DT0H15M0S",
+      "pilloryLengthMax": "P0Y0M0DT1H0M0S",
+      "minimumEventsToUnlock": 1,
+      "userTriggerable": true,
+      "eventsRequiredPerPeriod": 1,
+      "penaltyPeriod": "P0Y0M1DT0H0M0S",
+      "penaltyAddTime": "P0Y0M0DT1H0M0S",
+      "penaltyFreeze": true,
+      "penaltyPilloryLength": "P0Y0M0DT1H0M0S",
+      "penaltyMultiplier": true,
+      "penaltyMultiplierPer": 1.1,
+      "freezeOnStart": false
+    },
+    "defaultRegularity": 7200,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://bre.knks.xyz/better-random-events/configuration",
+    "partnerExtensionId": "64bfdc1b0bc87274b398f1e8"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Quiz",
+    "icon": "puzzle-piece",
+    "slug": "quiz-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64c16a3935d8b870bfc46cb3"
+  },
+  {
+    "subtitle": "Sudoku is a logic-based, combinatorial number-placement puzzle.",
+    "summary": "Solve Sudoku grid to improve your self ! Success or failures may influence your chastity !",
+    "displayName": "Sudoku",
+    "icon": "puzzle-piece",
+    "slug": "sudoku",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:4200/sudoku/config",
+    "partnerExtensionId": "64c3806a862a9a64ef45cfb8"
+  },
+  {
+    "subtitle": "Unlocking is only possible at agreed times and locations.",
+    "summary": "",
+    "displayName": "Geo Lock",
+    "icon": "puzzle-piece",
+    "slug": "geo-lock",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {
+      "canChangePortals": false,
+      "portals": []
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:5173/geolock/config",
+    "partnerExtensionId": "64c62cc001abed5e27e2dac7"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Random+",
+    "icon": "puzzle-piece",
+    "slug": "random",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64c75e9af50e610e51864d99"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-8",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64c796c0f50e610e518c31ca"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test mobile",
+    "icon": "puzzle-piece",
+    "slug": "test-mobile",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64c85d72a73cc4560ebba547"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Time From Caption",
+    "icon": "puzzle-piece",
+    "slug": "time-from-caption",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64cbb68ace00841df97c46fc"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Dynamic Wheel of Fortune",
+    "icon": "puzzle-piece",
+    "slug": "dynamic-wheel-of-fortune",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64cd44b4efc89cb981cae915"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test Extension",
+    "icon": "puzzle-piece",
+    "slug": "test-extension",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64cd93ddc0c80f5e37d3bb34"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-9",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ce9697fc52e82591373ae0"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "2048",
+    "icon": "puzzle-piece",
+    "slug": "2048",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "magnification": 3
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64cf04a2fab49b8385a63c89"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Spin",
+    "icon": "puzzle-piece",
+    "slug": "spin",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64d223154b3c92d15a6e8be6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Hello",
+    "icon": "puzzle-piece",
+    "slug": "hello",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64d22b8ff36983e2f350fc80"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Better Dice",
+    "icon": "puzzle-piece",
+    "slug": "better-dice",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "slug": "better-dice",
+      "sides": 6,
+      "time": "P0Y0M0DT1H0M0S",
+      "winMultiplier": 0.9,
+      "loseMultiplier": 1.1,
+      "skipTies": true,
+      "eventsRequiredPerPeriod": 1,
+      "penaltyPeriod": "P0Y0M1DT0H0M0S",
+      "penaltyAddTime": "P0Y0M0DT1H0M0S",
+      "penaltyFreeze": true,
+      "penaltyPilloryLength": "P0Y0M0DT0H15M0S",
+      "penaltyMultiplier": true,
+      "penaltyMultiplierPer": 1.1,
+      "minimumEventsToUnlock": 2,
+      "rigKeyholderDice": false,
+      "rigWearerDice": false,
+      "invisibleDice": false
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://bre.knks.xyz/better-dice/configuration",
+    "partnerExtensionId": "64d2b279397aab68839330f6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "The Test",
+    "icon": "puzzle-piece",
+    "slug": "the-test",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64d610ae0c68c0042a1b567c"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Blackjack",
+    "icon": "puzzle-piece",
+    "slug": "blackjack",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:4200/blackjack/config",
+    "partnerExtensionId": "64d68f71a0831433d8bd04cd"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "tesex",
+    "icon": "puzzle-piece",
+    "slug": "tesex",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64da5609baafe3f3fff64d64"
+  },
+  {
+    "subtitle": "Answer random questions - get some time reduction.",
+    "summary": "Trivia Time Unlock is an engaging and interactive extension designed to add an element of fun and challenge to your chastity experience. By answering a variety of random questions correctly, you'll earn valuable time reductions off your chastity lock. Put your knowledge to the test, learn new facts, and enjoy a unique way to manage your lock duration. With Trivia Time Unlock, learning and pleasure go hand in hand as you work towards unlocking your device sooner.",
+    "displayName": "Trivia",
+    "icon": "puzzle-piece",
+    "slug": "trivia",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 86400,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://chaster.neocore.cc/trivia/config",
+    "partnerExtensionId": "64db814b537d5daf7edb0e6d"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Minecraft",
+    "icon": "puzzle-piece",
+    "slug": "minecraft",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64dc019b65ffdfd91857e242"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "testify",
+    "icon": "puzzle-piece",
+    "slug": "testify",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64e7e033e9c9b69dacf2f358"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Unlock Gamble",
+    "icon": "puzzle-piece",
+    "slug": "unlock-condition",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "unlockWeight": 1,
+      "taskWeight": 0,
+      "deniedWeight": 1,
+      "tasks": [],
+      "deniedPunishments": [
+        {
+          "weight": 1,
+          "items": [
+            {
+              "type": "AddFixed",
+              "seconds": 1800
+            }
+          ]
+        }
+      ],
+      "taskFailedPunishments": []
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:80/config",
+    "partnerExtensionId": "64ee7f8c9c558b01392b65d6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Cards",
+    "icon": "puzzle-piece",
+    "slug": "cards-1",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64f0161fde7c96a8d193a16b"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "reading",
+    "icon": "puzzle-piece",
+    "slug": "reading",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64f5aa0c0a4d27590a6dd338"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "exTest",
+    "icon": "puzzle-piece",
+    "slug": "extest",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64f771bbb4547cbdaee861c4"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test extension ",
+    "icon": "puzzle-piece",
+    "slug": "test-extension-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64f826387b23592e40e0857f"
+  },
+  {
+    "subtitle": "Automatically freeze lock when started",
+    "summary": "Automatically freeze lock when started - 1 minute interval until webhooks implemented",
+    "displayName": "Start Frozen",
+    "icon": "puzzle-piece",
+    "slug": "start-frozen",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64fb9225ed0e690948140801"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test ext",
+    "icon": "puzzle-piece",
+    "slug": "test-ext",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64fe4b78c640e4a9f3d6df96"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "ocr",
+    "icon": "puzzle-piece",
+    "slug": "ocr",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64fe8ca0f8a07e521f7bbbbe"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Strawberria Random Events",
+    "icon": "puzzle-piece",
+    "slug": "strawberria-random-events",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64feb1b75d52d1e0da0011f4"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-10",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ff40f87d4c79bbe92968d9"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test Extention",
+    "icon": "puzzle-piece",
+    "slug": "test-extention",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ffaebf8cb4d71652fdcff8"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "TestE",
+    "icon": "puzzle-piece",
+    "slug": "teste",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65035674f9f9a7c21f68246f"
+  },
+  {
+    "subtitle": "Connect your session to your favourite video games!",
+    "summary": "Play your favourite video game, and watch as it impacts your chastity sentence.",
+    "displayName": "ChasterGAMES",
+    "icon": "puzzle-piece",
+    "slug": "chastergames",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 0,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://localhost:3000/edit",
+    "partnerExtensionId": "6504292765089c3c19da3aa8"
+  },
+  {
+    "subtitle": "Test extension - do not use",
+    "summary": "Test extension - do not use",
+    "displayName": "Testension",
+    "icon": "puzzle-piece",
+    "slug": "testension",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://testension.techspace.cz/config.html",
+    "partnerExtensionId": "65060692351e727f76c095e5"
+  },
+  {
+    "subtitle": "Add verification to the official Tasks  extension",
+    "summary": "This extension allows you to add a verification to tasks, to make a wearer prove they completed the task. Verification is currently done using images and videos.",
+    "displayName": "Verified Tasks",
+    "icon": "puzzle-piece",
+    "slug": "verified-tasks",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65070a48765e36978f70c858"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-11",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65089aa13fd57cd49cb7d6ef"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Demerzel",
+    "icon": "puzzle-piece",
+    "slug": "demerzel",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6509debb91428683c4fa4247"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "app_ext",
+    "icon": "puzzle-piece",
+    "slug": "appext",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "650aaef1d3c3c59d121fb340"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "LockBox",
+    "icon": "puzzle-piece",
+    "slug": "lockbox",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "650c0173af10eaf90ab755c8"
+  },
+  {
+    "subtitle": "Connect StarDash to your lock!",
+    "summary": "Allows you to play games, gamble and more using StarDash.",
+    "displayName": "StarDash connect",
+    "icon": "puzzle-piece",
+    "slug": "stardash-connect",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://starlightwt.github.io/StarDashWeb/views/config.html",
+    "partnerExtensionId": "650c837f49758e706c6cfa4b"
+  },
+  {
+    "subtitle": "POC_hangman_implementation",
+    "summary": "",
+    "displayName": "handman_localhost_app",
+    "icon": "puzzle-piece",
+    "slug": "handmanlocalhostapp",
+    "availableModes": [
+      "unlimited",
+      "cumulative"
+    ],
+    "defaultConfig": "default:config",
+    "defaultRegularity": 7200,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://webhook.site/4b51c2f6-3d07-4ba9-be59-371ee9b4f037",
+    "partnerExtensionId": "650ee4210222257fa301c2ca"
+  },
+  {
+    "subtitle": "this is an implementation of the More or Less  game",
+    "summary": "a random number will be generated, you have to guess it.Each time you fail, time will be added",
+    "displayName": "more_or_less",
+    "icon": "puzzle-piece",
+    "slug": "moreorless",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": {
+      "MaxNumber": 100,
+      "MinNumber": 0,
+      "NumberOfTry": 5,
+      "Penality": 300,
+      "Reward": 300
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://127.0.0.1:5000/config",
+    "partnerExtensionId": "650efa48b469cf0a9d2cae42"
+  },
+  {
+    "subtitle": "Wearer has to complete Wordle puzzles",
+    "summary": "Attempt to solve Wordles. The keyholder can add custom words, add rewards for completed puzzles and add penalties for failed puzzles.",
+    "displayName": "Wordle",
+    "icon": "puzzle-piece",
+    "slug": "wordle",
+    "availableModes": [
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "words": [
+        "caged"
+      ],
+      "rewards": [
+        {
+          "action": "REMOVE_TIME",
+          "data": 60
+        },
+        {
+          "action": "UNFREEZE",
+          "data": null
+        }
+      ],
+      "punishments": [
+        {
+          "action": "ADD_TIME",
+          "data": 120
+        }
+      ],
+      "punishmentTexts": [
+        "Add time: 2 hours"
+      ],
+      "rewardTexts": [
+        "Remove time: 1 hour",
+        "Unfreeze the lock"
+      ],
+      "freezeWhenAvailable": false,
+      "attemptPunishmentsActive": false,
+      "attemptPunishments": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0
+      }
+    },
+    "defaultRegularity": 86400,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://wordle-prod.enteofdeath.com/#/config",
+    "partnerExtensionId": "6511de0d69627fdcf8d471c2"
+  },
+  {
+    "subtitle": "Test instance for the Wordle extension. This is used to test new features and bugfixes before public release. Take care, this might be instable :)",
+    "summary": "",
+    "displayName": "Wordle (Test)",
+    "icon": "puzzle-piece",
+    "slug": "wordle-test",
+    "availableModes": [
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "words": [
+        "caged"
+      ],
+      "rewards": [
+        {
+          "action": "REMOVE_TIME",
+          "data": 60
+        },
+        {
+          "action": "UNFREEZE",
+          "data": null
+        }
+      ],
+      "punishments": [
+        {
+          "action": "ADD_TIME",
+          "data": 120
+        }
+      ],
+      "punishmentTexts": [
+        "Add time: 2 hours"
+      ],
+      "rewardTexts": [
+        "Remove time: 1 hour",
+        "Unfreeze the lock"
+      ],
+      "freezeWhenAvailable": false,
+      "attemptPunishmentsActive": false,
+      "attemptPunishments": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0
+      }
+    },
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://wordle-test.enteofdeath.com/#/config",
+    "partnerExtensionId": "6511de1a974a20984bfd4c97"
+  },
+  {
+    "subtitle": "DONT USE - This extension is used for local development of new features and bugfixes and will not work for you",
+    "summary": "",
+    "displayName": "Wordle (Dev)",
+    "icon": "puzzle-piece",
+    "slug": "wordle-dev",
+    "availableModes": [
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "words": [
+        "caged"
+      ],
+      "rewards": [
+        {
+          "action": "REMOVE_TIME",
+          "data": 60
+        },
+        {
+          "action": "UNFREEZE",
+          "data": null
+        }
+      ],
+      "punishments": [
+        {
+          "action": "ADD_TIME",
+          "data": 120
+        }
+      ],
+      "punishmentTexts": [
+        "Add time: 2 hours"
+      ],
+      "rewardTexts": [
+        "Remove time: 1 hour",
+        "Unfreeze the lock"
+      ],
+      "freezeWhenAvailable": false,
+      "attemptPunishmentsActive": false,
+      "attemptPunishments": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0
+      }
+    },
+    "defaultRegularity": 86400,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:5173/#/config",
+    "partnerExtensionId": "6511de25a0496ae3fd4757b6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-13",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6519f3542583fe072a3d65a6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Improvement",
+    "icon": "puzzle-piece",
+    "slug": "improvement",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6519f6c344c60e9085168321"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Locktober Points",
+    "icon": "puzzle-piece",
+    "slug": "locktober-points",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "651c43cbcf6c6c4b55e7f3da"
+  },
+  {
+    "subtitle": "Set sport goals to reach, then be reward or punished",
+    "summary": "Set sport goals to reach.",
+    "displayName": "Sport tracker by Strava",
+    "icon": "puzzle-piece",
+    "slug": "strava",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 0,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:4200/strava/config",
+    "partnerExtensionId": "651c7917ba083ca539a4b59c"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "asd",
+    "icon": "puzzle-piece",
+    "slug": "asd",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "651de821b3d818f15d134d96"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "add",
+    "icon": "puzzle-piece",
+    "slug": "add",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6520a0c4dea36974018d6c3b"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Mobile Mod",
+    "icon": "puzzle-piece",
+    "slug": "md",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6521280f3b371a3415bfaff4"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test1",
+    "icon": "puzzle-piece",
+    "slug": "test1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "652659cb5116c64fd6c5d4b9"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Trst",
+    "icon": "puzzle-piece",
+    "slug": "trst",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6526c5795116c64fd6d7c8ad"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-14",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6526c59d3e0774ec64c1a5b2"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-15",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65278a2aff4c15c95ff2bc5e"
+  },
+  {
+    "subtitle": "Send yourself to pillory",
+    "summary": "Makes it possible to wearer to send *self to pillory.",
+    "displayName": "Just the Pillory",
+    "icon": "puzzle-piece",
+    "slug": "just-the-pillory",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": {
+      "min": 900,
+      "max": 86400,
+      "editable": true
+    },
+    "defaultRegularity": 60,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://testension.techspace.cz/jtp/config.html",
+    "partnerExtensionId": "652be6346a25bfd1221d7a1d"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "TTLOCK",
+    "icon": "puzzle-piece",
+    "slug": "ttlock",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "652c7cacf60028cff6bb0a3b"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test-extension-2230",
+    "icon": "puzzle-piece",
+    "slug": "test-extension-2230",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "652f96d473e439e1c5c5f389"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Censored Rewards",
+    "icon": "puzzle-piece",
+    "slug": "censored-rewards",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65304fda7d0b5f3dede19c37"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-16",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65319bdc2f6fd9dd8a03d590"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Challenge Queue",
+    "icon": "puzzle-piece",
+    "slug": "challenge-queue",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://localhost:3000/config",
+    "partnerExtensionId": "65348f56b909cf4b230a5897"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Random",
+    "icon": "puzzle-piece",
+    "slug": "random-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65355c16b1dbb6e9cf296999"
+  },
+  {
+    "subtitle": "Chores",
+    "summary": "",
+    "displayName": "Chores",
+    "icon": "puzzle-piece",
+    "slug": "chores",
+    "availableModes": [
+      "unlimited",
+      "cumulative",
+      "non_cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://localhost:5250/chores/configuration",
+    "partnerExtensionId": "653b8d628ea522cbdfdbbdf4"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "marina extension",
+    "icon": "puzzle-piece",
+    "slug": "marina-extension",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "653d0192295d3329060781bf"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "CustomSafe",
+    "icon": "puzzle-piece",
+    "slug": "customsafe",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "653d38d314d36ee9184ec471"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test Extension",
+    "icon": "puzzle-piece",
+    "slug": "test-extension-2",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://www.edotmedia.net/extConfig-1.html",
+    "partnerExtensionId": "653fa935f5c228750878e91d"
+  },
+  {
+    "subtitle": "Input keyholder-specified codes to trigger various lock effects!",
+    "summary": "Input keyholder-specified codes to trigger various lock effects!",
+    "displayName": "Scavenger Codes",
+    "icon": "puzzle-piece",
+    "slug": "scavenger-codes",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 0,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "https://strawberria-extensions.github.io/chaster/scavenger-codes/configuration",
+    "partnerExtensionId": "6541c6993b3caea7f9302dd3"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "testa",
+    "icon": "puzzle-piece",
+    "slug": "testa",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6547bb86bd6f7eab81550a74"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-17",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65487c9b35c2c37fe45feb7b"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Multiple Choice 4 Timer",
+    "icon": "puzzle-piece",
+    "slug": "multiple-choice-4-timer",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "654ac4e66c9bced4ef877b51"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test extension",
+    "icon": "puzzle-piece",
+    "slug": "test-extension-3",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "654fd0be01b9d7f70cd0913d"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test 1",
+    "icon": "puzzle-piece",
+    "slug": "test-1-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65551f8dc67c65a5a2f70ff6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "FirstTry",
+    "icon": "puzzle-piece",
+    "slug": "firsttry",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "655a52426803eeab7fe828ed"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Blackjack",
+    "icon": "puzzle-piece",
+    "slug": "blackjack-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "655ba4b0225b6b576db42b30"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-18",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "655bc51d225b6b576db87156"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Forced Watch",
+    "icon": "puzzle-piece",
+    "slug": "forced-watch-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "http://127.0.0.1:5173/configuration",
+    "partnerExtensionId": "6563ded8a506024f1582114e"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Locked .Games",
+    "icon": "puzzle-piece",
+    "slug": "locked-games",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "656a665bf8ae6426559a8382"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-19",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "656bdf69131aa7c3ed646cc4"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Chance",
+    "icon": "puzzle-piece",
+    "slug": "chance",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6578b74516530460e289d3f0"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Wordle",
+    "icon": "puzzle-piece",
+    "slug": "wordle-1",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "658035bbe5007754e1c7e4ff"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-21",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6580bbf2ba132054ee6e8353"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-22",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6580c9d9633e84cf4e657cee"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-23",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6581847b6e1dd8ce538ef5b6"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-24",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6583a20495fcd4d1214e38d9"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Spend Task Points",
+    "icon": "puzzle-piece",
+    "slug": "spend-task-points",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "658633553ac6ae0a97245093"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Blackjack",
+    "icon": "puzzle-piece",
+    "slug": "blackjack-2",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6587662297013b3584ea8974"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "learning",
+    "icon": "puzzle-piece",
+    "slug": "learning",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "658fbc3416a535b3060be6b8"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Creative Tasks",
+    "icon": "puzzle-piece",
+    "slug": "creative-tasks",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "659041038ae1c9663e2b3f61"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "locky2",
+    "icon": "puzzle-piece",
+    "slug": "locky2",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6592939b226caa341fd08148"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Linked Locks",
+    "icon": "puzzle-piece",
+    "slug": "linked-locks",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6594626f342be9f93000ed22"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "chaste_footer_bar",
+    "icon": "puzzle-piece",
+    "slug": "chastefooterbar",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "65956636a01ff1848a74f384"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test Extension",
+    "icon": "puzzle-piece",
+    "slug": "test-extension-4",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "659628c3cf4e271ed19a1132"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "extension-01",
+    "icon": "puzzle-piece",
+    "slug": "extension-01",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6599d65e543e396f805e2458"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-25",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "659abc53c946e6530fb6d898"
+  },
+  {
+    "subtitle": "Stay locked the whole month",
+    "summary": "Complete actions and games throughout the month and earn points to be the best wearer of the month!",
+    "displayName": "Locktober 2020",
+    "icon": "jack-o-lantern",
+    "slug": "locktober",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": {},
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": false,
+    "isFeatured": false,
+    "isTesting": false,
+    "hasActions": true,
+    "configIframeUrl": null,
+    "partnerExtensionId": null
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-1",
+    "availableModes": [
+      "unlimited",
+      "non_cumulative",
+      "cumulative"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aae4b551a2526070ddfdd1"
+  },
+  {
+    "subtitle": "Additional and improved random events.",
+    "summary": "Incorporate randomness into your lock with new and improved events based of the already existing Chaster Random Events extension.",
+    "displayName": "IGNORE!!",
+    "icon": "puzzle-piece",
+    "slug": "random-events-2",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 0,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aaf91ec969a476082a6248"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Test",
+    "icon": "puzzle-piece",
+    "slug": "test-5",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ababf3678683e4d897a1da"
+  },
+  {
+    "subtitle": "Sudoku is a logic-based, combinatorial number-placement puzzle.",
+    "summary": "Solve Sudoku grid to improve your self ! Success or failures may influence your chastity !",
+    "displayName": "Sudoku deprecated",
+    "icon": "puzzle-piece",
+    "slug": "sudoku-game",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64abf2bc94e50daafc228964"
+  },
+  {
+    "subtitle": "Test",
+    "summary": "",
+    "displayName": "JorgenBot",
+    "icon": "puzzle-piece",
+    "slug": "jorgenbot",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64aed3d3826a52781a35a258"
+  },
+  {
+    "subtitle": "So once your timer has ran out you need to look for the key",
+    "summary": "This extensions will require you to walk around the key will be hidden somewhere around you walk around and see if you can find it. (Not really a fixed position but once you enter a new quadrant there is a chance the key is there)",
+    "displayName": "Find the needle in the haystack",
+    "icon": "puzzle-piece",
+    "slug": "find-the-needle-in-the-haystack",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64de8ecfd7980c543314a396"
+  },
+  {
+    "subtitle": "Remote padlock management",
+    "summary": "Configure how the padlock will be unlock",
+    "displayName": "padlock",
+    "icon": "puzzle-piece",
+    "slug": "padlock",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "64ec8a5b96e0f3422bf34850"
+  },
+  {
+    "subtitle": "test2",
+    "summary": "",
+    "displayName": "test",
+    "icon": "puzzle-piece",
+    "slug": "test-12",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6509c556b35200d20ac4ca5d"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "Task Master",
+    "icon": "puzzle-piece",
+    "slug": "task-master",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "657121e9614131e802f24f45"
+  },
+  {
+    "subtitle": "",
+    "summary": "",
+    "displayName": "TEST",
+    "icon": "puzzle-piece",
+    "slug": "test-20",
+    "availableModes": [
+      "unlimited"
+    ],
+    "defaultConfig": "",
+    "defaultRegularity": 3600,
+    "isEnabled": false,
+    "isPremium": false,
+    "isCountedInExtensionsLimit": true,
+    "isPartner": true,
+    "isFeatured": false,
+    "isTesting": true,
+    "isDevelopedByCommunity": true,
+    "hasActions": true,
+    "configIframeUrl": "",
+    "partnerExtensionId": "6571efbd6b090391bf65e942"
+  }
+]
+"""
+
 user_auth_profile = """
 {
   "_id": "64e5b481b533a5ccfe61567f",

@@ -465,6 +465,11 @@ class MyTestCase(unittest.TestCase):
     """
 
     # def get_all_known_extensions(self) -> tuple[requests.models.Response, list[extensions.KnownExtension]]:
+    def test_get_all_known_extensions(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.all_known_extensions)
+        response, data = api.get_all_known_extensions()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Session Offer

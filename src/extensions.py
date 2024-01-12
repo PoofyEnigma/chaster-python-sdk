@@ -557,7 +557,7 @@ class KnownExtension:
         self.configIframeUrl: str = ''
         self.isTesting: bool = True
         self.isPartner: bool = True
-        self.isDevelopedByCommunity: bool = True
+        self.isDevelopedByCommunity: bool = False
         self.subtitle: str = ''
         self.summary: str = ''
         self.displayName: str = ''
@@ -573,4 +573,6 @@ class KnownExtension:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
+        if 'isDevelopedByCommunity' not in obj.__dict__:
+            self.isDevelopedByCommunity = False
         return self

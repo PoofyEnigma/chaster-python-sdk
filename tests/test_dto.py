@@ -145,6 +145,29 @@ class DTOsTest(unittest.TestCase):
         cmp = user.AuthProfile()
         self.compare_obj_params(cmp, base)
 
+    """
+    Files
+    """
+
+    # def upload_file(self) -> tuple[requests.models.Response, user.FileToken]:
+
+    # def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
+
+    """
+    Combinations
+    """
+
+    # def upload_combination_image(self) -> tuple[requests.models.Response, lock.Combination]:
+
+    # def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
+
+    """
+    Extensions
+    """
+    def test_AuthProfile_params(self):
+        base = json.loads(response_examples.all_known_extensions)
+        cmp = extensions.KnownExtension()
+        self.compare_obj_params(cmp, base[10])
 
     """
     """
