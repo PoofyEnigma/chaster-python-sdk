@@ -200,3 +200,12 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.conversation_messages)
         cmp = conversation.ConversationMessages()
         self.compare_obj_params(cmp, base)
+
+    """
+    Extensions - Temporary Opening
+    """
+
+    def test_LockCombination_params(self):
+        base = json.loads(response_examples.lock_combination)
+        cmp = user.LockCombination()
+        self.compare_obj_params(cmp, base)

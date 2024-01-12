@@ -521,56 +521,48 @@ class MyTestCase(unittest.TestCase):
     Messaging
     """
 
-    # def get_conversations(self, limit: int = 15, status: str = 'approved') -> tuple[
     def test_get_conversations(self):
         status_code = 200
         api = self.response_factory(status_code, response_examples.conversations_list)
         response, data = api.get_conversations()
         self.assertEqual(response.status_code, status_code)
 
-    # def create_conversation(self, user_id: str, message: str) -> tuple[
     def test_create_conversation(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.conversation)
         response, data = api.create_conversation('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def get_user_conversation(self, user_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
     def test_get_user_conversation(self):
         status_code = 200
         api = self.response_factory(status_code, response_examples.conversation)
         response, data = api.get_user_conversation('')
         self.assertEqual(response.status_code, status_code)
 
-    # def post_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
     def test_post_message(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.conversation_messasge)
         response, data = api.post_message('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def get_conversation(self, conversation_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
     def test_get_conversation(self):
         status_code = 200
         api = self.response_factory(status_code, response_examples.conversation)
         response, data = api.get_conversation('')
         self.assertEqual(response.status_code, status_code)
 
-    # def set_conversation_status(self, conversation_id, status: str) -> requests.models.Response:
     def test_set_conversation_status(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.set_conversation_status('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def set_conversation_unread(self, conversation_id, unread: bool) -> requests.models.Response:
     def test_set_conversation_unread(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.set_conversation_unread('', False)
         self.assertEqual(response.status_code, status_code)
 
-    # def get_conversation_messages(self, conversation_id: str, limit=15, lastId=None) -> tuple[
     def test_get_conversation_messages(self):
         status_code = 200
         api = self.response_factory(status_code, response_examples.conversation_messages)
@@ -581,11 +573,23 @@ class MyTestCase(unittest.TestCase):
     Extensions - Temporary Opening
     """
 
-    # def get_temporary_opening_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
+    def test_get_temporary_opening_combination(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.lock_combination)
+        response, data = api.get_temporary_opening_combination('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
+    def test_set_temporary_opening_new_combination(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.set_temporary_opening_new_combination('', '')
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
+    def test_get_temporary_opening_combination_from_action_log(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.lock_combination)
+        response, data = api.get_temporary_opening_combination_from_action_log('', '')
+        self.assertEqual(response.status_code, status_code)
 
     """
     Community Events

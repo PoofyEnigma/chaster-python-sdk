@@ -1,3 +1,18 @@
+lock_combination = """
+{
+  "_id": "65a17ab51c64b78e78d5f7f1",
+  "user": "64e5b481b533a5ccfe61567f",
+  "enableManualCheck": false,
+  "checkStatus": "verified",
+  "expiresAt": null,
+  "code": "8164",
+  "createdAt": "2024-01-12T17:45:25.029Z",
+  "updatedAt": "2024-01-12T17:45:25.873Z",
+  "type": "code"
+}
+"""
+
+
 conversation_messasge = """
 {
       "_id": "659ee03d9e46da74718cbec0",
