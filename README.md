@@ -20,12 +20,12 @@
 | Community Events                  | done    | done      |            |        |
 | Partner Extensions                |         |           |            |        |
 | Settings                          | done    | done      |            |        |
-| Users                             | done    |           |            |        |
-| Keyholder                         | done    |           |            |        |
+| Users                             | done    | done      |            |        |
+| Keyholder                         | done    | done      |            |        |
 | Reports                           | done    | done      | done       | done   | done     |
 | Partner Configurations            |         |           |            |        |
-| Public Locks                      | done    |           |            |        |
-| Extensions - Verification Picture | done    |           |            |        |
+| Public Locks                      | done    | done      |            |        |
+| Extensions - Verification Picture | done    | done      |            |        |
 
 Stubbed - API call functions, DTOs defined<br>
 Validated - tested with mocked chaster http response<br>

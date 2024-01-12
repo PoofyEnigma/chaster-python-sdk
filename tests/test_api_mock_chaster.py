@@ -616,7 +616,6 @@ class MyTestCase(unittest.TestCase):
     Settings
     """
 
-    # def get_app_settings(self) -> tuple[requests.models.Response, user.AppSettings]:
     def test_get_app_settings(self):
         status_code = 200
         api = self.response_factory(status_code, response_examples.app_settings)
@@ -628,20 +627,33 @@ class MyTestCase(unittest.TestCase):
     """
 
     # def search_for_users(self, search: str) -> tuple[requests.models.Response, list[user.User]]:
+    def test_search_for_users(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.list_of_users)
+        response, data = api.search_for_users('')
+        self.assertEqual(response.status_code, status_code)
 
     # def search_for_users_by_discord(self, discord_id: str) -> tuple[requests.models.Response, user.User]:
+    def test_search_for_users_by_discord(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_profile)
+        response, data = api.search_for_users_by_discord('')
+        self.assertEqual(response.status_code, status_code)
 
     """
     Keyholder
     """
 
     # def post_keyholder_locks_search(self, page: int = 0, status: str = 'locked', limit: int = 15, criteria: dict = {},
+    def test_post_keyholder_locks_search(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.locked_users)
+        response, data = api.post_keyholder_locks_search()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Reports
     """
-
-    # def post_report(self):
 
     """
     Partner Configurations
@@ -652,21 +664,48 @@ class MyTestCase(unittest.TestCase):
     Public Locks
     """
 
-    # def find_public_shared_lock(self, shared_lock_id: str) -> tuple[
+    def test_find_public_shared_lock(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.public_shared_lock)
+        response, data = api.find_public_shared_lock('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def generate_public_shared_lock_flyer(self, shared_lock_id: str) -> requests.models.Response:
+    def test_generate_public_shared_lock_flyer(self):
+        status_code = 200
+        api = self.response_factory(status_code, '')
+        response = api.generate_public_shared_lock_flyer('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def search_for_public_locks(self, searchPublicLock: lock.SearchPublicLock) -> \
+    def test_search_for_public_locks(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.search_public_locks)
+        spl = lock.SearchPublicLock()
+        response, data = api.search_for_public_locks(spl)
+        self.assertEqual(response.status_code, status_code)
 
-    # def find_explore_page_locks(self) -> tuple[requests.models.Response, lock.ExplorePageLock]:
+    def test_find_explore_page_locks(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.explore_page_locks)
+        response, data = api.find_explore_page_locks()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Extensions - Verification Picture
     """
 
     # def submit_verification(self, lock_id: str) -> requests.models.Response:
+    def test_submit_verification(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.submit_verification('')
+        self.assertEqual(response.status_code, status_code)
 
     # def get_verification_history(self, lock_id: str) -> tuple
+    def test_get_verification_history(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.verification_history)
+        response, data = api.get_verification_history('')
+        self.assertEqual(response.status_code, status_code)
 
 
 if __name__ == '__main__':

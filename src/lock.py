@@ -67,16 +67,17 @@ class Lock:
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
-        self.extensions = extensions.Extension.generate_array(obj.extensions)
+        if 'extensions' in obj.__dict__:
+            self.extensions = extensions.Extension.generate_array(obj.extensions)
         if 'availableHomeActions' in obj.__dict__:
             self.availableHomeActions = AvailableHomeAction.generate_array(obj.availableHomeActions)
         if obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
-        if obj.unlockedAt is not None:
+        if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
             self.unlockedAt = isoparse(obj.unlockedAt)
-        if obj.archivedAt is not None:
+        if 'archivedAt' in obj.__dict__ and obj.archivedAt is not None:
             self.archivedAt = isoparse(obj.archivedAt)
-        if obj.keyholderArchivedAt is not None:
+        if 'keyholderArchivedAt' in obj.__dict__ and obj.keyholderArchivedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.keyholderArchivedAt)
         if 'deletedAt' in obj.__dict__ and obj.deletedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.deletedAt)
@@ -393,7 +394,9 @@ class PublicSharedLockInfo:
     def update(self, obj):
         self.__dict__ = obj.__dict__
         self.extensions = extensions.Extension.generate_array(obj.extensions)
-        self.locks = Lock.generate_array(obj.locks)
+        # TODO: Is locks actually in the return obj?
+        if 'locks' in obj.__dict__:
+            self.locks = Lock.generate_array(obj.locks)
         if obj.maxDate is not None:
             self.maxDate = isoparse(obj.maxDate)
         if obj.minDate is not None:
@@ -404,14 +407,12 @@ class PublicSharedLockInfo:
             self.lastSavedAt = isoparse(obj.lastSavedAt)
         if obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
-        if obj.unlockedAt is not None:
+        if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
             self.unlockedAt = isoparse(obj.unlockedAt)
-        if obj.deletedAt is not None:
+        if 'deletedAt' in obj.__dict__ and obj.deletedAt is not None:
             self.deletedAt = isoparse(obj.deletedAt)
-        if obj.createdAt is not None:
+        if 'createdAt' in obj.__dict__ and obj.createdAt is not None:
             self.createdAt = isoparse(obj.createdAt)
-        if obj.deletedAt is not None:
-            self.deletedAt = isoparse(obj.deletedAt)
         return self
 
 
@@ -419,11 +420,25 @@ class ExplorePageLock:
     def __init__(self):
         self.locks: list[Lock] = []
         self._id: str = ''
+        self.description: str = ''
+        self.featured: bool = False
+        self.nbItems: int = 0
+        self.order: int = 0
+        self.title: str = ''
+        self.type: str = ''
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        self.__dict__ = obj.__dict__.copy()
         self.locks = Lock.generate_array(obj.locks)
         return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        category = []
+        for account in obj_list:
+            category.append(ExplorePageLock().update(account))
+        return category
+
 
 
 class SearchPublicLockCriteriaDuration:
@@ -474,7 +489,7 @@ class SearchPublicLockCriteria:
 
 class SearchPublicLock:
     def __init__(self):
-        self.limit: int = 0
+        self.limit: int = 15
         self.lastId: str = ''
         self.criteria: SearchPublicLockCriteria = None
 

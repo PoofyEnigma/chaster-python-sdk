@@ -12,7 +12,7 @@ class DTOsTest(unittest.TestCase):
         for entry in obj.__dict__:
             self.assertTrue(entry in dictionary, msg=f'{entry} is not present in source dictionary')
         for entry in dictionary:
-            self.assertTrue(entry in obj.__dict__)
+            self.assertTrue(entry in obj.__dict__, msg=f'{entry} is not present in dto')
 
     """
     Shared Locks
@@ -231,6 +231,59 @@ class DTOsTest(unittest.TestCase):
     """
     Settings
     """
+
+    """
+    Users
+    """
+
+    """
+    Keyholder
+    """
+    def test_LockedUsers_params(self):
+        base = json.loads(response_examples.locked_users)
+        cmp = lock.LockedUsers()
+        self.compare_obj_params(cmp, base)
+
+    """
+    Public Locks
+    """
+
+    def test_PublicSharedLockInfo_params(self):
+        base = json.loads(response_examples.public_shared_lock)
+        base['locks'] = []
+        base['createdAt'] = None
+        base['updatedAt'] = None
+        base['unlockedAt'] = None
+        base['deletedAt'] = None
+        cmp = lock.PublicSharedLockInfo()
+        self.compare_obj_params(cmp, base)
+
+    def test_PageinatedSharedLockList_params(self):
+        base = json.loads(response_examples.search_public_locks)
+        base['lastId'] = ''
+        cmp = lock.PageinatedSharedLockList()
+        self.compare_obj_params(cmp, base)
+
+    def test_ExplorePageLock_params(self):
+        base = json.loads(response_examples.explore_page_locks)
+        base[0]['locks'] = []
+        cmp = lock.ExplorePageLock()
+        self.compare_obj_params(cmp, base[0])
+
+    def test_SearchPublicLock_params(self):
+        base = json.loads(response_examples.search_for_public_locks)
+        cmp = lock.SearchPublicLock()
+        self.compare_obj_params(cmp, base)
+
+    """
+    Extensions - Verification Picture
+    """
+
+    def test_VerificationPhotoHistory_params(self):
+        base = json.loads(response_examples.verification_history)
+        cmp = lock.VerificationPhotoHistory()
+        self.compare_obj_params(cmp, base[0])
+
 
     def test_CommunityEventDetails_params(self):
         base = json.loads(response_examples.app_settings)

@@ -681,8 +681,8 @@ class ChasterAPI:
             data = lock.PageinatedSharedLockList().update(x)
         return response, data
 
-    def find_explore_page_locks(self) -> tuple[requests.models.Response, lock.ExplorePageLock]:
-        return self._tester_get_wrapper('/explore/categories', lock.ExplorePageLock().update)
+    def find_explore_page_locks(self) -> tuple[requests.models.Response, list[lock.ExplorePageLock]]:
+        return self._tester_get_wrapper('/explore/categories', lock.ExplorePageLock.generate_array)
 
     """
     Extensions - Verification Picture
