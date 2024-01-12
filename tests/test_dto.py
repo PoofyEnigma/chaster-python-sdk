@@ -170,6 +170,14 @@ class DTOsTest(unittest.TestCase):
         self.compare_obj_params(cmp, base[10])
 
     """
+    Session Offer
+    """
+    def test_KeyholderOfferEntry_params(self):
+        base = json.loads(response_examples.keyholder_offers)
+        cmp = user.KeyholderOfferEntry()
+        self.compare_obj_params(cmp, base[0])
+
+    """
     """
 
     def test_base_conversation_message_has_correct_params(self):

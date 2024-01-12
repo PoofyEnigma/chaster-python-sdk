@@ -14,7 +14,7 @@
 | Files                             | done    |           |            |        |
 | Combinations                      | done    |           |            |        |
 | Extensions                        | done    | done      |            |        |
-| Session Offer                     | done    |           |            |        |
+| Session Offer                     | done    | done      |            |        |
 | Messaging                         | done    |           |            |        |
 | Extensions - Temporary Opening    | done    |           |            |        |
 | Community Events                  | done    |           |            |        |
@@ -69,6 +69,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 - validate sdk against the
 
 ## Layer 2 Progress
+
 To obfuscate the API calls into function calls on the object itself. For example, rather than having to call
 the trigger API to spin the wheel of fortune, instead the interface would be lock.spin_wheel_of_fortune().
 

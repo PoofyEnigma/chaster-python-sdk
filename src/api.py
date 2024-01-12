@@ -500,19 +500,19 @@ class ChasterAPI:
         return self._get(f'session-offer/token/{offer_token}/accept')
 
     def get_keyholding_offers(self, lock_id: str) -> tuple[requests.models.Response, list[user.KeyholderOfferEntry]]:
-        return self._tester_get_wrapper(f'session-offer/lock/{lock_id}/status', user.keyholder_offer_list_update)
+        return self._tester_get_wrapper(f'session-offer/lock/{lock_id}/status', user.KeyholderOfferEntry.generate_array)
 
     def retrieve_keyholder_request_lock_info(self, offer_token: str) -> tuple[requests.models.Response, lock.Lock]:
         return self._tester_get_wrapper(f'session-offer/token/{offer_token}', lock.Lock().update)
 
-    def handle_keyholding_offer(self, session_request_id, do_accept) -> requests.models.Response:
+    def handle_keyholding_offer(self, session_request_id: str, do_accept: bool) -> requests.models.Response:
         return self._post(f'session-offer/{session_request_id}', data={'accept': do_accept})
 
-    def archive_keyholding_offer(self, session_request_id) -> requests.models.Response:
+    def archive_keyholding_offer(self, session_request_id: str) -> requests.models.Response:
         return self._get(f'session-offer/{session_request_id}/archive')
 
     def get_keyholding_offers_from_wearers(self) -> tuple[requests.models.Response, list[user.KeyholderOfferEntry]]:
-        return self._tester_get_wrapper('session-offer/requests', user.keyholder_offer_list_update)
+        return self._tester_get_wrapper('session-offer/requests', user.KeyholderOfferEntry.generate_array)
 
     """
     Messaging

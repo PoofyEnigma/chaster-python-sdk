@@ -1,3 +1,47 @@
+keyholder_offers = """[
+  {
+    "keyholder": {
+      "role": "keyholder",
+      "features": [
+        "partner_extensions"
+      ],
+      "_id": "string",
+      "username": "string",
+      "isPremium": true,
+      "description": "string",
+      "location": "string",
+      "gender": "string",
+      "age": 0,
+      "isFindom": true,
+      "avatarUrl": "string",
+      "online": true,
+      "lastSeen": 0,
+      "isAdmin": true,
+      "isModerator": true,
+      "metadata": {
+        "locktober2020Points": 0,
+        "locktober2021Points": 0,
+        "chastityMonth2022Points": 0,
+        "locktober2022Points": 0,
+        "locktober2023Points": 0
+      },
+      "fullLocation": "string",
+      "discordId": "string",
+      "discordUsername": "string",
+      "isDisabled": true,
+      "isSuspended": true,
+      "joinedAt": "string",
+      "isNewMember": true,
+      "isSuspendedOrDisabled": true
+    },
+    "lock": "string",
+    "status": "pending",
+    "validatedAt": "2024-01-12T16:39:31.558Z",
+    "archivedAt": "2024-01-12T16:39:31.558Z"
+  }
+]"""
+
+
 all_known_extensions = """
 [
   {
@@ -4035,7 +4079,6 @@ user_auth_profile = """
 }
 """
 
-
 user_badges = """
 {
   "pendingMessages": 0,
@@ -4043,7 +4086,7 @@ user_badges = """
   "keyholdingRequests": 0
 }"""
 
-detailed_user_profile= """
+detailed_user_profile = """
 {
   "user": {
     "_id": "64e5b481b533a5ccfe61567f",
@@ -4680,6 +4723,8 @@ lock_history = """
   "count": 1
 }
 """
+
+
 
 lock_combination = """
 {

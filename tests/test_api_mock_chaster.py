@@ -475,19 +475,47 @@ class MyTestCase(unittest.TestCase):
     Session Offer
     """
 
-    # def create_keyholding_offer(self, lock_id, keyholder: str) -> requests.models.Response:
+    def test_create_keyholding_offer(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.create_keyholding_offer('', '')
+        self.assertEqual(response.status_code, status_code)
 
-    # def accept_keyholding_request(self, offer_token: str) -> requests.models.Response:
+    def test_accept_keyholding_request(self):
+        status_code = 200
+        api = self.response_factory(status_code, '')
+        response = api.accept_keyholding_request('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_keyholding_offers(self, lock_id: str) -> tuple[requests.models.Response, list[user.KeyholderOfferEntry]]:
+    def test_get_keyholding_offers(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.keyholder_offers)
+        response, data = api.get_keyholding_offers('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def retrieve_keyholder_request_lock_info(self, offer_token: str) -> tuple[requests.models.Response, lock.Lock]:
+    def test_retrieve_keyholder_request_lock_info(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.user_lock)
+        response, data = api.retrieve_keyholder_request_lock_info('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def handle_keyholding_offer(self, session_request_id, do_accept) -> requests.models.Response:
+    def test_handle_keyholding_offer(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.handle_keyholding_offer('', False)
+        self.assertEqual(response.status_code, status_code)
 
-    # def archive_keyholding_offer(self, session_request_id) -> requests.models.Response:
+    def test_archive_keyholding_offer(self):
+        status_code = 200
+        api = self.response_factory(status_code, '')
+        response = api.archive_keyholding_offer('')
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_keyholding_offers_from_wearers(self) -> tuple[requests.models.Response, list[user.KeyholderOfferEntry]]:
+    def test_get_keyholding_offers_from_wearers(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.keyholder_offers)
+        response, data = api.get_keyholding_offers_from_wearers()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Messaging

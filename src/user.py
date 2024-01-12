@@ -227,11 +227,7 @@ class AuthProfile:
         return self
 
 
-def keyholder_offer_list_update(obj):
-    out = []
-    for item in obj:
-        out.append(KeyholderOfferEntry().update(item))
-    return out
+
 
 
 class KeyholderOfferEntry:
@@ -251,7 +247,12 @@ class KeyholderOfferEntry:
             self.archivedAt = dateutil.parser.isoparse(obj.archivedAt)
         return self
 
-
+    @staticmethod
+    def generate_array(obj_list):
+        out = []
+        for item in obj_list:
+            out.append(KeyholderOfferEntry().update(item))
+        return out
 class CommunityEventAction:
     def __init__(self):
         self.name: str = ''
