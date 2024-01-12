@@ -280,11 +280,13 @@ class CommunityEventCategory:
         self.title: str = ''
         self.maxPoints: int = 0
         self.actions: list[CommunityEventAction] = []
-        self.hidden: bool = True
+        self.hidden: bool = False
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.actions = CommunityEventAction.generate_array(obj.actions)
+        if 'hidden' not in obj.__dict__:
+            self.hidden = False
         return self
 
     @staticmethod

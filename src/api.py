@@ -588,7 +588,7 @@ class ChasterAPI:
     """
 
     def get_community_event_categories(self) -> tuple[
-        requests.models.Response, user.CommunityEventCategory]:
+        requests.models.Response,list[user.CommunityEventCategory]]:
         return self._tester_get_wrapper('/community-event/categories', user.CommunityEventCategory.generate_array)
 
     def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[

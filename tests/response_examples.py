@@ -1,3 +1,183 @@
+community_event_details = """
+{
+  "categories": {
+    "extensions": 0,
+    "interaction": 0,
+    "community": 0,
+    "challenges": 0
+  },
+  "actions": {
+    "dice": 0,
+    "wheel_of_fortune": 0,
+    "complete_task": 0,
+    "verification_picture": 0,
+    "change_time": 0,
+    "toggle_freeze": 0,
+    "toggle_timer_visibility": 0,
+    "assign_task": 0,
+    "request_verification_picture": 0,
+    "vote": 0,
+    "receive_vote": 0,
+    "vote_task": 0,
+    "verify_picture": 0,
+    "log_in": 0,
+    "post_on_discord": 0,
+    "complete_challenge": 0,
+    "vote_submission": 0
+  },
+  "start": "2023-10-01T08:00:00.000Z",
+  "end": "2023-11-01T08:00:00.000Z"
+}
+"""
+
+
+community_event_category_list = """
+[
+  {
+    "name": "extensions",
+    "title": "Interact with locks",
+    "maxPoints": 100,
+    "actions": [
+      {
+        "name": "dice",
+        "title": "Roll the dice",
+        "description": null,
+        "points": 100,
+        "group": "Wearer"
+      },
+      {
+        "name": "wheel_of_fortune",
+        "title": "Turn the Wheel of Fortune",
+        "description": null,
+        "points": 100,
+        "group": "Wearer"
+      },
+      {
+        "name": "complete_task",
+        "title": "Complete a task",
+        "description": null,
+        "points": 100,
+        "group": "Wearer"
+      },
+      {
+        "name": "verification_picture",
+        "title": "Post a verification picture",
+        "description": null,
+        "points": 100,
+        "group": "Wearer"
+      },
+      {
+        "name": "change_time",
+        "title": "Add or remove time on a lock",
+        "description": null,
+        "points": 100,
+        "group": "Keyholder"
+      },
+      {
+        "name": "toggle_freeze",
+        "title": "Freeze or unfreeze a lock",
+        "description": null,
+        "points": 100,
+        "group": "Keyholder"
+      },
+      {
+        "name": "toggle_timer_visibility",
+        "title": "Show or hide the timer",
+        "description": null,
+        "points": 100,
+        "group": "Keyholder"
+      },
+      {
+        "name": "assign_task",
+        "title": "Assign a task",
+        "description": null,
+        "points": 100,
+        "group": "Keyholder"
+      },
+      {
+        "name": "request_verification_picture",
+        "title": "Request a verification picture",
+        "description": null,
+        "points": 100,
+        "group": "Keyholder"
+      }
+    ]
+  },
+  {
+    "name": "interaction",
+    "title": "Activity",
+    "maxPoints": 100,
+    "actions": [
+      {
+        "name": "vote",
+        "title": "Add or remove time to another user",
+        "description": "Check out our Discord server to see all locks from other users.",
+        "points": 10
+      },
+      {
+        "name": "receive_vote",
+        "title": "Receive a vote from another user",
+        "description": "Post your own shared link on our Discord server to receive votes!",
+        "points": 10
+      },
+      {
+        "name": "vote_task",
+        "title": "Vote for a user task",
+        "description": "Check out the Activity page to see task polls.",
+        "points": 10
+      },
+      {
+        "name": "verify_picture",
+        "title": "Verify a picture",
+        "description": null,
+        "points": 10
+      }
+    ]
+  },
+  {
+    "name": "community",
+    "title": "Participate in the community",
+    "maxPoints": 20,
+    "actions": [
+      {
+        "name": "log_in",
+        "title": "Log in to Chaster",
+        "description": null,
+        "points": 10,
+        "maxPerPeriod": 1
+      },
+      {
+        "name": "post_on_discord",
+        "title": "Post on our Discord server",
+        "description": "Make sure to link your Discord account in your settings before posting to earn XP!",
+        "points": 10,
+        "maxPerPeriod": 1
+      }
+    ]
+  },
+  {
+    "name": "challenges",
+    "title": "Challenges",
+    "maxPoints": null,
+    "hidden": true,
+    "actions": [
+      {
+        "name": "complete_challenge",
+        "title": "Complete a challenge",
+        "description": "",
+        "points": 1000
+      },
+      {
+        "name": "vote_submission",
+        "title": "Vote for a submission",
+        "description": "",
+        "points": 10
+      }
+    ]
+  }
+]
+"""
+
 lock_combination = """
 {
   "_id": "65a17ab51c64b78e78d5f7f1",

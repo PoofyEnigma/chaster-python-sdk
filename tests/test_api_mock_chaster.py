@@ -595,9 +595,17 @@ class MyTestCase(unittest.TestCase):
     Community Events
     """
 
-    # def get_community_event_categories(self) -> tuple[
+    def test_get_community_event_categories(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.community_event_category_list)
+        response, data = api.get_community_event_categories()
+        self.assertEqual(response.status_code, status_code)
 
-    # def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
+    def test_get_community_event_details(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.community_event_details)
+        response, data = api.get_community_event_details()
+        self.assertEqual(response.status_code, status_code)
 
     """
     Partner Extensions

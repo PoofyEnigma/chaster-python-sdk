@@ -209,3 +209,18 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.lock_combination)
         cmp = user.LockCombination()
         self.compare_obj_params(cmp, base)
+
+    """
+    Community Events
+    """
+
+    def test_CommunityEventCategory_params(self):
+        base = json.loads(response_examples.community_event_category_list)
+        base[0]['hidden'] = False
+        cmp = user.CommunityEventCategory()
+        self.compare_obj_params(cmp, base[0])
+
+    def test_CommunityEventDetails_params(self):
+        base = json.loads(response_examples.community_event_details)
+        cmp = user.CommunityEventDetails()
+        self.compare_obj_params(cmp, base)
