@@ -11,8 +11,8 @@
 | trigger_extension_actions         | done    | done      |            |        |
 | Lock Creation                     | done    | done      |            |        |
 | profile                           | done    | done      |            |        |
-| Files                             | done    |           |            |        |
-| Combinations                      | done    |           |            |        |
+| Files                             | done    | done      |            |        |
+| Combinations                      | done    | done      |            |        |
 | Extensions                        | done    | done      |            |        |
 | Session Offer                     | done    | done      |            |        |
 | Messaging                         | done    | done      |            |        |

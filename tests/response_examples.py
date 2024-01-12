@@ -1,3 +1,21 @@
+combination_id_response = """
+{
+  "combinationId": "65a189721c64b78e78e1f8a3"
+}
+"""
+
+file_url = """
+{
+  "url": "string"
+}
+"""
+
+file_token = """
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlcyI6WyI2NWExODkxNmE1MjNiMTA2NWRhNmQ4NDkiXSwidHlwZSI6Im1lc3NhZ2luZyIsInVzZXIiOiI2NGU1YjQ4MWI1MzNhNWNjZmU2MTU2N2YiLCJpYXQiOjE3MDUwODUyMDYsImV4cCI6MTcwNTE3MTYwNn0.mak0kxMhyVIlVCU-ehqiIWt2emp4aGmjI-aJHwbHte0"
+}
+"""
+
 search_for_public_locks = """
 {
   "criteria": {},

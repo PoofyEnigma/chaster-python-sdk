@@ -449,16 +449,36 @@ class MyTestCase(unittest.TestCase):
     """
 
     # def upload_file(self) -> tuple[requests.models.Response, user.FileToken]:
+    def test_upload_file(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.file_token)
+        response, data = api.upload_file()
+        self.assertEqual(response.status_code, status_code)
 
     # def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
+    def test_find_file(self):
+        status_code = 200
+        api = self.response_factory(status_code, response_examples.file_url)
+        response, data = api.find_file('')
+        self.assertEqual(response.status_code, status_code)
 
     """
     Combinations
     """
 
     # def upload_combination_image(self) -> tuple[requests.models.Response, lock.Combination]:
+    def test_upload_combination_image(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.combination_id_response)
+        response, data = api.upload_combination_image()
+        self.assertEqual(response.status_code, status_code)
 
     # def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
+    def test_create_combination_code(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.combination_id_response)
+        response, data = api.create_combination_code('')
+        self.assertEqual(response.status_code, status_code)
 
     """
     Extensions
@@ -644,7 +664,6 @@ class MyTestCase(unittest.TestCase):
     Keyholder
     """
 
-    # def post_keyholder_locks_search(self, page: int = 0, status: str = 'locked', limit: int = 15, criteria: dict = {},
     def test_post_keyholder_locks_search(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.locked_users)
