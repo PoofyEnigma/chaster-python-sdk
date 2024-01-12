@@ -74,7 +74,7 @@ class Lock:
             self.archivedAt = isoparse(obj.archivedAt)
         if obj.keyholderArchivedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.keyholderArchivedAt)
-        if obj.deletedAt is not None:
+        if 'deletedAt' in obj.__dict__ and obj.deletedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.deletedAt)
         return self
 

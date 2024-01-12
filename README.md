@@ -7,7 +7,7 @@
 | API Group                         | Stubbed | Validated | Integrated | Mocked | Tutorial |
 |-----------------------------------|---------|-----------|------------|--------|----------|
 | Shared Locks                      | done    | done      | done       |        |
-| Locks                             | done    |           |            |        |
+| Locks                             | done    | done      |            |        |
 | trigger_extension_actions         | done    |           |            |        |
 | Lock Creation                     | done    |           |            |        |
 | profile                           | done    |           |            |        |
@@ -28,7 +28,7 @@
 | Extensions - Verification Picture | done    |           |            |        |
 
 Stubbed - API call functions, DTOs defined<br>
-Validated - tested with mocked chaster http response, obj and function naming refined<br>
+Validated - tested with mocked chaster http response<br>
 Integrated - Integration tests written<br>
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
@@ -44,6 +44,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 - more debug logging
 - https://github.com/pydantic/pydantic
 - Enums?
+- Templatize Result object to avoid returning a tuple? https://stackoverflow.com/questions/6725868/generics-templates-in-python
 
 ### Testing
 

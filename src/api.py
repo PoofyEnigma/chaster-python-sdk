@@ -236,7 +236,7 @@ class ChasterAPI:
     def archive_lock_as_keyholder(self, lock_id: str) -> requests.models.Response:
         return self._post(f'/locks/{lock_id}/archive/keyholder', {})
 
-    def update_lock_time(self, lock_id: str, time_seconds: int):
+    def update_lock_time(self, lock_id: str, time_seconds: int) -> requests.models.Response:
         return self._post(f'locks/{lock_id}/update-time', {'duration': time_seconds})
 
     def freeze(self, lock_id: str, freeze: bool) -> requests.models.Response:
@@ -252,6 +252,7 @@ class ChasterAPI:
             "hideTimeLogs": hide_time_logs
         })
 
+    # TODO: would you ever set bot max_limit_date and disable_max_time_limit
     def set_max_limit_date(self, lock_id: str, max_limit_date: datetime.datetime,
                            disable_max_time_limit: bool) -> requests.models.Response:
         return self._post(f'locks/{lock_id}/max-limit-date', data={
@@ -262,7 +263,7 @@ class ChasterAPI:
     def set_keyholder_as_trusted(self, lock_id: str) -> requests.models.Response:
         return self._post(f'locks/{lock_id}/trust-keyholder', data={})
 
-    def get_lock_combination(self, lock_id: str) -> tuple[requests.models.Response, any]:
+    def get_lock_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
         response = self._get(f'/locks/{lock_id}/combination')
 
         data = None
@@ -271,7 +272,7 @@ class ChasterAPI:
             data = user.LockCombination().update(data)
         return response, data
 
-    def get_lock_history(self, lock_id: str, extension: str = None, limit: int = None, last_id: str = None) -> tuple[
+    def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 100, last_id: str = None) -> tuple[
         requests.models.Response, lock.PageinatedLockHistory]:
         data = {}
         if extension is not None and extension != '':
@@ -288,7 +289,7 @@ class ChasterAPI:
             data = lock.PageinatedLockHistory().update(data)
         return response, data
 
-    def is_test_lock(self, lock_id) -> requests.models.Response:
+    def is_test_lock(self, lock_id: str) -> requests.models.Response:
         return self._put(f'locks/{lock_id}/is-test-lock', data={})
 
     # TODO: The reason for this API is unclear. Does it send more data than what is already present in the lock?
@@ -302,7 +303,6 @@ class ChasterAPI:
             data = lock.ExtensionInformation().update(data)
         return response, data
 
-    # TODO: Flush out data?
     def trigger_extension_actions(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
         """
         See triggers

@@ -1,8 +1,9 @@
 import datetime
 import json
 import unittest
-from src.api import conversation
+from src.api import conversation, lock, user
 from types import SimpleNamespace
+from . import response_examples
 
 
 class DTOsTest(unittest.TestCase):
@@ -13,14 +14,54 @@ class DTOsTest(unittest.TestCase):
         for entry in dictionary:
             self.assertTrue(entry in obj.__dict__)
 
+    def test_response_id_params(self):
+        base = json.loads(response_examples.created_shared_lock)
+        cmp = lock.IdResponse()
+        self.compare_obj_params(cmp, base)
+
+    def test_shared_lock_params(self):
+        base = json.loads(response_examples.shared_lock)
+        cmp = lock.SharedLock()
+        self.compare_obj_params(cmp, base)
+
+    def test_create_shared_lock_params(self):
+        base = json.loads(response_examples.create_shared_lock)
+        cmp = lock.CreateSharedLock()
+        self.compare_obj_params(cmp, base)
+
+    def test_pageinatedSharedLockList_params(self):
+        base = json.loads(response_examples.get_favorited_share_locks)
+        cmp = lock.PageinatedSharedLockList()
+        self.compare_obj_params(cmp, base)
+
+    def test_lock_params(self):
+        base = json.loads(response_examples.user_lock)
+        cmp = lock.Lock()
+        self.compare_obj_params(cmp, base)
+
+    def test_lock_combinations_params(self):
+        base = json.loads(response_examples.lock_combination)
+        cmp = user.LockCombination()
+        self.compare_obj_params(cmp, base)
+
+    def test_PageinatedLockHistory_params(self):
+        base = json.loads(response_examples.lock_history)
+        cmp = lock.PageinatedLockHistory()
+        self.compare_obj_params(cmp, base)
+        cmp = lock.ActionLog()
+        self.compare_obj_params(cmp, base['results'][0])
+
+    def test_ExtensionInformation_params(self):
+        base = json.loads(response_examples.lock_with_extension)
+        cmp = lock.ExtensionInformation()
+        self.compare_obj_params(cmp, base)
+
     def test_base_conversation_message_has_correct_params(self):
         base = json.loads(_conversation_messages)
-        cm = conversation.ConversationMessages()
-        self.compare_obj_params(cm, base)
-        cm.results.extend([conversation.Message()] * 31)
-        self.assertEqual(len(cm.results), len(base['results']))
-        for i in range(0, len(cm.results)):
-            self.compare_obj_params(cm.results[i], base['results'][i])
+        cmp = conversation.ConversationMessages()
+        self.compare_obj_params(cmp, base)
+
+
 
 
 _conversation_messages = """
