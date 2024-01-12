@@ -25,7 +25,6 @@ class Conversation:
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
         self.users = user.update(obj)
-        self.lastMessage = isoparse(obj.lastMessage)
         self.lastMessageAt = isoparse(obj.lastMessageAt)
         return self
 

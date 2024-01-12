@@ -15,7 +15,7 @@
 | Combinations                      | done    |           |            |        |
 | Extensions                        | done    | done      |            |        |
 | Session Offer                     | done    | done      |            |        |
-| Messaging                         | done    |           |            |        |
+| Messaging                         | done    | done      |            |        |
 | Extensions - Temporary Opening    | done    |           |            |        |
 | Community Events                  | done    |           |            |        |
 | Partner Extensions                |         |           |            |        |

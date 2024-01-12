@@ -551,6 +551,7 @@ class ChasterAPI:
     def get_conversation(self, conversation_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
         return self._tester_get_wrapper(f'conversations/{conversation_id}', conversation.Conversation().update)
 
+    # TODO: What options for status are there?
     def set_conversation_status(self, conversation_id, status: str) -> requests.models.Response:
         return self._put(f'conversations/{conversation_id}/status', data={'status': status})
 
