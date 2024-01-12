@@ -1,3 +1,23 @@
+lock_info_input="""
+{
+  "password": "string",
+  "combinationId": "string",
+  "isTestLock": false
+}"""
+extensions_input = """{
+  "extensions": [
+    {
+      "slug": "string",
+      "config": {},
+      "partnerConfigurationToken": "string",
+      "mode": "cumulative",
+      "regularity": 0
+    }
+  ]
+}
+  """
+lock_id_response="""{"lockId": "string"}"""
+
 guess_the_timer_result = """{"canBeUnlocked":false}"""
 wheel_of_fortune_result = """{"index":0,"action":{"segment":{"type":"add-time","text":"","duration":3600}},"text":"Added 1 hour"}"""
 dice_roll_result = """{"adminDice":5,"playerDice":4,"duration":3600}"""

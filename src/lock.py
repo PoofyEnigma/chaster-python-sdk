@@ -55,11 +55,15 @@ class Lock:
 
     def dump(self):
         obj = self.__dict__
-        obj['shared_lock'] = self.shared_lock.__dict__
-        obj['maxLimitDate'] = self.maxLimitDate.isoformat()
-        obj['unlockedAt'] = self.unlockedAt.isoformat()
-        obj['archivedAt'] = self.archivedAt.isoformat()
-        obj['keyholderArchivedAt'] = self.keyholderArchivedAt.isoformat()
+        obj['shared_lock'] = self.sharedLock.__dict__
+        if self.maxLimitDate is not None:
+            obj['maxLimitDate'] = self.maxLimitDate.isoformat()
+        if self.unlockedAt is not None:
+            obj['unlockedAt'] = self.unlockedAt.isoformat()
+        if self.archivedAt is not None:
+            obj['archivedAt'] = self.archivedAt.isoformat()
+        if self.keyholderArchivedAt is not None:
+            obj['keyholderArchivedAt'] = self.keyholderArchivedAt.isoformat()
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)

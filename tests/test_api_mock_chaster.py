@@ -10,6 +10,7 @@ import json
 from src.api import ChasterAPI
 import src.lock as lock
 import src.triggers as triggers
+import src.extensions as extensions
 from types import SimpleNamespace
 from . import response_examples
 
@@ -290,7 +291,6 @@ class MyTestCase(unittest.TestCase):
     Triggers
     """
 
-    # def vote_in_share_links(self, lock_id: str, extension_id: str, data: triggers.ShareLinksVote) -> tuple[
     def test_vote_in_share_links(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.share_link_vote_ack)
@@ -300,21 +300,18 @@ class MyTestCase(unittest.TestCase):
         response, data = api.vote_in_share_links('', '', slv)
         self.assertEqual(response.status_code, status_code)
 
-    # def get_share_link_url_to_vote(self, lock_id: str, extension_id: str) -> tuple[
     def test_get_share_link_url_to_vote(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.share_link_url_response)
         response, data = api.get_share_link_url_to_vote('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def get_share_link_info(self, lock_id: str, extension_id: str) -> tuple[
     def test_get_share_link_info(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.share_link_info_response)
         response, data = api.get_share_link_info('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def place_user_into_pillory(self, lock_id: str, extension_id: str,
     def test_place_user_into_pillory(self):
         status_code = 201
         api = self.response_factory(status_code, '')
@@ -325,63 +322,54 @@ class MyTestCase(unittest.TestCase):
         response = api.place_user_into_pillory('', '', pp)
         self.assertEqual(response.status_code, status_code)
 
-    # def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
     def test_get_current_pillory_info(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.pillory_info)
         response, data = api.get_current_pillory_info('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
     def test_unlock_for_hygiene(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.unlock_for_hygiene('', '', True)
         self.assertEqual(response.status_code, status_code)
 
-    # def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
     def test_roll_dice(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.dice_roll_result)
         response, data = api.roll_dice('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
     def test_spin_wheel_of_fortune(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.wheel_of_fortune_result)
         response, data = api.spin_wheel_of_fortune('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
     def test_request_a_random_task(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.request_a_random_task('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
     def test_community_vote_next_task(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.community_vote_next_task('', '', 3600)
         self.assertEqual(response.status_code, status_code)
 
-    # def mark_task_done(self, lock_id: str, extension_id: str, succeeded: bool) -> requests.models.Response:
     def test_mark_task_done(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.mark_task_done('', '', True)
         self.assertEqual(response.status_code, status_code)
 
-    # def trigger_new_verification(self, lock_id: str, extension_id: str) -> requests.models.Response:
     def test_trigger_new_verification(self):
         status_code = 201
         api = self.response_factory(status_code, '')
         response = api.trigger_new_verification('', '')
         self.assertEqual(response.status_code, status_code)
 
-    # def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
     def test_trigger_guess_the_timer(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.guess_the_timer_result)
@@ -393,10 +381,25 @@ class MyTestCase(unittest.TestCase):
     """
 
     # def create_personal_lock(self, self_lock: lock.Lock) -> tuple[requests.models.Response, lock.LockId]:
+    def test_create_personal_lock(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.lock_id_response)
+        response, data = api.create_personal_lock(lock.Lock())
+        self.assertEqual(response.status_code, status_code)
 
     # def add_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
+    def test_add_extensions(self):
+        status_code = 201
+        api = self.response_factory(status_code, '')
+        response = api.add_extensions('', extensions.Extensions())
+        self.assertEqual(response.status_code, status_code)
 
     # def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
+    def test_create_lock_from_shared_lock(self):
+        status_code = 201
+        api = self.response_factory(status_code, response_examples.lock_id_response)
+        response, data = api.create_lock_from_shared_lock('', lock.LockInfo())
+        self.assertEqual(response.status_code, status_code)
 
     """
     profile

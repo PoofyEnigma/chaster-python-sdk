@@ -1,7 +1,7 @@
 import datetime
 import json
 import unittest
-from src.api import conversation, lock, user, triggers
+from src.api import conversation, lock, user, triggers, extensions
 from types import SimpleNamespace
 from . import response_examples
 
@@ -102,6 +102,28 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.guess_the_timer_result)
         cmp = triggers.GuessTheTimerResponse()
         self.compare_obj_params(cmp, base)
+
+    """
+    Lock Creation
+    """
+
+    def test_LockId_params(self):
+        base = json.loads(response_examples.lock_id_response)
+        cmp = lock.LockId()
+        self.compare_obj_params(cmp, base)
+
+    def test_Extensions_params(self):
+        base = json.loads(response_examples.extensions_input)
+        cmp = extensions.Extensions()
+        self.compare_obj_params(cmp, base)
+
+    def test_LockInfo_params(self):
+        base = json.loads(response_examples.lock_info_input)
+        cmp = lock.LockInfo()
+        self.compare_obj_params(cmp, base)
+
+    """
+    """
 
     def test_base_conversation_message_has_correct_params(self):
         base = json.loads(_conversation_messages)

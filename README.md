@@ -9,7 +9,7 @@
 | Shared Locks                      | done    | done      | done       |        |
 | Locks                             | done    | done      |            |        |
 | trigger_extension_actions         | done    | done      |            |        |
-| Lock Creation                     | done    |           |            |        |
+| Lock Creation                     | done    | done      |            |        |
 | profile                           | done    |           |            |        |
 | Files                             | done    |           |            |        |
 | Combinations                      | done    |           |            |        |
