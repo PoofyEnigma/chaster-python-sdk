@@ -13,6 +13,21 @@ from . import user
 from . import extensions
 
 
+class FileMultipartForm:
+    def __init__(self):
+        self.uri: str = ''
+        self.name: str = ''
+        self.type: str = ''
+
+
+def generate_multipart_form_from_uri(uri) -> FileMultipartForm:
+    fmf = FileMultipartForm()
+    fmf.uri = uri
+    fmf.name = 'todo.jpg'
+    fmf.type = 'image/jpg'
+    return fmf
+
+
 class ChasterAPI:
 
     def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/',
@@ -31,8 +46,7 @@ class ChasterAPI:
         self.session = requests.Session()  # generally not multithread safe https://github.com/psf/requests/issues/1871
         self.session.headers = {
             'Authorization': f'Bearer {bearer}',
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'User-Agent': user_agent,
             'Accept-Language': 'en-US,en;q=0.5',
             'Connection': 'keep-alive',
@@ -50,7 +64,6 @@ class ChasterAPI:
             self._request_logger = request_logger
 
     def _request_logger_default(self, response: requests.models.Response, *args, **kwargs):
-        print('?')
         chaster_transaction_id = ''
         if 'x-chaster-transaction-id' in response.headers:
             chaster_transaction_id = response.headers['x-chaster-transaction-id']
@@ -112,10 +125,17 @@ class ChasterAPI:
                                     hooks={'response': [self._post_request_handler, self._request_logger]})
         return response
 
-    def _post(self, path: str, data) -> requests.models.Response:
+    def _post(self, path: str, data, files: dict = {}) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      data=json.dumps(data),
-                                     hooks={'response': [self._post_request_handler, self._request_logger]})
+                                     hooks={'response': [self._post_request_handler, self._request_logger]},
+                                     files=files)
+        return response
+
+    def _post_form(self, path: str, form) -> requests.models.Response:
+        response = self.session.post(urljoin(self.root_api.geturl(), path),
+                                     hooks={'response': [self._post_request_handler, self._request_logger]},
+                                     files=form)
         return response
 
     def _put(self, path: str, data) -> requests.models.Response:
@@ -460,9 +480,13 @@ class ChasterAPI:
     Files
     """
 
-    # TODO: Handle Files
-    def upload_file(self) -> tuple[requests.models.Response, user.FileToken]:
-        response = self._post(f'/files/upload', {})
+    def upload_file(self, uri, type: str = 'messaging') -> tuple[requests.models.Response, user.FileToken]:
+        fmf = generate_multipart_form_from_uri(uri)
+        files = {'files': (fmf.name, open(fmf.uri, 'rb'), fmf.type),
+                 'type': (None, type)}
+
+        response = self._post_form('/files/upload', files)
+
         return self._tester_post_request_helper(response, user.FileToken().update)
 
     def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
@@ -472,8 +496,10 @@ class ChasterAPI:
     Combinations
     """
 
-    def upload_combination_image(self) -> tuple[requests.models.Response, lock.Combination]:
-        response = self._post(f'combinations/image', {})
+    def upload_combination_image(self, uri) -> tuple[requests.models.Response, lock.Combination]:
+        fmf = generate_multipart_form_from_uri(uri)
+        files = {'file': (fmf.name, open(fmf.uri, 'rb'), fmf.type)}
+        response = self._post_form('combinations/image', files)
         return self._tester_post_request_helper(response, lock.Combination().update)
 
     def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
@@ -588,7 +614,7 @@ class ChasterAPI:
     """
 
     def get_community_event_categories(self) -> tuple[
-        requests.models.Response,list[user.CommunityEventCategory]]:
+        requests.models.Response, list[user.CommunityEventCategory]]:
         return self._tester_get_wrapper('/community-event/categories', user.CommunityEventCategory.generate_array)
 
     def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[

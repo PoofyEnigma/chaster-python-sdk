@@ -22,7 +22,7 @@
 | Settings                          | done    | done      |            |        |
 | Users                             | done    | done      |            |        |
 | Keyholder                         | done    | done      |            |        |
-| Reports                           | done    | done      | done       | done   | done     |
+| Reports                           | N/A     | N/A       | N/A        | N/A    | N/A      |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      | done    | done      |            |        |
 | Extensions - Verification Picture | done    | done      |            |        |
@@ -33,11 +33,14 @@ Integrated - Integration tests written<br>
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
 
+### Before getting service accounts
+
+- create and merge to master, format repo
+
 ### HTTP
 
 - async funcs?
 - play with swagger codegen
-- how to handle files?
 
 ### File/Class Organization
 
@@ -46,6 +49,8 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 - Enums?
 - Templatize Result object to avoid returning a
   tuple? https://stackoverflow.com/questions/6725868/generics-templates-in-python
+- Better way to handle files in multipart/form-data requests
+- need a wrapper for multipart/form-data requests
 
 ### Testing
 
@@ -55,7 +60,7 @@ Tutorial - A tutorial demonstrating usage of the function written and the SDK py
 
 - Credentials stack object
 - Other authentication support
-- Need to cycle your bearer token
+
 
 ### Backlog
 

@@ -209,6 +209,7 @@ class MyTestCase(unittest.TestCase):
         api._post = MagicMock(return_value=response)
         api._put = MagicMock(return_value=response)
         api._delete = MagicMock(return_value=response)
+        api._post_form = MagicMock(return_value=response)
         return api
 
     def test_get_locks(self):
@@ -452,7 +453,7 @@ class MyTestCase(unittest.TestCase):
     def test_upload_file(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.file_token)
-        response, data = api.upload_file()
+        response, data = api.upload_file('./tests/test_api_mock_chaster.py')
         self.assertEqual(response.status_code, status_code)
 
     # def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
@@ -470,7 +471,7 @@ class MyTestCase(unittest.TestCase):
     def test_upload_combination_image(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.combination_id_response)
-        response, data = api.upload_combination_image()
+        response, data = api.upload_combination_image('./tests/test_api_mock_chaster.py')
         self.assertEqual(response.status_code, status_code)
 
     # def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
