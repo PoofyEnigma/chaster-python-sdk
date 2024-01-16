@@ -33,10 +33,6 @@ Integrated - Integration tests written<br>
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
 
-### Before getting service accounts
-
-- create and merge to master, format repo
-
 ### HTTP
 
 - async funcs?
