@@ -23,8 +23,8 @@ class FileMultipartForm:
 def generate_multipart_form_from_uri(uri) -> FileMultipartForm:
     fmf = FileMultipartForm()
     fmf.uri = uri
-    fmf.name = 'todo.jpg'
-    fmf.type = 'image/jpg'
+    fmf.name = 'test.png'
+    fmf.type = 'image/png'
     return fmf
 
 
@@ -49,13 +49,13 @@ class ChasterAPI:
             'Accept': 'application/json',
             'User-Agent': user_agent,
             'Accept-Language': 'en-US,en;q=0.5',
-            'Connection': 'keep-alive',
+            'Connection': 'keep-alive'
         }
         retries = Retry(total=3,
                         backoff_factor=0.1,
                         status_forcelist=[500, 502, 503, 504],
                         respect_retry_after_header=True)
-        retries.backoff_jitter = 0.01
+        retries.backoff_jitter = 0.01  # TODO: why is backoff_jitter not present in Retry?
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
         if request_logger is None:
@@ -69,67 +69,30 @@ class ChasterAPI:
             chaster_transaction_id = response.headers['x-chaster-transaction-id']
             pass
 
-        self.logger.info(
-            f'{response.status_code} {response.request.url} {response.request.method} {len(response.content)} {chaster_transaction_id}')
+        self.logger.debug(
+            f'{response.status_code} {response.request.method} {response.request.url}  chaster_transaction_id:{chaster_transaction_id} {response.content}')
+        self.logger.debug(
+            f'{response.request.headers}')
+        self.logger.debug(
+            f'{response.request.body}')
         if 200 <= response.status_code < 300:
             return
-
-        self.logger.error(f'{response.text}')
-        match response.status_code:
-            # Bad Request
-            case 400:
-                pass
-            # Unauthenticated
-            case 401:
-                pass
-            # Unauthorized
-            case 403:
-                pass
-            # Not found
-            case 404:
-                pass
-            # Too Many Requests
-            case 429:
-                time.sleep(30)
-            case 503:
-                pass
-
-        # Other 400
-        if 400 <= response.status_code < 500:
-            return
-        # Other 500s
-        if 500 <= response.status_code < 600:
-            self.logger.error(f'{response.text}')
-            return
+        self.logger.error(
+            f'{response.status_code} {response.request.method} {response.request.url}  chaster_transaction_id:{chaster_transaction_id} {response.content}')
 
     def _post_request_handler(self, response: requests.models.Response, *args, **kwargs):
         time.sleep(self.delay)
-        if 'retry-after' in response.headers:
-            pass
-        if 'x-ratelimit-limit' in response.headers:
-            pass
-        if 'retry-after' in response.headers:
-            # this is honored in the retry object
-            pass
-        if 'x-ratelimit-limit' in response.headers:
-            pass
-        if 'x-ratelimit-remaining' in response.headers:
-            pass
-        if 'x-ratelimit-reset' in response.headers:
-            pass
-        if 'x-chaster-transaction-id' in response.headers:
-            pass
 
     def _get(self, path: str) -> requests.models.Response:
         response = self.session.get(urljoin(self.root_api.geturl(), path),
                                     hooks={'response': [self._post_request_handler, self._request_logger]})
         return response
 
-    def _post(self, path: str, data, files: dict = {}) -> requests.models.Response:
+    def _post(self, path: str, data) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      data=json.dumps(data),
                                      hooks={'response': [self._post_request_handler, self._request_logger]},
-                                     files=files)
+                                     headers={'Content-Type': 'application/json'})
         return response
 
     def _post_form(self, path: str, form) -> requests.models.Response:
@@ -140,7 +103,8 @@ class ChasterAPI:
 
     def _put(self, path: str, data) -> requests.models.Response:
         response = self.session.put(urljoin(self.root_api.geturl(), path),
-                                    data=json.dumps(data), hooks={'response': self._post_request_handler})
+                                    data=json.dumps(data), hooks={'response': self._post_request_handler},
+                                     headers={'Content-Type': 'application/json'})
         return response
 
     def _delete(self, path: str):
@@ -251,7 +215,7 @@ class ChasterAPI:
         return response, data
 
     def archive_lock(self, lock_id: str) -> requests.models.Response:
-        return self._post(f'/locks/{lock_id}', {})
+        return self._post(f'/locks/{lock_id}/archive', {})
 
     def archive_lock_as_keyholder(self, lock_id: str) -> requests.models.Response:
         return self._post(f'/locks/{lock_id}/archive/keyholder', {})
@@ -421,7 +385,7 @@ class ChasterAPI:
     Lock Creation
     """
 
-    def create_personal_lock(self, self_lock: lock.Lock) -> tuple[requests.models.Response, lock.LockId]:
+    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, lock.LockId]:
         response = self._post('locks', data=self_lock.dump())
 
         data = None
@@ -444,7 +408,7 @@ class ChasterAPI:
         return response, data
 
     """
-    profile
+    Profile
     """
 
     def _tester_get_wrapper(self, path, func):
@@ -496,14 +460,18 @@ class ChasterAPI:
     Combinations
     """
 
-    def upload_combination_image(self, uri) -> tuple[requests.models.Response, lock.Combination]:
+    def upload_combination_image(self, uri, enableManualCheck: bool = False) -> tuple[requests.models.Response, lock.Combination]:
         fmf = generate_multipart_form_from_uri(uri)
-        files = {'file': (fmf.name, open(fmf.uri, 'rb'), fmf.type)}
+        with open(fmf.uri, 'rb') as f:
+            content = f.read()
+            print(len(content))
+            files = {'file': (fmf.name, content, fmf.type),
+                     'enableManualCheck': (None, str(enableManualCheck).lower())}
         response = self._post_form('combinations/image', files)
         return self._tester_post_request_helper(response, lock.Combination().update)
 
     def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
-        response = self._post(f'combinations/image', {'code': code})
+        response = self._post(f'combinations/code', {'code': code})
         return self._tester_post_request_helper(response, lock.Combination().update)
 
     """

@@ -5,6 +5,23 @@ import dateutil.parser
 from . import extensions
 from . import user
 from dateutil.parser import isoparse
+from dateutil.tz import tzutc
+
+class CreateLock:
+    def __init__(self):
+        self.minDuration: int = 0
+        self.maxDuration: int = 0
+        self.maxLimitDuration: int = 0
+        self.displayRemainingTime: bool = True
+        self.limitLockTime: bool = True
+        self.combinationId: str = ''
+        self.extensions = []
+        self.allowSessionOffer: bool = True
+        self.isTestLock: bool = False
+        self.hideTimeLogs: bool = True
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class Lock:
@@ -32,7 +49,7 @@ class Lock:
         self.isTestLock: bool = False
         self.offerToken: str = ''
         self.hideTimeLogs: bool = True
-        self.trusted: bool = True
+        self.trusted: bool = False
         self.user = user.User()
         self.keyholder = user.User()
         self.isAllowedToViewTime: bool = True
@@ -202,7 +219,7 @@ class LockId:
 
 class LockInfo:
     def __init__(self):
-        self.password: str = ''
+        self.password: str = None
         self.combinationId: str = ''
         self.isTestLock: bool = False
 
@@ -438,7 +455,6 @@ class ExplorePageLock:
         for account in obj_list:
             category.append(ExplorePageLock().update(account))
         return category
-
 
 
 class SearchPublicLockCriteriaDuration:

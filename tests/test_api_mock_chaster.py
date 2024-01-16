@@ -384,7 +384,7 @@ class MyTestCase(unittest.TestCase):
     def test_create_personal_lock(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.lock_id_response)
-        response, data = api.create_personal_lock(lock.Lock())
+        response, data = api.create_personal_lock(lock.CreateLock())
         self.assertEqual(response.status_code, status_code)
 
     def test_add_extensions(self):
