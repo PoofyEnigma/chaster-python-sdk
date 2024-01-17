@@ -104,7 +104,7 @@ class ChasterAPI:
     def _put(self, path: str, data) -> requests.models.Response:
         response = self.session.put(urljoin(self.root_api.geturl(), path),
                                     data=json.dumps(data), hooks={'response': self._post_request_handler},
-                                     headers={'Content-Type': 'application/json'})
+                                    headers={'Content-Type': 'application/json'})
         return response
 
     def _delete(self, path: str):
@@ -279,13 +279,8 @@ class ChasterAPI:
     # TODO: The reason for this API is unclear. Does it send more data than what is already present in the lock?
     def get_extension_information(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, lock.ExtensionInformation]:
-        response = self._get(f'locks/{lock_id}/extensions/{extension_id}')
-
-        data = None
-        if response.status_code == 201:
-            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.ExtensionInformation().update(data)
-        return response, data
+        return self._tester_get_wrapper(f'locks/{lock_id}/extensions/{extension_id}',
+                                        lock.ExtensionInformation().update)
 
     def trigger_extension_actions(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
         """
@@ -460,7 +455,8 @@ class ChasterAPI:
     Combinations
     """
 
-    def upload_combination_image(self, uri, enableManualCheck: bool = False) -> tuple[requests.models.Response, lock.Combination]:
+    def upload_combination_image(self, uri, enableManualCheck: bool = False) -> tuple[
+        requests.models.Response, lock.Combination]:
         fmf = generate_multipart_form_from_uri(uri)
         with open(fmf.uri, 'rb') as f:
             content = f.read()

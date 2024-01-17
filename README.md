@@ -9,9 +9,9 @@ v0.1.0
 | API Group                         | Stubbed | Validated | Integrated | Mocked | Tutorial |
 |-----------------------------------|---------|-----------|------------|--------|----------|
 | Shared Locks                      | done    | done      | done       |        |
-| Locks                             | done    | done      | ip         |        |
+| Locks                             | done    | done      | done       |        |
 | trigger_extension_actions         | done    | done      |            |        |
-| Lock Creation                     | done    | done      | ip         |        |
+| Lock Creation                     | done    | done      | done       |        |
 | Profile                           | done    | done      |            |        |
 | Files                             | done    | done      |            |        |
 | Combinations                      | done    | done      | done       |        |
@@ -32,8 +32,10 @@ v0.1.0
 Stubbed - API call functions, DTOs defined<br>
 Validated - tested with mocked chaster http response<br>
 Integrated - Integration tests written and naming settled<br>
-Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented
-Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
+Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented<br>
+Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published<br>
+Extension Objects - DTO Tested and Validated<br>
+Extension Information API - C&C the extension information component vs. the extension info in the lock obj
 
 ## Layer 2 Progress
 

@@ -3,6 +3,7 @@ import time
 
 import src.api as api
 import src.lock as lock
+import src.extensions as extensions
 import unittest
 import uuid
 import logging
@@ -174,18 +175,6 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api_lockee.is_test_lock(lock_id.lockId)
         self.assertEqual(response.status_code, 200)
 
-    @unittest.SkipTest
-    def test_get_lock_combination(self):
-        self.assertFalse(True)
-
-    @unittest.SkipTest
-    def test_get_lock_history(self):
-        self.assertFalse(True)
-
-    @unittest.SkipTest
-    def test_get_extension_information(self):
-        self.assertFalse(True)
-
     """
     Lock Creation
     """
@@ -218,7 +207,47 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_add_extensions(self):
-        self.assertFalse(True)
+        response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png')
+        self.assertIsNotNone(combination)
+        self.assertNotEqual(combination.combinationId, '')
+
+        l = lock.LockInfo()
+        l.isTestLock = True
+        l.combinationId = combination.combinationId
+        l.password = 'puppy'
+        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock('64e69feb2f626eb789dafd6e', l)
+        self.assertIsNotNone(lock_id)
+        self.assertNotEqual(lock_id.lockId, '')
+
+        response = chaster_api_lockee.set_keyholder_as_trusted(lock_id.lockId)
+        self.assertEqual(response.status_code, 204)
+
+        eh = extensions.ExtensionsHandler()
+        ho = extensions.HygieneOpening()
+        eh.add(ho)
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+        response = chaster_api.add_extensions(lock_id.lockId, e)
+        self.assertEqual(response.status_code, 201)
+
+        response, locked_users = chaster_api.post_keyholder_locks_search()
+        self.assertIsNotNone(locked_users)
+        self.assertEqual(len(locked_users.locks), 1)
+        lock_after = locked_users.locks[0]
+
+        response, extensions_info = chaster_api.get_extension_information(lock_id.lockId, lock_after.extensions[0]._id)
+        self.assertIsNotNone(extensions_info)
+        self.assertIsNotNone(extensions_info.extension)
+
+        _ = chaster_api.unlock(lock_id.lockId)
+
+        response, lock_combo = chaster_api_lockee.get_lock_combination(lock_id.lockId)
+        self.assertIsNotNone(lock_combo)
+
+        response, lock_history = chaster_api_lockee.get_lock_history(lock_id.lockId)
+        self.assertIsNotNone(lock_history)
+
+        _ = chaster_api_lockee.archive_lock(lock_id.lockId)
 
     @unittest.SkipTest
     def test_create_lock_from_shared_lock(self):
