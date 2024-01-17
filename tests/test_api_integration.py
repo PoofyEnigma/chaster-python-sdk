@@ -285,13 +285,56 @@ class ApiTestCases(unittest.TestCase):
     Profile
     """
 
+    @unittest.SkipTest
+    def test_get_your_profile(self):
+        response, profile = chaster_api.get_your_profile()
+        self.assertIsNotNone(profile)
+
+        response, profile = chaster_api.update_profile()
+        self.assertIsNotNone(profile)
+
+        response, badges = chaster_api.get_badges()
+        self.assertIsNotNone(badges)
+
+        response, detailed_user = chaster_api.find_profile_detailed('PupHimbo')
+        self.assertIsNotNone(detailed_user)
+
+        response, user = chaster_api.find_profile('PupHimbo')
+        self.assertIsNotNone(user)
+
+        response, profile = chaster_api.get_profile(profile._id)
+        self.assertIsNotNone(profile)
+
+        response, locks = chaster_api.get_user_locks(profile._id)
+        self.assertIsNotNone(locks)
+
     """
     Files
     """
 
+    @unittest.SkipTest
+    def test_upload_and_find_file(self):
+        response, file_info = chaster_api.upload_file('./tests/test.png')
+        self.assertIsNotNone(file_info)
+
+        # now can use the file to send a message
+
+    @unittest.SkipTest
+    def test_find_file(self):
+        self.assertTrue(False)
+
     """
     Combinations
     """
+
+    """
+    Extensions
+    """
+    @unittest.SkipTest
+    def test_get_all_known_extensions(self):
+        response, known_extensions = chaster_api.get_all_known_extensions()
+        self.assertIsNotNone(known_extensions)
+
 
 
 if __name__ == '__main__':

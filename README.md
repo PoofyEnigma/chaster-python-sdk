@@ -12,10 +12,10 @@ v0.1.0
 | Locks                             | done    | done      | done       |        |
 | trigger_extension_actions         | done    | done      |            |        |
 | Lock Creation                     | done    | done      | done       |        |
-| Profile                           | done    | done      |            |        |
-| Files                             | done    | done      |            |        |
+| Profile                           | done    | done      | done       |        |
+| Files                             | done    | done      | ip         |        |
 | Combinations                      | done    | done      | done       |        |
-| Extensions                        | done    | done      |            |        |
+| Extensions                        | done    | done      | done       |        |
 | Session Offer                     | done    | done      |            |        |
 | Messaging                         | done    | done      |            |        |
 | Extensions - Temporary Opening    | done    | done      |            |        |

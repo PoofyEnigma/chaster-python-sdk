@@ -620,6 +620,7 @@ def known_extension_list_update(obj):
     out = []
     for item in obj:
         out.append(KnownExtension().update(item))
+    return out
 
 
 class KnownExtension:

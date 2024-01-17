@@ -112,6 +112,14 @@ class ChasterAPI:
                                        hooks={'response': self._post_request_handler})
         return response
 
+    def _tester_get_wrapper(self, path, func):
+        response = self._get(path)
+        data = None
+        if response.status_code == 200:
+            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = func(data)
+        return response, data
+
     """
     Shared Locks
     """
@@ -405,15 +413,6 @@ class ChasterAPI:
     """
     Profile
     """
-
-    def _tester_get_wrapper(self, path, func):
-        response = self._get(path)
-        data = None
-        if response.status_code == 200:
-            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = func(data)
-        return response, data
-
     def get_user_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
         return self._tester_get_wrapper(f'locks/user/{user_id}', lock.Lock.generate_array)
 
