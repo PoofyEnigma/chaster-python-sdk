@@ -19,7 +19,7 @@ v0.1.0
 | Session Offer                     | done    | done      | done       |        |
 | Messaging                         | done    | done      | done       |        |
 | Extensions - Temporary Opening    | done    | done      |            |        |
-| Community Events                  | done    | done      |            |        |
+| Community Events                  | done    | done      | done       |        |
 | Partner Extensions                |         |           |            |        |
 | Settings                          | done    | done      |            |        |
 | Users                             | done    | done      |            |        |

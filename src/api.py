@@ -586,7 +586,7 @@ class ChasterAPI:
 
     def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
         requests.models.Response, user.CommunityEventDetails]:
-        response = self._put(f'/community-event/details', data={'date': date.isoformat()})
+        response = self._post(f'community-event/details', data={'date': date.isoformat()})
         data = None
         if response.status_code == 201:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))

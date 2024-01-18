@@ -458,6 +458,26 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api.set_conversation_unread(conversation._id, True)
         self.assertEqual(response.status_code, 200)
 
+    """
+    Extensions - Temporary Opening
+    """
+
+    # def get_temporary_opening_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
+
+    # def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
+
+    # def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
+
+    """
+    Community Events
+    """
+
+    @unittest.SkipTest
+    def test_community_events(self):
+        _, ced = chaster_api.get_community_event_details()
+        self.assertIsNotNone(ced)
+        _, cec = chaster_api.get_community_event_categories()
+        self.assertIsNotNone(cec)
 
 if __name__ == '__main__':
     log_format = '%(asctime)s %(name)s %(levelname)s %(message)s'

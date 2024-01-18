@@ -349,6 +349,7 @@ class CommunityEventDetails:
         self.__dict__ = obj.__dict__.copy()
         self.start = dateutil.parser.isoparse(obj.start)
         self.end = dateutil.parser.isoparse(obj.end)
+        return self
 
 
 class CommunityEventTier:
