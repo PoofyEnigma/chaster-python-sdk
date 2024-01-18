@@ -17,7 +17,7 @@ v0.1.0
 | Combinations                      | done    | done      | done       |        |
 | Extensions                        | done    | done      | done       |        |
 | Session Offer                     | done    | done      | done       |        |
-| Messaging                         | done    | done      |            |        |
+| Messaging                         | done    | done      | done       |        |
 | Extensions - Temporary Opening    | done    | done      |            |        |
 | Community Events                  | done    | done      |            |        |
 | Partner Extensions                |         |           |            |        |

@@ -425,6 +425,39 @@ class ApiTestCases(unittest.TestCase):
         _ = chaster_api_lockee.unlock(lock_data.lockId)
         _ = chaster_api_lockee.archive_lock(lock_data.lockId)
 
+    """
+    Messaging
+    """
+
+    @unittest.SkipTest
+    def test_conversations(self):
+        response, conversations = chaster_api.get_conversations()
+        self.assertIsNotNone(conversations)
+
+        response, conversation = chaster_api.get_conversation(conversations.results[0]._id)
+        self.assertIsNotNone(conversation)
+
+        response, messages = chaster_api.get_conversation_messages(conversations.results[0]._id)
+        self.assertIsNotNone(messages)
+
+    @unittest.SkipTest
+    def test_conversations_sending_messages(self):
+        _, profile = chaster_api_lockee.get_your_profile()
+        _, conversation = chaster_api.get_user_conversation(profile._id)
+        self.assertIsNotNone(conversation)
+
+        response, message = chaster_api.post_message(conversation._id, 'hello')
+        self.assertIsNotNone(message)
+
+        _, conversation = chaster_api.create_conversation(profile._id, 'create')
+        self.assertIsNotNone(conversation)
+
+        response = chaster_api.set_conversation_status(conversation._id, 'approved')
+        self.assertEqual(response.status_code, 200)
+
+        response = chaster_api.set_conversation_unread(conversation._id, True)
+        self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     log_format = '%(asctime)s %(name)s %(levelname)s %(message)s'

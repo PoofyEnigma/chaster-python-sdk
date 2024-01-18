@@ -413,6 +413,7 @@ class ChasterAPI:
     """
     Profile
     """
+
     def get_user_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
         return self._tester_get_wrapper(f'locks/user/{user_id}', lock.Lock.generate_array)
 
@@ -531,6 +532,10 @@ class ChasterAPI:
     def get_user_conversation(self, user_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
         return self._tester_get_wrapper(f'conversations/by-user/{user_id}', conversation.Conversation().update)
 
+    # TODO: flushout attachments, what is nonce?
+    """
+    {"message":"here","attachments":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlcyI6WyI2NWE4OGU2OWE4NTIwMDAxYzc2MTc2OTkiXSwidHlwZSI6Im1lc3NhZ2luZyIsInVzZXIiOiI2NGU1YjQ4MWI1MzNhNWNjZmU2MTU2N2YiLCJpYXQiOjE3MDU1NDUzMjEsImV4cCI6MTcwNTYzMTcyMX0.u2HPOjyhmqAB-2aTd4Uq_HF-b-Z6V8-T8soPZytLj9w","nonce":"HhH_YHrj8TAAhkyDFfEYs"}
+    """
     def post_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
         response = self._post(f'conversations/{conversation_id}',
                               {"message": message})
@@ -544,9 +549,8 @@ class ChasterAPI:
     def set_conversation_status(self, conversation_id, status: str) -> requests.models.Response:
         return self._put(f'conversations/{conversation_id}/status', data={'status': status})
 
-    # /conversation/conversationid/unread
     def set_conversation_unread(self, conversation_id, unread: bool) -> requests.models.Response:
-        return self._put(f'conversations/{conversation_id}/status', data={'unread': unread})
+        return self._put(f'conversations/{conversation_id}/unread', data={'unread': unread})
 
     def get_conversation_messages(self, conversation_id: str, limit=15, lastId=None) -> tuple[
         requests.models.Response, conversation.ConversationMessages]:
