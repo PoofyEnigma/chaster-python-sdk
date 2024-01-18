@@ -10,7 +10,7 @@ v0.1.0
 |-----------------------------------|---------|-----------|------------|--------|----------|
 | Shared Locks                      | done    | done      | done       |        |
 | Locks                             | done    | done      | done       |        |
-| trigger_extension_actions         | done    | done      |            |        |
+| trigger_extension_actions         | done    | done      | ip         |        |
 | Lock Creation                     | done    | done      | done       |        |
 | Profile                           | done    | done      | done       |        |
 | Files                             | done    | done      | ip         |        |
@@ -26,7 +26,7 @@ v0.1.0
 | Keyholder                         | done    | done      | done       |        |
 | Reports                           | N/A     | N/A       | N/A        | N/A    | N/A      |
 | Partner Configurations            |         |           |            |        |
-| Public Locks                      | done    | done      |            |        |
+| Public Locks                      | done    | done      | done       |        |
 | Extensions - Verification Picture | done    | done      |            |        |
 
 Stubbed - API call functions, DTOs defined<br>
@@ -35,7 +35,10 @@ Integrated - Integration tests written and naming settled<br>
 Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented<br>
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published<br>
 Extension Objects - DTO Tested and Validated<br>
-Extension Information API - C&C the extension information component vs. the extension info in the lock obj
+
+## Backlog
+- Extension Information API - C&C the extension information component vs. the extension info in the lock obj
+- Probably remove bespoke objects as input to api functions, such as in triggers
 
 ## Layer 2 Progress
 

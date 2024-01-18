@@ -61,13 +61,40 @@ class ExtensionsHandler:
         self.share_links: list[ShareLinks] = []
         self.pillories: list[Pillory] = []
         self.hygiene_openings: list[HygieneOpening] = []
-        self.dices: list[Dice] = []
-        self.wheel_of_fortune: list[WheelOfFortune] = []
+        self.dice: list[Dice] = []
+        self.wheel_of_fortunes: list[WheelOfFortune] = []
         self.tasks: list[Tasks] = []
         self.penalties: list[Penalties] = []
         self.verification_pictures: list[VerificationPicture] = []
         self.random_events: list[RandomEvents] = []
         self.guess_timers: list[GuessTheTimer] = []
+
+    def add_defined(self, extension):
+        if extension.slug == 'link':
+            self.share_links.append(extension)
+        if extension.slug == 'pillory':
+            self.pillories.append(extension)
+        if extension.slug == 'temporary-opening':
+            self.hygiene_openings.append(extension)
+        if extension.slug == 'dice':
+            self.dice.append(extension)
+        if extension.slug == 'wheel-of-fortune':
+            self.wheel_of_fortunes.append(extension)
+        if extension.slug == 'tasks':
+            self.tasks.append(extension)
+        if extension.slug == 'penalty':
+            self.penalties.append(extension)
+        if extension.slug == 'verification-picture':
+            self.verification_pictures.append(extension)
+        if extension.slug == 'random-events':
+            self.random_events.append(extension)
+        if extension.slug == 'guess-timer':
+            self.guess_timers.append(extension)
+
+    def load_defined(self, extensions):
+        for extension in extensions:
+            self.add_defined(extension)
+        return self
 
     def load(self, extensions):
         for extension in extensions:
@@ -82,9 +109,9 @@ class ExtensionsHandler:
         if extension.slug == 'temporary-opening':
             self.hygiene_openings.append(HygieneOpening().update(extension))
         if extension.slug == 'dice':
-            self.dices.append(Dice().update(extension))
+            self.dice.append(Dice().update(extension))
         if extension.slug == 'wheel-of-fortune':
-            self.wheel_of_fortune.append(WheelOfFortune().update(extension))
+            self.wheel_of_fortunes.append(WheelOfFortune().update(extension))
         if extension.slug == 'tasks':
             self.tasks.append(Tasks().update(extension))
         if extension.slug == 'penalty':
@@ -218,10 +245,10 @@ class ShareLinks(Extension):
 class PilloryConfig:
     def __init__(self):
         self.timeToAdd: int = 3600
-        self.limitToLoggedUser: bool = True
+        self.limitToLoggedUsers: bool = True
 
     def dump(self):
-        return self.__dict__.copy()
+        return  self.__dict__.copy()
 
 
 class Pillory(Extension):
@@ -290,6 +317,7 @@ class Dice(Extension):
         self.slug: str = 'dice'
         self.config: DiceConfig = DiceConfig()
         self.mode: mode_non_cumulative = mode_non_cumulative
+        self.regularity: int = 1
 
     def update(self, obj):
         super().update(obj)
@@ -300,6 +328,7 @@ class Dice(Extension):
         obj['slug'] = self.slug
         obj['mode'] = self.mode
         obj['config'] = self.config.dump()
+        obj['regularity'] = self.regularity
         return obj
 
 
@@ -363,19 +392,30 @@ class Task:
         self.task: str = ''
         self.points: int = 0
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
     def dump(self):
         return self.__dict__.copy()
+
+    @staticmethod
+    def generate_array(obj_list):
+        tasks = []
+        for item in obj_list:
+            tasks.append(Task().update(item))
+        return tasks
 
 
 class TasksConfig:
     def __init__(self):
         self.tasks: list[Task] = []
-        self.voteEnabled: bool = False
-        self.voteDuration: int = 43200
+        self.voteEnabled: bool = True
+        self.voteDuration: int = 3600
         self.startVoteAfterLastVote: bool = False
-        self.enablePoints: bool = True
-        self.pointsRequired: int = 50
-        self.allowWearerToEditTasks: bool = True
+        self.enablePoints: bool = False
+        self.pointsRequired: int = 0
+        self.allowWearerToEditTasks: bool = False
         self.allowWearerToConfigureTasks: bool = False
         self.preventWearerFromAssigningTasks: bool = False
         self.allowWearerToChooseTasks: bool = True
@@ -384,6 +424,7 @@ class TasksConfig:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.actionsOnAbandonedTask = Punishment.generate_array(obj.actionsOnAbandonedTask)
+        self.tasks = Task.generate_array(obj.tasks)
         return self
 
     def dump(self):
@@ -537,7 +578,7 @@ class VerificationPicture(Extension):
         super().__init__()
         self.slug: str = "verification-picture"
         self.config: VerificationPictureConfig = VerificationPictureConfig()
-        self.regularity: int = 0
+        self.regularity: int = 3600
         self.mode: str = mode_non_cumulative
 
     def update(self, obj):

@@ -3,6 +3,7 @@ import time
 
 import src.api as api
 import src.lock as lock
+import src.triggers as triggers
 import src.extensions as extensions
 import unittest
 import uuid
@@ -174,6 +175,160 @@ class ApiTestCases(unittest.TestCase):
         _ = chaster_api_lockee.archive_lock(lock_id.lockId)
         response = chaster_api_lockee.is_test_lock(lock_id.lockId)
         self.assertEqual(response.status_code, 200)
+
+    """
+    Triggers
+    """
+
+    def prep_lock(self, extension):
+        _, combination = chaster_api_lockee.create_combination_code('1234')
+        l = lock.CreateLock()
+        l.minDuration = 0
+        l.maxDuration = 1
+        l.isTestLock = True
+        l.combinationId = combination.combinationId
+        _, lock_data = chaster_api_lockee.create_personal_lock(l)
+        response, user = chaster_api.get_your_profile()
+        response = chaster_api_lockee.create_keyholding_offer(lock_data.lockId, user.username)
+        response, offers = chaster_api.get_keyholding_offers_from_wearers()
+        response = chaster_api.handle_keyholding_offer(offers[0]._id, True)
+        response = chaster_api_lockee.set_keyholder_as_trusted(lock_data.lockId)
+
+        response = chaster_api.add_extensions(lock_data.lockId, extension)
+        self.assertEqual(response.status_code, 201)
+        _, locks = chaster_api_lockee.get_locks()
+        return locks
+
+    @unittest.SkipTest
+    def test_share_link(self):
+        eh = extensions.ExtensionsHandler()
+        ho = extensions.ShareLinks()
+        eh.add(ho)
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+
+        locks = self.prep_lock(e)
+        lock_id = locks[0]._id
+        slv = triggers.ShareLinksVote()
+        _, slvr = chaster_api.vote_in_share_links(lock_id, locks[0].extensions[0]._id, slv)
+        self.assertIsNotNone(slvr)
+
+        _, url = chaster_api.get_share_link_url_to_vote(lock_id, locks[0].extensions[0]._id)
+        self.assertIsNotNone(url)
+
+        _, info = chaster_api_lockee.get_share_link_info(lock_id, locks[0].extensions[0]._id)
+        self.assertIsNotNone(info)
+
+        _ = chaster_api.unlock(lock_id)
+        _ = chaster_api_lockee.archive_lock(lock_id)
+
+    @unittest.SkipTest
+    def test_pillory(self):
+        eh = extensions.ExtensionsHandler()
+        ho = extensions.Pillory()
+        eh.add(ho)
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+        locks = self.prep_lock(e)
+        lock_id = locks[0]._id
+
+        pp = triggers.PilloryParameters()
+
+        response = chaster_api.place_user_into_pillory(lock_id, locks[0].extensions[0]._id, pp)
+        self.assertEqual(response.status_code, 201)
+
+        _, info = chaster_api.get_current_pillory_info(lock_id, locks[0].extensions[0]._id)
+        self.assertIsNotNone(info)
+
+        _ = chaster_api.unlock(lock_id)
+        _ = chaster_api_lockee.archive_lock(lock_id)
+
+    @unittest.SkipTest
+    def test_roll_dice_wof_guess_timer(self):
+        dice = extensions.Dice()
+        wof = extensions.WheelOfFortune()
+        wofs = extensions.WheelOfFortuneSegment()
+        wofs.type = extensions.WheelOfFortuneSegment.add_time
+        wofs.duration = 2600
+        wof.config.segments.append(wofs)
+        wofs = extensions.WheelOfFortuneSegment()
+        wofs.type = extensions.WheelOfFortuneSegment.add_time
+        wofs.duration = 3600
+        wof.config.segments.append(wofs)
+        gtt = extensions.GuessTheTimer()
+
+        eh = extensions.ExtensionsHandler()
+        eh.add(dice)
+        eh.add(wof)
+        eh.add(gtt)
+
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+        locks = self.prep_lock(e)
+        lock_id = locks[0]._id
+
+        eh = extensions.ExtensionsHandler()
+        eh.load_defined(locks[0].extensions)
+
+        _, drr = chaster_api_lockee.roll_dice(lock_id, eh.dice[0]._id)
+        self.assertIsNotNone(drr)
+
+        _, wofr = chaster_api_lockee.spin_wheel_of_fortune(lock_id, eh.wheel_of_fortunes[0]._id)
+        self.assertIsNotNone(wofr)
+
+        _, gttr = chaster_api_lockee.trigger_guess_the_timer(lock_id, eh.guess_timers[0]._id)
+        self.assertIsNotNone(gttr)
+
+        _ = chaster_api.unlock(lock_id)
+        _ = chaster_api_lockee.archive_lock(lock_id)
+
+    @unittest.SkipTest
+    def test_tasks(self):
+        t1 = extensions.Task()
+        t1.task = 'ride dildo 15 min'
+        t2 = extensions.Task()
+        t2.task = 'beg kh for more time'
+        t3 = extensions.Task()
+        t3.task = 'butt plug 60 min'
+
+        eh = extensions.ExtensionsHandler()
+        ho = extensions.Tasks()
+        ho.config.tasks.append(t1)
+        ho.config.tasks.append(t2)
+        ho.config.tasks.append(t3)
+        ho.mode = extensions.mode_unlimited
+
+        eh.add(ho)
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+        locks = self.prep_lock(e)
+        lock_id = locks[0]._id
+
+        response = chaster_api_lockee.request_a_random_task(lock_id, locks[0].extensions[0]._id)
+        self.assertEqual(response.status_code, 201)
+
+        response = chaster_api_lockee.mark_task_done(lock_id, locks[0].extensions[0]._id, True)
+        self.assertEqual(response.status_code, 201)
+
+        response = chaster_api_lockee.assign_task(lock_id, locks[0].extensions[0]._id, locks[0].extensions[0].config.tasks[1])
+        self.assertEqual(response.status_code, 201)
+
+        response = chaster_api_lockee.mark_task_done(lock_id, locks[0].extensions[0]._id, True)
+        self.assertEqual(response.status_code, 201)
+
+        response = chaster_api_lockee.community_vote_next_task(lock_id, locks[0].extensions[0]._id, 3600)
+        self.assertEqual(response.status_code, 201)
+
+        _ = chaster_api.unlock(lock_id)
+        _ = chaster_api_lockee.archive_lock(lock_id)
+
+    @unittest.SkipTest
+    def test_unlock_for_hygiene(self):
+        pass
+
+    @unittest.SkipTest
+    def test_trigger_new_verification(self):
+        pass
 
     """
     Lock Creation
@@ -503,6 +658,7 @@ class ApiTestCases(unittest.TestCase):
     """
     Public Locks
     """
+
     @unittest.SkipTest
     def test_public_locks(self):
         _, details = chaster_api.find_public_shared_lock('64e69feb2f626eb789dafd6e')

@@ -72,9 +72,9 @@ class ChasterAPI:
         self.logger.debug(
             f'{response.status_code} {response.request.method} {response.request.url}  chaster_transaction_id:{chaster_transaction_id} {response.content}')
         self.logger.debug(
-            f'{response.request.headers}')
+            f'chaster_transaction_id:{chaster_transaction_id} {response.request.headers}')
         self.logger.debug(
-            f'{response.request.body}')
+            f'chaster_transaction_id:{chaster_transaction_id} {response.request.body}')
         if 200 <= response.status_code < 300:
             return
         self.logger.error(
@@ -118,6 +118,13 @@ class ChasterAPI:
         if response.status_code == 200:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
             data = func(data)
+        return response, data
+
+    def _tester_post_request_helper(self, response, update):
+        data = None
+        if response.status_code == 201 or response.status_code == 200:
+            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
+            data = update(data)
         return response, data
 
     """
@@ -304,41 +311,34 @@ class ChasterAPI:
     Triggers
     """
 
-    def _tester_post_request_helper(self, response, update):
-        data = None
-        if response.status_code == 201 or response.status_code == 200:
-            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = update(data)
-        return response, data
-
     def vote_in_share_links(self, lock_id: str, extension_id: str, data: triggers.ShareLinksVote) -> tuple[
         requests.models.Response, triggers.ShareLinksVoteReturn]:
-        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        response = self.trigger_extension_actions(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
 
     def get_share_link_url_to_vote(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.ShareLinkUrlResponse]:
         data = triggers.ActionRequest()
         data.action = 'getLink'
-        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        response = self.trigger_extension_actions(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
 
     def get_share_link_info(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.ShareLinkGetInfoResponse]:
         data = triggers.ActionRequest()
         data.action = 'getInfo'
-        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        response = self.trigger_extension_actions(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.ShareLinkGetInfoResponse().update)
 
     def place_user_into_pillory(self, lock_id: str, extension_id: str,
                                 data: triggers.PilloryParameters) -> requests.models.Response:
-        return self.trigger_extension_actions(lock_id, extension_id, data)
+        return self.trigger_extension_actions(lock_id, extension_id, data.dump())
 
     def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.PilloryVotes]:
         data = triggers.ActionRequest()
         data.action = 'getStatus'
-        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        response = self.trigger_extension_actions(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.PilloryVotes().update)
 
     def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
@@ -346,20 +346,20 @@ class ChasterAPI:
         data.action = 'keyholderOpen'
         if is_you:
             data.action = 'submit'
-        return self.trigger_extension_actions(lock_id, extension_id, data)
+        return self.trigger_extension_actions(lock_id, extension_id, data.dump())
 
     def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.DiceRollResult]:
         data = triggers.ActionRequest()
         data.action = 'submit'
-        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        response = self.trigger_extension_actions(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
 
     def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.WheelOfFortuneResult]:
         data = triggers.ActionRequest()
         data.action = 'submit'
-        response = self.trigger_extension_actions(lock_id, extension_id, data)
+        response = self.trigger_extension_actions(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.WheelOfFortuneResult().update)
 
     def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
@@ -368,6 +368,15 @@ class ChasterAPI:
 
     def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
         data = {"action": "submit", "payload": {"requestVote": True, "voteDuration": vote_duration}}
+        return self.trigger_extension_actions(lock_id, extension_id, data)
+
+    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task):
+        data = {
+            "action": "assignTask",
+            "payload": {
+                'task': task.dump()
+            }
+        }
         return self.trigger_extension_actions(lock_id, extension_id, data)
 
     def mark_task_done(self, lock_id: str, extension_id: str, succeeded: bool) -> requests.models.Response:
@@ -536,6 +545,7 @@ class ChasterAPI:
     """
     {"message":"here","attachments":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlcyI6WyI2NWE4OGU2OWE4NTIwMDAxYzc2MTc2OTkiXSwidHlwZSI6Im1lc3NhZ2luZyIsInVzZXIiOiI2NGU1YjQ4MWI1MzNhNWNjZmU2MTU2N2YiLCJpYXQiOjE3MDU1NDUzMjEsImV4cCI6MTcwNTYzMTcyMX0.u2HPOjyhmqAB-2aTd4Uq_HF-b-Z6V8-T8soPZytLj9w","nonce":"HhH_YHrj8TAAhkyDFfEYs"}
     """
+
     def post_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
         response = self._post(f'conversations/{conversation_id}',
                               {"message": message})
