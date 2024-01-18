@@ -21,9 +21,9 @@ v0.1.0
 | Extensions - Temporary Opening    | done    | done      |            |        |
 | Community Events                  | done    | done      | done       |        |
 | Partner Extensions                |         |           |            |        |
-| Settings                          | done    | done      |            |        |
-| Users                             | done    | done      |            |        |
-| Keyholder                         | done    | done      | ip         |        |
+| Settings                          | done    | done      | done       |        |
+| Users                             | done    | done      | done       |        |
+| Keyholder                         | done    | done      | done       |        |
 | Reports                           | N/A     | N/A       | N/A        | N/A    | N/A      |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      | done    | done      |            |        |

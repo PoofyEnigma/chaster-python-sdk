@@ -507,7 +507,7 @@ class SearchPublicLockCriteria:
 class SearchPublicLock:
     def __init__(self):
         self.limit: int = 15
-        self.lastId: str = ''
+        self.lastId: str = None
         self.criteria: SearchPublicLockCriteria = None
 
     def dump(self):

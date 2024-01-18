@@ -491,6 +491,7 @@ class ApiTestCases(unittest.TestCase):
     """
     Users
     """
+
     @unittest.SkipTest
     def test_users(self):
         _, users = chaster_api.search_for_users('pup')
@@ -498,6 +499,23 @@ class ApiTestCases(unittest.TestCase):
 
         _, user = chaster_api.search_for_users_by_discord('1153172669559214141')
         self.assertIsNotNone(users)
+
+    """
+    Public Locks
+    """
+    @unittest.SkipTest
+    def test_public_locks(self):
+        _, details = chaster_api.find_public_shared_lock('64e69feb2f626eb789dafd6e')
+        self.assertIsNotNone(details)
+
+        response = chaster_api.generate_public_shared_lock_flyer('64e69feb2f626eb789dafd6e')
+        self.assertEqual(response.status_code, 200)
+
+        _, page = chaster_api.search_for_public_locks(lock.SearchPublicLock())
+        self.assertIsNotNone(page)
+
+        _, data = chaster_api.find_explore_page_locks()
+        self.assertIsNotNone(data)
 
 
 if __name__ == '__main__':
