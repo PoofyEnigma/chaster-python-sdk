@@ -306,7 +306,7 @@ class ChasterAPI:
 
     def _tester_post_request_helper(self, response, update):
         data = None
-        if response.status_code == 201:
+        if response.status_code == 201 or response.status_code == 200:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
             data = update(data)
         return response, data

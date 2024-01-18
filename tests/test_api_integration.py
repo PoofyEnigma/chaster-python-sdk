@@ -482,10 +482,22 @@ class ApiTestCases(unittest.TestCase):
     """
     Settings
     """
+
     @unittest.SkipTest
     def test_get_app_settings(self):
         _, settings = chaster_api.get_app_settings()
         self.assertIsNotNone(settings)
+
+    """
+    Users
+    """
+    @unittest.SkipTest
+    def test_users(self):
+        _, users = chaster_api.search_for_users('pup')
+        self.assertIsNotNone(users)
+
+        _, user = chaster_api.search_for_users_by_discord('1153172669559214141')
+        self.assertIsNotNone(users)
 
 
 if __name__ == '__main__':
