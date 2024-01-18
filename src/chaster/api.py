@@ -1,16 +1,12 @@
-from . import conversation
+from . import conversation, extensions, lock, triggers, user
 import datetime
 import json
-from . import lock
 import logging
 import requests
 from requests.adapters import HTTPAdapter, Retry
-from . import triggers
 import time
 from types import SimpleNamespace
 from urllib.parse import urlparse, urljoin
-from . import user
-from . import extensions
 
 
 class FileMultipartForm:

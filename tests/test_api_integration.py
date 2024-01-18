@@ -1,10 +1,10 @@
 import datetime
 import time
 
-import src.api as api
-import src.lock as lock
-import src.triggers as triggers
-import src.extensions as extensions
+import src.chaster.api as api
+import src.chaster.lock as lock
+import src.chaster.triggers as triggers
+import src.chaster.extensions as extensions
 import unittest
 import uuid
 import logging

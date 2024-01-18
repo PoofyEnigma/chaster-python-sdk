@@ -1,8 +1,6 @@
-import datetime
 import json
 import unittest
-from src.api import conversation, lock, user, triggers, extensions
-from types import SimpleNamespace
+from src.chaster import conversation, extensions, lock, triggers, user
 from . import response_examples
 
 
