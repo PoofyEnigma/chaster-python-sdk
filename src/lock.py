@@ -191,8 +191,6 @@ class PageinatedLockHistory:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.results = ActionLog.generate_array(obj.results)
-        for result in obj.results:
-            self.results.append(ActionLog().update(result))
         return self
 
 

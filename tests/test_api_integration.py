@@ -324,7 +324,35 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_unlock_for_hygiene(self):
-        pass
+        ho = extensions.HygieneOpening()
+        ho.regularity = 1
+
+        eh = extensions.ExtensionsHandler()
+        eh.add(ho)
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+        locks = self.prep_lock(e)
+        lock_id = locks[0]._id
+
+        response = chaster_api_lockee.unlock_for_hygiene(lock_id, locks[0].extensions[0]._id, True)
+        self.assertEqual(response.status_code, 201)
+
+        _, lock_combo = chaster_api_lockee.get_temporary_opening_combination(lock_id)
+        self.assertIsNotNone(lock_combo)
+
+        _, combination = chaster_api_lockee.create_combination_code('1234')
+
+        response = chaster_api_lockee.set_temporary_opening_new_combination(lock_id, combination.combinationId)
+        self.assertEqual(response.status_code, 201)
+
+        _, history = chaster_api_lockee.get_lock_history(lock_id)
+        print(history)
+
+        _, combo = chaster_api_lockee.get_temporary_opening_combination_from_action_log(history.results[1]._id, lock_id)
+        self.assertIsNotNone(combo)
+
+        _ = chaster_api.unlock(lock_id)
+        _ = chaster_api_lockee.archive_lock(lock_id)
 
     @unittest.SkipTest
     def test_trigger_new_verification(self):
@@ -641,12 +669,6 @@ class ApiTestCases(unittest.TestCase):
     """
     Extensions - Temporary Opening
     """
-
-    # def get_temporary_opening_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
-
-    # def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
-
-    # def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
 
     """
     Community Events

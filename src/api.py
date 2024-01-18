@@ -271,15 +271,15 @@ class ChasterAPI:
             data = user.LockCombination().update(data)
         return response, data
 
-    def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 100, last_id: str = None) -> tuple[
+    def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 25, last_id: str = None) -> tuple[
         requests.models.Response, lock.PageinatedLockHistory]:
         data = {}
         if extension is not None and extension != '':
             data['extension'] = extension
         if limit is not None:
-            data['limit'] = extension
+            data['limit'] = limit
         if last_id is not None:
-            data['lastId'] = extension
+            data['lastId'] = last_id
         response = self._post(f'locks/{lock_id}/history', data=data)
 
         data = None
