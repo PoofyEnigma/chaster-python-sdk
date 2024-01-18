@@ -717,7 +717,7 @@ class MyTestCase(unittest.TestCase):
     def test_submit_verification(self):
         status_code = 201
         api = self.response_factory(status_code, '')
-        response = api.submit_verification('')
+        response = api.submit_verification('', './tests/test.png')
         self.assertEqual(response.status_code, status_code)
 
     # def get_verification_history(self, lock_id: str) -> tuple

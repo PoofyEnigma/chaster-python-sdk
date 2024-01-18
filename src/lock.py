@@ -541,7 +541,8 @@ class VerificationPhotoHistory:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.submittedAt = dateutil.parser.isoparse(obj.submittedAt)
-        self.votes = VerificationPhotoHistoryVotes().update(obj.votes)
+        if obj.votes is not None:
+            self.votes = VerificationPhotoHistoryVotes().update(obj.votes)
         return self
 
     @staticmethod

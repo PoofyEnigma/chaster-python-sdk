@@ -691,8 +691,12 @@ class ChasterAPI:
     Extensions - Verification Picture
     """
 
-    def submit_verification(self, lock_id: str) -> requests.models.Response:
-        return self._post(f'/extensions/verification-picture/{lock_id}/submit', {})
+    # TODO: enableVerificationCode False does what?
+    def submit_verification(self, lock_id: str, uri, enableVerificationCode: bool = True) -> requests.models.Response:
+        fmf = generate_multipart_form_from_uri(uri)
+        files = {'file': (fmf.name, open(fmf.uri, 'rb'), fmf.type),
+                 'enableVerificationCode': (None, enableVerificationCode)}
+        return self._post_form(f'/extensions/verification-picture/{lock_id}/submit', files)
 
     def get_verification_history(self, lock_id: str) -> tuple[
         requests.models.Response, list[lock.VerificationPhotoHistory]]:

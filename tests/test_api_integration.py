@@ -328,7 +328,32 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_trigger_new_verification(self):
-        pass
+        vp = extensions.VerificationPicture()
+        vp.regularity = 1
+        vp.config.visibility = extensions.VerificationPictureConfig.visability_keyholder
+        vp.config.peerVerification.enabled = False
+
+        eh = extensions.ExtensionsHandler()
+        eh.add(vp)
+        e = extensions.Extensions()
+        e.extensions = eh.dump()
+        locks = self.prep_lock(e)
+        lock_id = locks[0]._id
+
+        response = chaster_api.trigger_new_verification(lock_id, locks[0].extensions[0]._id)
+        self.assertEqual(response.status_code, 201)
+
+        response = chaster_api_lockee.submit_verification(lock_id, './tests/test.png')
+        self.assertEqual(response.status_code, 201)
+
+        _, history = chaster_api_lockee.get_verification_history(lock_id)
+        self.assertIsNotNone(history)
+
+        _ = chaster_api.unlock(lock_id)
+        _ = chaster_api_lockee.archive_lock(lock_id)
+
+
+
 
     """
     Lock Creation
@@ -672,6 +697,10 @@ class ApiTestCases(unittest.TestCase):
 
         _, data = chaster_api.find_explore_page_locks()
         self.assertIsNotNone(data)
+
+    """
+    Extensions - Verification Picture
+    """
 
 
 if __name__ == '__main__':

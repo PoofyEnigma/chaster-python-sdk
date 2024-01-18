@@ -555,9 +555,12 @@ class PeerVerification:
 
 
 class VerificationPictureConfig:
+    visability_all = 'all'
+    visability_keyholder = 'keyholder'
+
     def __init__(self):
         self.peerVerification: PeerVerification = PeerVerification()
-        self.visibility: str = 'all'
+        self.visibility: str = VerificationPictureConfig.visability_all
 
     def update(self, obj):
         self.__dict__ = obj.__dict__

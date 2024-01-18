@@ -10,7 +10,7 @@ v0.1.0
 |-----------------------------------|---------|-----------|------------|--------|----------|
 | Shared Locks                      | done    | done      | done       |        |
 | Locks                             | done    | done      | done       |        |
-| trigger_extension_actions         | done    | done      | ip         |        |
+| trigger_extension_actions         | done    | done      | done       |        |
 | Lock Creation                     | done    | done      | done       |        |
 | Profile                           | done    | done      | done       |        |
 | Files                             | done    | done      | ip         |        |
@@ -27,7 +27,7 @@ v0.1.0
 | Reports                           | N/A     | N/A       | N/A        | N/A    | N/A      |
 | Partner Configurations            |         |           |            |        |
 | Public Locks                      | done    | done      | done       |        |
-| Extensions - Verification Picture | done    | done      |            |        |
+| Extensions - Verification Picture | done    | done      | done       |        |
 
 Stubbed - API call functions, DTOs defined<br>
 Validated - tested with mocked chaster http response<br>
