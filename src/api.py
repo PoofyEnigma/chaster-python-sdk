@@ -500,8 +500,8 @@ class ChasterAPI:
     def archive_keyholding_offer(self, session_request_id: str) -> requests.models.Response:
         return self._get(f'session-offer/{session_request_id}/archive')
 
-    def get_keyholding_offers_from_wearers(self) -> tuple[requests.models.Response, list[user.KeyholderOfferEntry]]:
-        return self._tester_get_wrapper('session-offer/requests', user.KeyholderOfferEntry.generate_array)
+    def get_keyholding_offers_from_wearers(self) -> tuple[requests.models.Response, list[user.KeyholderRequestEntry]]:
+        return self._tester_get_wrapper('session-offer/requests', user.KeyholderRequestEntry.generate_array)
 
     """
     Messaging

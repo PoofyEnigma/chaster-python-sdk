@@ -534,7 +534,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_keyholding_offers_from_wearers(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.keyholder_offers)
+        api = self.response_factory(status_code, response_examples.wearer_offers)
         response, data = api.get_keyholding_offers_from_wearers()
         self.assertEqual(response.status_code, status_code)
 

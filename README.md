@@ -16,7 +16,7 @@ v0.1.0
 | Files                             | done    | done      | ip         |        |
 | Combinations                      | done    | done      | done       |        |
 | Extensions                        | done    | done      | done       |        |
-| Session Offer                     | done    | done      |            |        |
+| Session Offer                     | done    | done      | done       |        |
 | Messaging                         | done    | done      |            |        |
 | Extensions - Temporary Opening    | done    | done      |            |        |
 | Community Events                  | done    | done      |            |        |

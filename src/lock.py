@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 import dateutil.parser
 
@@ -83,12 +84,12 @@ class Lock:
             obj['keyholderArchivedAt'] = self.keyholderArchivedAt.isoformat()
 
     def update(self, obj):
-        self.__dict__.update(obj.__dict__)
+        self.__dict__ = obj.__dict__.copy()
         if 'extensions' in obj.__dict__:
             self.extensions = extensions.Extension.generate_array(obj.extensions)
         if 'availableHomeActions' in obj.__dict__:
             self.availableHomeActions = AvailableHomeAction.generate_array(obj.availableHomeActions)
-        if obj.maxLimitDate is not None:
+        if 'maxLimitDate' in obj.__dict__ and obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
         if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
             self.unlockedAt = isoparse(obj.unlockedAt)

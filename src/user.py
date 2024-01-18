@@ -1,4 +1,6 @@
 import datetime
+import logging
+
 import dateutil.parser
 from . import lock
 
@@ -229,11 +231,14 @@ class AuthProfile:
 
 class KeyholderOfferEntry:
     def __init__(self):
+        self._id: str = ''
         self.keyholder: User = None
         self.lock: str = ''
         self.status: str = ''
         self.validatedAt: datetime.datetime = None
         self.archivedAt: datetime.datetime = None
+        self.createdAt: datetime.datetime = None
+        self.updatedAt: datetime.datetime = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -242,6 +247,10 @@ class KeyholderOfferEntry:
             self.validatedAt = dateutil.parser.isoparse(obj.validatedAt)
         if obj.archivedAt is not None:
             self.archivedAt = dateutil.parser.isoparse(obj.archivedAt)
+        if obj.createdAt is not None:
+            self.createdAt = dateutil.parser.isoparse(obj.createdAt)
+        if obj.updatedAt is not None:
+            self.updatedAt = dateutil.parser.isoparse(obj.updatedAt)
         return self
 
     @staticmethod
@@ -249,6 +258,39 @@ class KeyholderOfferEntry:
         out = []
         for item in obj_list:
             out.append(KeyholderOfferEntry().update(item))
+        return out
+
+
+class KeyholderRequestEntry:
+    def __init__(self):
+        self._id: str = ''
+        self.keyholder: str = ''
+        self.lock: lock.Lock = None
+        self.status: str = ''
+        self.validatedAt: datetime.datetime = None
+        self.archivedAt: datetime.datetime = None
+        self.createdAt: datetime.datetime = None
+        self.updatedAt: datetime.datetime = None
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.lock = lock.Lock().update(obj.lock)
+        if obj.validatedAt is not None:
+            self.validatedAt = dateutil.parser.isoparse(obj.validatedAt)
+        if obj.archivedAt is not None:
+            self.archivedAt = dateutil.parser.isoparse(obj.archivedAt)
+        if obj.createdAt is not None:
+            self.createdAt = dateutil.parser.isoparse(obj.createdAt)
+        if obj.updatedAt is not None:
+            self.updatedAt = dateutil.parser.isoparse(obj.updatedAt)
+        return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        out = []
+        for item in obj_list:
+            logging.getLogger().debug(item)
+            out.append(KeyholderRequestEntry().update(item))
         return out
 
 

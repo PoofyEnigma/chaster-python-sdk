@@ -330,11 +330,100 @@ class ApiTestCases(unittest.TestCase):
     """
     Extensions
     """
+
     @unittest.SkipTest
     def test_get_all_known_extensions(self):
         response, known_extensions = chaster_api.get_all_known_extensions()
         self.assertIsNotNone(known_extensions)
 
+    """
+    Session Offer
+    """
+
+    @unittest.SkipTest
+    def test_accept_session_offer(self):
+        _, combination = chaster_api_lockee.create_combination_code('1234')
+
+        l = lock.CreateLock()
+        l.minDuration = 0
+        l.maxDuration = 1
+        l.isTestLock = True
+        l.combinationId = combination.combinationId
+        _, lock_data = chaster_api_lockee.create_personal_lock(l)
+
+        response, user = chaster_api.get_your_profile()
+
+        response = chaster_api_lockee.create_keyholding_offer(lock_data.lockId, user.username)
+        self.assertEqual(response.status_code, 201)
+
+        response, user_offers = chaster_api_lockee.get_keyholding_offers(lock_data.lockId)
+        self.assertIsNotNone(user_offers)
+        self.assertGreaterEqual(len(user_offers), 1)
+
+        response, offers = chaster_api.get_keyholding_offers_from_wearers()
+        self.assertIsNotNone(offers)
+        self.assertGreaterEqual(len(offers), 1)
+
+        response = chaster_api.handle_keyholding_offer(offers[0]._id, True)
+        self.assertEqual(response.status_code, 201)
+
+        _ = chaster_api.unlock(lock_data.lockId)
+        _ = chaster_api_lockee.archive_lock(lock_data.lockId)
+
+    @unittest.SkipTest
+    def test_refuse_session_offer(self):
+        _, combination = chaster_api_lockee.create_combination_code('1234')
+
+        l = lock.CreateLock()
+        l.minDuration = 0
+        l.maxDuration = 1
+        l.isTestLock = True
+        l.combinationId = combination.combinationId
+        _, lock_data = chaster_api_lockee.create_personal_lock(l)
+
+        response, user = chaster_api.get_your_profile()
+
+        response = chaster_api_lockee.create_keyholding_offer(lock_data.lockId, user.username)
+        self.assertEqual(response.status_code, 201)
+
+        response, user_offers = chaster_api_lockee.get_keyholding_offers(lock_data.lockId)
+        self.assertIsNotNone(user_offers)
+        self.assertGreaterEqual(len(user_offers), 1)
+
+        _, locks = chaster_api_lockee.get_locks()
+
+        response, user_lock = chaster_api.retrieve_keyholder_request_lock_info(locks[0].offerToken)
+        self.assertIsNotNone(user_lock)
+
+        response = chaster_api.accept_keyholding_request(locks[0].offerToken)
+        self.assertEqual(response.status_code, 200)
+
+        _ = chaster_api.unlock(lock_data.lockId)
+        _ = chaster_api_lockee.archive_lock(lock_data.lockId)
+
+    @unittest.SkipTest
+    def test_archive_session_offer(self):
+        _, combination = chaster_api_lockee.create_combination_code('1234')
+
+        l = lock.CreateLock()
+        l.minDuration = 0
+        l.maxDuration = 1
+        l.isTestLock = True
+        l.combinationId = combination.combinationId
+        _, lock_data = chaster_api_lockee.create_personal_lock(l)
+
+        response, user = chaster_api.get_your_profile()
+
+        response = chaster_api_lockee.create_keyholding_offer(lock_data.lockId, user.username)
+        self.assertEqual(response.status_code, 201)
+
+        response, user_offers = chaster_api_lockee.get_keyholding_offers(lock_data.lockId)
+
+        response = chaster_api_lockee.archive_keyholding_offer(user_offers[0]._id)
+        self.assertEqual(response.status_code, 200)
+
+        _ = chaster_api_lockee.unlock(lock_data.lockId)
+        _ = chaster_api_lockee.archive_lock(lock_data.lockId)
 
 
 if __name__ == '__main__':
