@@ -7,10 +7,10 @@ import unittest
 from unittest.mock import MagicMock
 from requests import Response
 import json
-from src.api import ChasterAPI
-import src.lock as lock
-import src.triggers as triggers
-import src.extensions as extensions
+from src.chaster.api import ChasterAPI
+import src.chaster.lock as lock
+import src.chaster.triggers as triggers
+import src.chaster.extensions as extensions
 from types import SimpleNamespace
 from . import response_examples
 

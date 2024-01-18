@@ -1,12 +1,10 @@
 import datetime
-import logging
 
 import dateutil.parser
 
-from . import extensions
-from . import user
+from . import extensions, user
 from dateutil.parser import isoparse
-from dateutil.tz import tzutc
+
 
 class CreateLock:
     def __init__(self):
