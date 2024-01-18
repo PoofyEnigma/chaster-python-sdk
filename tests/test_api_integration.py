@@ -479,6 +479,15 @@ class ApiTestCases(unittest.TestCase):
         _, cec = chaster_api.get_community_event_categories()
         self.assertIsNotNone(cec)
 
+    """
+    Settings
+    """
+    @unittest.SkipTest
+    def test_get_app_settings(self):
+        _, settings = chaster_api.get_app_settings()
+        self.assertIsNotNone(settings)
+
+
 if __name__ == '__main__':
     log_format = '%(asctime)s %(name)s %(levelname)s %(message)s'
     root_logger = logging.getLogger()
