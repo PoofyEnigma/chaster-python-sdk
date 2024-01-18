@@ -384,7 +384,7 @@ class MyTestCase(unittest.TestCase):
     def test_create_personal_lock(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.lock_id_response)
-        response, data = api.create_personal_lock(lock.Lock())
+        response, data = api.create_personal_lock(lock.CreateLock())
         self.assertEqual(response.status_code, status_code)
 
     def test_add_extensions(self):
@@ -534,7 +534,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_keyholding_offers_from_wearers(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.keyholder_offers)
+        api = self.response_factory(status_code, response_examples.wearer_offers)
         response, data = api.get_keyholding_offers_from_wearers()
         self.assertEqual(response.status_code, status_code)
 
@@ -717,7 +717,7 @@ class MyTestCase(unittest.TestCase):
     def test_submit_verification(self):
         status_code = 201
         api = self.response_factory(status_code, '')
-        response = api.submit_verification('')
+        response = api.submit_verification('', './tests/test.png')
         self.assertEqual(response.status_code, status_code)
 
     # def get_verification_history(self, lock_id: str) -> tuple

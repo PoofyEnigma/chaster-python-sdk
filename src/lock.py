@@ -1,10 +1,28 @@
 import datetime
+import logging
 
 import dateutil.parser
 
 from . import extensions
 from . import user
 from dateutil.parser import isoparse
+from dateutil.tz import tzutc
+
+class CreateLock:
+    def __init__(self):
+        self.minDuration: int = 0
+        self.maxDuration: int = 0
+        self.maxLimitDuration: int = 0
+        self.displayRemainingTime: bool = True
+        self.limitLockTime: bool = True
+        self.combinationId: str = ''
+        self.extensions = []
+        self.allowSessionOffer: bool = True
+        self.isTestLock: bool = False
+        self.hideTimeLogs: bool = True
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class Lock:
@@ -32,7 +50,7 @@ class Lock:
         self.isTestLock: bool = False
         self.offerToken: str = ''
         self.hideTimeLogs: bool = True
-        self.trusted: bool = True
+        self.trusted: bool = False
         self.user = user.User()
         self.keyholder = user.User()
         self.isAllowedToViewTime: bool = True
@@ -66,12 +84,12 @@ class Lock:
             obj['keyholderArchivedAt'] = self.keyholderArchivedAt.isoformat()
 
     def update(self, obj):
-        self.__dict__.update(obj.__dict__)
+        self.__dict__ = obj.__dict__.copy()
         if 'extensions' in obj.__dict__:
             self.extensions = extensions.Extension.generate_array(obj.extensions)
         if 'availableHomeActions' in obj.__dict__:
             self.availableHomeActions = AvailableHomeAction.generate_array(obj.availableHomeActions)
-        if obj.maxLimitDate is not None:
+        if 'maxLimitDate' in obj.__dict__ and obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
         if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
             self.unlockedAt = isoparse(obj.unlockedAt)
@@ -173,8 +191,6 @@ class PageinatedLockHistory:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.results = ActionLog.generate_array(obj.results)
-        for result in obj.results:
-            self.results.append(ActionLog().update(result))
         return self
 
 
@@ -202,7 +218,7 @@ class LockId:
 
 class LockInfo:
     def __init__(self):
-        self.password: str = ''
+        self.password: str = None
         self.combinationId: str = ''
         self.isTestLock: bool = False
 
@@ -440,7 +456,6 @@ class ExplorePageLock:
         return category
 
 
-
 class SearchPublicLockCriteriaDuration:
     def __init__(self):
         self.minDuration: int = -1
@@ -490,7 +505,7 @@ class SearchPublicLockCriteria:
 class SearchPublicLock:
     def __init__(self):
         self.limit: int = 15
-        self.lastId: str = ''
+        self.lastId: str = None
         self.criteria: SearchPublicLockCriteria = None
 
     def dump(self):
@@ -524,7 +539,8 @@ class VerificationPhotoHistory:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.submittedAt = dateutil.parser.isoparse(obj.submittedAt)
-        self.votes = VerificationPhotoHistoryVotes().update(obj.votes)
+        if obj.votes is not None:
+            self.votes = VerificationPhotoHistoryVotes().update(obj.votes)
         return self
 
     @staticmethod

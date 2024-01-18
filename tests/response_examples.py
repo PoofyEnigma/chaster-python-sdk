@@ -5041,47 +5041,130 @@ conversations_list ="""
 """
 
 keyholder_offers = """[
-  {
-    "keyholder": {
-      "role": "keyholder",
-      "features": [
-        "partner_extensions"
-      ],
-      "_id": "string",
-      "username": "string",
-      "isPremium": true,
-      "description": "string",
-      "location": "string",
-      "gender": "string",
-      "age": 0,
-      "isFindom": true,
-      "avatarUrl": "string",
-      "online": true,
-      "lastSeen": 0,
-      "isAdmin": true,
-      "isModerator": true,
-      "metadata": {
-        "locktober2020Points": 0,
-        "locktober2021Points": 0,
-        "chastityMonth2022Points": 0,
-        "locktober2022Points": 0,
-        "locktober2023Points": 0
-      },
-      "fullLocation": "string",
-      "discordId": "string",
-      "discordUsername": "string",
-      "isDisabled": true,
-      "isSuspended": true,
-      "joinedAt": "string",
-      "isNewMember": true,
-      "isSuspendedOrDisabled": true
-    },
-    "lock": "string",
-    "status": "pending",
-    "validatedAt": "2024-01-12T16:39:31.558Z",
-    "archivedAt": "2024-01-12T16:39:31.558Z"
-  }
+    {
+        "_id": "65a85f0ead4664390b08f75c",
+        "lock": "65a85f0d56f045a0bf9e255d",
+        "keyholder": {
+            "_id": "64e5b481b533a5ccfe61567f",
+            "username": "PupHimbo",
+            "isPremium": false,
+            "description": "Pup looking for more friends, cuddles, and cum, and maybe a cage. Aspiring to be a slutty Himbo pup",
+            "location": "San Francisco ",
+            "gender": "Male",
+            "age": 27,
+            "role": "switch",
+            "isFindom": false,
+            "avatarUrl": "https://cdn01.chaster.app/app/uploads/avatars/EfcMg0h1HiLUc67j.jpg",
+            "online": false,
+            "lastSeen": null,
+            "isAdmin": false,
+            "isModerator": false,
+            "metadata": {
+                "locktober2020Points": 0,
+                "locktober2021Points": 0,
+                "chastityMonth2022Points": 0,
+                "locktober2022Points": 0,
+                "locktober2023Points": 1240
+            },
+            "fullLocation": "San Francisco , California, United States",
+            "discordId": "1153172669559214141",
+            "discordUsername": "puphimbo",
+            "isDisabled": false,
+            "isSuspended": false,
+            "features": [],
+            "joinedAt": "2023-08",
+            "isNewMember": false,
+            "isSuspendedOrDisabled": false
+        },
+        "status": "pending",
+        "validatedAt": null,
+        "archivedAt": null,
+        "createdAt": "2024-01-17T23:13:18.117Z",
+        "updatedAt": "2024-01-17T23:13:18.117Z"
+    }
 ]"""
+
+wearer_offers = """
+[
+  {
+    "_id": "65a87e82c29dc11782974b40",
+    "lock": {
+      "_id": "65a87e8256f045a0bfb46552",
+      "startDate": "2024-01-18T01:27:30.000Z",
+      "endDate": "2024-01-18T01:27:55.000Z",
+      "minDate": "2024-01-18T01:27:30.000Z",
+      "maxDate": "2024-01-18T01:28:30.000Z",
+      "maxLimitDate": null,
+      "displayRemainingTime": true,
+      "limitLockTime": false,
+      "status": "locked",
+      "combination": "65a87e81ecde82c8ac185ea2",
+      "sharedLock": null,
+      "createdAt": "2024-01-18T01:27:30.102Z",
+      "updatedAt": "2024-01-18T01:27:30.183Z",
+      "unlockedAt": null,
+      "archivedAt": null,
+      "frozenAt": null,
+      "keyholderArchivedAt": null,
+      "totalDuration": 2224,
+      "allowSessionOffer": true,
+      "isTestLock": false,
+      "offerToken": null,
+      "hideTimeLogs": false,
+      "trusted": false,
+      "user": {
+        "_id": "65873830075fc043537113ee",
+        "username": "Poofy",
+        "isPremium": false,
+        "description": "",
+        "location": "",
+        "gender": "",
+        "age": null,
+        "role": "unspecified",
+        "isFindom": false,
+        "avatarUrl": "https://api.chaster.app/users/avatar/default_avatar.jpg",
+        "online": true,
+        "lastSeen": null,
+        "isAdmin": false,
+        "isModerator": false,
+        "metadata": {
+          "locktober2020Points": 0,
+          "locktober2021Points": 0,
+          "chastityMonth2022Points": 0,
+          "locktober2022Points": 0,
+          "locktober2023Points": 0
+        },
+        "fullLocation": "",
+        "discordId": null,
+        "discordUsername": null,
+        "isDisabled": false,
+        "isSuspended": false,
+        "features": [],
+        "joinedAt": "2023-12",
+        "isNewMember": false,
+        "isSuspendedOrDisabled": false
+      },
+      "keyholder": null,
+      "isAllowedToViewTime": true,
+      "canBeUnlocked": false,
+      "canBeUnlockedByMaxLimitDate": false,
+      "isFrozen": false,
+      "extensions": [],
+      "role": "keyholder",
+      "title": "Self-lock",
+      "lastVerificationPicture": null,
+      "reasonsPreventingUnlocking": [],
+      "extensionsAllowUnlocking": true
+    },
+    "keyholder": "64e5b481b533a5ccfe61567f",
+    "status": "pending",
+    "validatedAt": null,
+    "archivedAt": null,
+    "createdAt": "2024-01-18T01:27:30.777Z",
+    "updatedAt": "2024-01-18T01:27:30.777Z"
+  }
+]
+"""
 
 
 all_known_extensions = """

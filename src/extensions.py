@@ -1,6 +1,47 @@
+import datetime
+
+import dateutil.parser
+
 mode_non_cumulative = 'non_cumulative'
 mode_unlimited = 'unlimited'
 
+
+class Extension:
+    def __init__(self):
+        self._id: str = ''  # Lock only
+        self.textConfig: str = ''
+        self.name: str = None  # Shared lock only
+        self.displayName: str = None  # Lock only
+        self.createdAt: datetime.datetime = None  # Lock only
+        self.updatedAt: datetime.datetime = None  # Lock only
+        self.isPartner: bool = None  # Lock only
+        self.nbActionsRemaining: int = None  # Lock only
+        self.userData = None  # Lock only
+        self.summary: str = None  # Lock only
+        self.subtitle: str = None  # Lock only
+        self.icon: str = None  # Lock only
+
+    def get_name(self):
+        if self.displayName is not None:
+            return self.displayName
+        if self.name is not None:
+            return self.name
+        return ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        if 'createdAt' in obj.__dict__ and obj.createdAt is not None:
+            self.createdAt = dateutil.parser.isoparse(obj.createdAt)
+        if 'updatedAt' in obj.__dict__ and obj.updatedAt is not None:
+            self.updatedAt = dateutil.parser.isoparse(obj.updatedAt)
+        return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        h = ExtensionsHandler()
+        for extension in obj_list:
+            h.add(extension)
+        return h.dump()
 
 class Extensions:
     def __init__(self):
@@ -20,13 +61,40 @@ class ExtensionsHandler:
         self.share_links: list[ShareLinks] = []
         self.pillories: list[Pillory] = []
         self.hygiene_openings: list[HygieneOpening] = []
-        self.dices: list[Dice] = []
-        self.wheel_of_fortune: list[WheelOfFortune] = []
+        self.dice: list[Dice] = []
+        self.wheel_of_fortunes: list[WheelOfFortune] = []
         self.tasks: list[Tasks] = []
         self.penalties: list[Penalties] = []
         self.verification_pictures: list[VerificationPicture] = []
         self.random_events: list[RandomEvents] = []
         self.guess_timers: list[GuessTheTimer] = []
+
+    def add_defined(self, extension):
+        if extension.slug == 'link':
+            self.share_links.append(extension)
+        if extension.slug == 'pillory':
+            self.pillories.append(extension)
+        if extension.slug == 'temporary-opening':
+            self.hygiene_openings.append(extension)
+        if extension.slug == 'dice':
+            self.dice.append(extension)
+        if extension.slug == 'wheel-of-fortune':
+            self.wheel_of_fortunes.append(extension)
+        if extension.slug == 'tasks':
+            self.tasks.append(extension)
+        if extension.slug == 'penalty':
+            self.penalties.append(extension)
+        if extension.slug == 'verification-picture':
+            self.verification_pictures.append(extension)
+        if extension.slug == 'random-events':
+            self.random_events.append(extension)
+        if extension.slug == 'guess-timer':
+            self.guess_timers.append(extension)
+
+    def load_defined(self, extensions):
+        for extension in extensions:
+            self.add_defined(extension)
+        return self
 
     def load(self, extensions):
         for extension in extensions:
@@ -41,9 +109,9 @@ class ExtensionsHandler:
         if extension.slug == 'temporary-opening':
             self.hygiene_openings.append(HygieneOpening().update(extension))
         if extension.slug == 'dice':
-            self.dices.append(Dice().update(extension))
+            self.dice.append(Dice().update(extension))
         if extension.slug == 'wheel-of-fortune':
-            self.wheel_of_fortune.append(WheelOfFortune().update(extension))
+            self.wheel_of_fortunes.append(WheelOfFortune().update(extension))
         if extension.slug == 'tasks':
             self.tasks.append(Tasks().update(extension))
         if extension.slug == 'penalty':
@@ -72,17 +140,7 @@ def generate_punishment(punishment):
     if punishment.name == 'pillory':
         return PunishmentPillory(punishment.params.duration)
 
-
-class Extension:
-    @staticmethod
-    def generate_array(obj_list):
-        h = ExtensionsHandler()
-        for extension in obj_list:
-            h.add(extension)
-        return h.dump()
-
-
-class Params:
+class PunishmentPilloryParams:
     def __init__(self, time):
         self.duration: int = time
 
@@ -114,7 +172,7 @@ class Punishment:
 class PunishmentPillory(Punishment):
     def __init__(self, time):
         super().__init__('pillory')
-        self.params: Params = Params(time)
+        self.params: PunishmentPilloryParams = PunishmentPilloryParams(time)
 
     def get_time(self):
         return self.params.duration
@@ -163,19 +221,23 @@ class ShareLinksConfig:
         return self.__dict__.copy()
 
 
-class ShareLinks:
+class ShareLinks(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'link'
         self.config: ShareLinksConfig = ShareLinksConfig()
         self.mode: str = mode_unlimited
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
         return obj
 
@@ -183,26 +245,31 @@ class ShareLinks:
 class PilloryConfig:
     def __init__(self):
         self.timeToAdd: int = 3600
-        self.limitToLoggedUser: bool = True
+        self.limitToLoggedUsers: bool = True
 
     def dump(self):
-        return self.__dict__.copy()
+        return  self.__dict__.copy()
 
 
-class Pillory:
+class Pillory(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'pillory'
         self.config: PilloryConfig = PilloryConfig()
         self.mode: str = mode_unlimited
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
+        return obj
 
 
 class HygieneOpeningConfig:
@@ -215,21 +282,25 @@ class HygieneOpeningConfig:
         return self.__dict__.copy()
 
 
-class HygieneOpening:
+class HygieneOpening(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'temporary-opening'
         self.config: HygieneOpeningConfig = HygieneOpeningConfig()
         self.mode: str = mode_non_cumulative
         self.regularity: int = 172800
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
-        return self
+        return obj
 
 
 class DiceConfig:
@@ -240,20 +311,25 @@ class DiceConfig:
         return self.__dict__.copy()
 
 
-class Dice:
+class Dice(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'dice'
         self.config: DiceConfig = DiceConfig()
         self.mode: mode_non_cumulative = mode_non_cumulative
+        self.regularity: int = 1
 
     def update(self, obj):
-        self.__dict__.update(obj.__dict__)
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
         obj['config'] = self.config.dump()
-        return self
+        obj['regularity'] = self.regularity
+        return obj
 
 
 class WheelOfFortuneSegment:
@@ -290,21 +366,25 @@ class WheelOfFortuneConfig:
         return obj
 
 
-class WheelOfFortune:
+class WheelOfFortune(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = "wheel-of-fortune"
         self.config: WheelOfFortuneConfig = WheelOfFortuneConfig()
         self.mode: str = 'non_cumulative'
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__.update(obj.__dict__)
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
-        return self
+        return obj
 
 
 class Task:
@@ -312,19 +392,30 @@ class Task:
         self.task: str = ''
         self.points: int = 0
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
     def dump(self):
         return self.__dict__.copy()
+
+    @staticmethod
+    def generate_array(obj_list):
+        tasks = []
+        for item in obj_list:
+            tasks.append(Task().update(item))
+        return tasks
 
 
 class TasksConfig:
     def __init__(self):
         self.tasks: list[Task] = []
-        self.voteEnabled: bool = False
-        self.voteDuration: int = 43200
+        self.voteEnabled: bool = True
+        self.voteDuration: int = 3600
         self.startVoteAfterLastVote: bool = False
-        self.enablePoints: bool = True
-        self.pointsRequired: int = 50
-        self.allowWearerToEditTasks: bool = True
+        self.enablePoints: bool = False
+        self.pointsRequired: int = 0
+        self.allowWearerToEditTasks: bool = False
         self.allowWearerToConfigureTasks: bool = False
         self.preventWearerFromAssigningTasks: bool = False
         self.allowWearerToChooseTasks: bool = True
@@ -333,6 +424,7 @@ class TasksConfig:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.actionsOnAbandonedTask = Punishment.generate_array(obj.actionsOnAbandonedTask)
+        self.tasks = Task.generate_array(obj.tasks)
         return self
 
     def dump(self):
@@ -346,20 +438,25 @@ class TasksConfig:
         return obj
 
 
-class Tasks:
+class Tasks(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'tasks'
         self.config: TasksConfig = TasksConfig()
         self.mode: str = mode_non_cumulative
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
+        super().update(obj)
         self.config = TasksConfig().update(obj.config)
         return self
 
+    # TODO: slug, mode, regularity, config is a common pattern. Use inheritance?
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
         return obj
 
@@ -417,20 +514,24 @@ class PenaltiesConfig:
         return obj
 
 
-class Penalties:
+class Penalties(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'penalty'
         self.config: PenaltiesConfig = PenaltiesConfig()
         self.mode: str = mode_unlimited
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        self.__dict__ = obj.__dict__.copy()
         self.config = PenaltiesConfig().update(obj.config)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
         return obj
 
@@ -454,9 +555,12 @@ class PeerVerification:
 
 
 class VerificationPictureConfig:
+    visability_all = 'all'
+    visability_keyholder = 'keyholder'
+
     def __init__(self):
         self.peerVerification: PeerVerification = PeerVerification()
-        self.visibility: str = 'all'
+        self.visibility: str = VerificationPictureConfig.visability_all
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
@@ -469,23 +573,27 @@ class VerificationPictureConfig:
         return obj
 
 
-class VerificationPicture:
+class VerificationPicture(Extension):
     visibility_all = 'all'
     visibility_only_kh = 'keyholder'
 
     def __init__(self):
+        super().__init__()
         self.slug: str = "verification-picture"
         self.config: VerificationPictureConfig = VerificationPictureConfig()
-        self.regularity: int = 0
+        self.regularity: int = 3600
         self.mode: str = mode_non_cumulative
 
     def update(self, obj):
-        self.__dict__.update(obj.__dict__)
+        super().update(obj)
         self.config = VerificationPictureConfig().update(obj.config)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['regularity'] = self.regularity
+        obj['mode'] = self.mode
         obj['config'] = self.config.dump()
         return obj
 
@@ -501,19 +609,23 @@ class RandomEventsConfig:
         return self.__dict__.copy()
 
 
-class RandomEvents:
+class RandomEvents(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'random-events'
         self.config: RandomEventsConfig = RandomEventsConfig()
         self.mode: str = mode_unlimited
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
+        obj['slug'] = self.slug
         obj['config'] = self.config.dump()
         return obj
 
@@ -527,19 +639,23 @@ class GuessTheTimerConfig:
         return self.__dict__.copy()
 
 
-class GuessTheTimer:
+class GuessTheTimer(Extension):
     def __init__(self):
+        super().__init__()
         self.slug: str = 'guess-timer'
         self.config: GuessTheTimerConfig = GuessTheTimerConfig()
         self.mode: str = mode_unlimited
         self.regularity: int = 3600
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        super().update(obj)
         return self
 
     def dump(self):
-        obj = self.__dict__.copy()
+        obj = {}
+        obj['slug'] = self.slug
+        obj['mode'] = self.mode
+        obj['regularity'] = self.regularity
         obj['config'] = self.config.dump()
         return obj
 
@@ -548,6 +664,7 @@ def known_extension_list_update(obj):
     out = []
     for item in obj:
         out.append(KnownExtension().update(item))
+    return out
 
 
 class KnownExtension:

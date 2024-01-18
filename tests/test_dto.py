@@ -296,3 +296,8 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.app_settings)
         cmp = user.AppSettings()
         self.compare_obj_params(cmp, base)
+
+    """
+    Extension Objects
+    """
+    

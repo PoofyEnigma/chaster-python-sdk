@@ -8,6 +8,9 @@ class ActionRequest:
         self.action: str = 'submit'
         self.payload: any = {}
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 # share links
 # vote
@@ -55,12 +58,20 @@ class ShareLinksVotePayload:
         self.action = ShareLinksVotePayload.action_add
         self.sessionId: str = ''
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class ShareLinksVote(ActionRequest):
     def __init__(self):
         super().__init__()
         self.action = 'vote'
-        self.payload: ShareLinksVotePayload = None
+        self.payload: ShareLinksVotePayload = ShareLinksVotePayload()
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['payload'] = self.payload.dump()
+        return obj
 
 
 class ShareLinksVoteReturn:
@@ -115,14 +126,22 @@ class PilloryVotes:
 class PilloryPayload:
     def __init__(self):
         self.duration: int = 900
-        self.reason: str = ''
+        self.reason: str = 'default'
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class PilloryParameters(ActionRequest):
     def __init__(self):
         super().__init__()
         self.action = 'submit'
-        self.payload: PilloryPayload = None
+        self.payload: PilloryPayload = PilloryPayload()
+
+    def dump(self):
+        obj = super().dump()
+        obj['payload'] = self.payload.dump()
+        return obj
 
 
 # hygience opening
@@ -172,6 +191,7 @@ class WheelOfFortuneResult:
         self.action = WheelOfFortuneAction().update(obj.action)
         return self
 
+
 # tasks
 # get a random task
 # {"action":"submit","payload":{"requestVote":false}}
@@ -182,7 +202,6 @@ class WheelOfFortuneResult:
 # {"action":"completeTask","payload":{"isCompleted":true}}
 # fail task
 # {"action":"completeTask","payload":{"isCompleted":false}}
-
 
 
 # verification photo
@@ -201,4 +220,3 @@ class GuessTheTimerResponse:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
-
