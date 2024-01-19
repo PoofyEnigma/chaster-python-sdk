@@ -39,28 +39,28 @@
 
 ### Backlog
 
-| API Group                         | util.dump_time | util.safe_dump_parameter |
-|-----------------------------------|----------------|--------------------------|
-| Shared Locks                      |                |                          |
-| Locks                             |                |                          |
-| trigger_extension_actions         |                |                          |
-| Lock Creation                     |                |                          |
-| Profile                           |                |                          |
-| Files                             |                |                          |
-| Combinations                      |                |                          |
-| Extensions                        |                |                          |
-| Session Offer                     |                |                          |
-| Messaging                         |                |                          |
-| Extensions - Temporary Opening    |                |                          |
-| Community Events                  |                |                          |
-| Partner Extensions                |                |                          |
-| Settings                          |                |                          |
-| Users                             |                |                          |
-| Keyholder                         |                |                          |
-| Reports                           |                |                          |
-| Partner Configurations            |                |                          |
-| Public Locks                      |                |                          |
-| Extensions - Verification Picture |                |                          |
+| API Group                         | util.safe_dump_parameter |
+|-----------------------------------|--------------------------|
+| Shared Locks                      |                          |
+| Locks                             |                          |
+| trigger_extension_actions         |                          |
+| Lock Creation                     |                          |
+| Profile                           |                          |
+| Files                             |                          |
+| Combinations                      |                          |
+| Extensions                        |                          |
+| Session Offer                     |                          |
+| Messaging                         |                          |
+| Extensions - Temporary Opening    |                          |
+| Community Events                  |                          |
+| Partner Extensions                |                          |
+| Settings                          |                          |
+| Users                             |                          |
+| Keyholder                         |                          |
+| Reports                           |                          |
+| Partner Configurations            |                          |
+| Public Locks                      |                          |
+| Extensions - Verification Picture |                          |
 
 - Extension Information API - C&C the extension information component vs. the extension info in the lock obj
 - Redact bearer token from logs

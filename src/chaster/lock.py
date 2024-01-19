@@ -329,12 +329,9 @@ class CreateSharedLock:
 
     def dump(self):
         dictionary = self.__dict__.copy()
-        if self.maxDate is not None:
-            dictionary['maxDate'] = util.datetime_to_chaster_format(self.maxDate)
-        if self.minDate is not None:
-            dictionary['minDate'] = util.datetime_to_chaster_format(self.minDate)
-        if self.maxLimitDate is not None:
-            dictionary['maxLimitDate'] = util.datetime_to_chaster_format(self.maxLimitDate)
+        util.dump_time(self, 'maxDate', dictionary)
+        util.dump_time(self, 'minDate', dictionary)
+        util.dump_time(self, 'maxLimitDate', dictionary)
         return dictionary
 
     def validate(self):
@@ -430,14 +427,10 @@ class SharedLock:
         util.safe_dump_parameter(self, 'user', obj)
         if 'joinRules' in self.__dict__ and self.joinRules is not None:
             obj['joinRules'] = self.joinRules.dump()
-        if self.maxDate is not None:
-            obj['maxDate'] = util.datetime_to_chaster_format(self.maxDate)
-        if self.minDate is not None:
-            obj['minDate'] = util.datetime_to_chaster_format(self.minDate)
-        if self.maxLimitDate is not None:
-            obj['maxLimitDate'] = util.datetime_to_chaster_format(self.maxLimitDate)
-        if self.lastSavedAt is not None:
-            obj['lastSavedAt'] = util.datetime_to_chaster_format(self.lastSavedAt)
+        util.dump_time(self, 'maxDate', obj)
+        util.dump_time(self, 'minDate', obj)
+        util.dump_time(self, 'maxLimitDate', obj)
+        util.dump_time(self, 'lastSavedAt', obj)
         return obj
 
     @staticmethod
@@ -711,7 +704,7 @@ class VerificationPhotoHistory:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['submittedAt'] = util.datetime_to_chaster_format(self.submittedAt)
+        util.dump_time(self, 'submittedAt', obj)
         obj['votes'] = self.votes.dump()
         return obj
 

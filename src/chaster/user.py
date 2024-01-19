@@ -92,10 +92,8 @@ class LockCombination:
 
     def dump(self):
         obj = self.__dict__.copy()
-        if self.createdAt is not None:
-            obj['createdAt'] = util.datetime_to_chaster_format(self.createdAt)
-        if self.updatedAt is not None:
-            obj['updatedAt'] = util.datetime_to_chaster_format(self.updatedAt)
+        util.dump_time(self, 'createdAt', obj)
+        util.dump_time(self, 'updatedAt', obj)
         return obj
 
 
