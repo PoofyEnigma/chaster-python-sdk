@@ -39,19 +39,38 @@
 
 ### Backlog
 
+| API Group                         | util.dump_time | util.safe_dump_parameter |
+|-----------------------------------|----------------|--------------------------|
+| Shared Locks                      |                |                          |
+| Locks                             |                |                          |
+| trigger_extension_actions         |                |                          |
+| Lock Creation                     |                |                          |
+| Profile                           |                |                          |
+| Files                             |                |                          |
+| Combinations                      |                |                          |
+| Extensions                        |                |                          |
+| Session Offer                     |                |                          |
+| Messaging                         |                |                          |
+| Extensions - Temporary Opening    |                |                          |
+| Community Events                  |                |                          |
+| Partner Extensions                |                |                          |
+| Settings                          |                |                          |
+| Users                             |                |                          |
+| Keyholder                         |                |                          |
+| Reports                           |                |                          |
+| Partner Configurations            |                |                          |
+| Public Locks                      |                |                          |
+| Extensions - Verification Picture |                |                          |
+
 - Extension Information API - C&C the extension information component vs. the extension info in the lock obj
 - Redact bearer token from logs
 - Remove delay and apply intelligent rate limiting reaction
-- embrace util.dump_time
-- embrace one line for loops
 - need more/better extension dump handling. May need to reformat extension handler
-- embrace util.safe_dump_parameter
 - Probably remove bespoke objects as output to api functions, such as in files
 
 ## Research
 
 - Integration test, isolate by function
-
 - connection pool, thread safety of SDK
 - test and tweak retry
 - implement w3c tracing protocol
@@ -130,14 +149,6 @@ Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface
 
 Understood - Validated it has a place in the deployment process and is functioning correctly.<br>
 Documented - The file is document in a process doc
-
-## Testing
-
-| Suite       | Stmts | Miss | Cover | Date      |
-|-------------|-------|------|-------|-----------|
-| Unittest    | 3293  | 859  | 74%   | 1/19/2024 |
-| Unittest    | 4055  | 994  | 75%   | 1/19/2024 |
-| Integration | 4055  | 994  | 75%   | 1/19/2024 |
 
 ## Linting
 

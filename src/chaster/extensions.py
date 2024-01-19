@@ -177,10 +177,7 @@ class Punishment:
 
     @staticmethod
     def generate_array(obj_list):
-        punishments = []
-        for punishment in obj_list:
-            punishments.append(generate_punishment(punishment))
-        return punishments
+        return [generate_punishment(punishment) for punishment in obj_list]
 
 
 class PunishmentPillory(Punishment):
@@ -450,10 +447,7 @@ class Task:
 
     @staticmethod
     def generate_array(obj_list):
-        tasks = []
-        for item in obj_list:
-            tasks.append(Task().update(item))
-        return tasks
+        return [Task().update(item) for item in obj_list]
 
 
 class TasksConfig:
@@ -534,17 +528,14 @@ class Penalty:
     def dump(self):
         obj = self.__dict__.copy()
         obj['params'] = self.params.dump()
-        obj['punishments'] = []
+        obj['punishments'] = [] # TODO: Move this to a dump_array funciton after punishments have been dto tested
         for punishment in self.punishments:
             obj['punishments'].append(punishment.dump())
         return obj
 
     @staticmethod
     def generate_array(obj_list):
-        penalties = []
-        for penalty in obj_list:
-            penalties.append(Penalty().update(penalty))
-        return penalties
+        return [Penalty().update(penalty) for penalty in obj_list]
 
 
 class PenaltiesConfig:
@@ -557,7 +548,7 @@ class PenaltiesConfig:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['penalties'] = []
+        obj['penalties'] = [] # TODO: Move this to a dump_array funciton after penalties have been dto tested
         for penalty in self.penalties:
             obj['penalties'].append(penalty.dump())
         return obj
@@ -597,7 +588,7 @@ class PeerVerification:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['punishments'] = []
+        obj['punishments'] = [] # TODO: Move this to a dump_array funciton after punishments have been dto tested
         for punishment in self.punishments:
             obj['punishments'].append(punishment.dump())
         return obj
@@ -709,13 +700,6 @@ class GuessTheTimer(Extension):
         return obj
 
 
-def known_extension_list_update(obj):
-    out = []
-    for item in obj:
-        out.append(KnownExtension().update(item))
-    return out
-
-
 class KnownExtension:
     def __init__(self):
         self.defaultConfig: dict = {}  # TODO: Flush out based on known extensions
@@ -747,3 +731,7 @@ class KnownExtension:
         obj = self.__dict__.copy()
         obj['defaultConfig'] = self.defaultConfig.__dict__.copy()
         return obj
+
+    @staticmethod
+    def generate_array(obj_list):
+        return [KnownExtension().update(item) for item in obj_list]

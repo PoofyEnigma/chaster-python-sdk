@@ -1,7 +1,5 @@
 import datetime
 
-import dateutil.parser
-
 
 def datetime_to_chaster_format(d: datetime.datetime) -> str:
     d.replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
@@ -16,6 +14,7 @@ def dump_time(src, key, out):
 def safe_dump_parameter(src, key, out):
     if key in src.__dict__ and src.__dict__[key] is not None:
         out[key] = src.__dict__[key].dump()
+
 
 def safe_update_parameter(src, key, out, update):
     if key in src.__dict__ and src.__dict__[key] is not None:

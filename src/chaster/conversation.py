@@ -79,10 +79,7 @@ class Message:
 
     @staticmethod
     def generate_array(obj_list):
-        messages = []
-        for item in obj_list:
-            messages.append(Message().update(item))
-        return messages
+        return [Message().update(item) for item in obj_list]
 
     @staticmethod
     def dump_array(obj_list):

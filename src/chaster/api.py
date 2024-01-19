@@ -1151,7 +1151,7 @@ class ChasterAPI(_ChasterApi):
         `endpoint <https://api.chaster.app/api#/Extensions/ExtensionListController_getExtensions>`_
         :return:
         """
-        return self._tester_get_wrapper('extensions', extensions.known_extension_list_update)
+        return self._tester_get_wrapper('extensions', extensions.KnownExtension.generate_array)
 
     """
     Session Offer

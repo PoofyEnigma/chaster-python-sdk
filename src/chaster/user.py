@@ -393,10 +393,7 @@ class KeyholderOfferEntry:
 
     @staticmethod
     def generate_array(obj_list):
-        out = []
-        for item in obj_list:
-            out.append(KeyholderOfferEntry().update(item))
-        return out
+        return [KeyholderOfferEntry().update(item) for item in obj_list]
 
 
 class KeyholderRequestEntry:
@@ -425,11 +422,7 @@ class KeyholderRequestEntry:
 
     @staticmethod
     def generate_array(obj_list):
-        out = []
-        for item in obj_list:
-            logging.getLogger().debug(item)
-            out.append(KeyholderRequestEntry().update(item))
-        return out
+        return [KeyholderRequestEntry().update(item) for item in obj_list]
 
 
 class CommunityEventAction:
@@ -479,10 +472,7 @@ class CommunityEventCategory:
 
     @staticmethod
     def generate_array(obj_list):
-        cecs = []
-        for cec in obj_list:
-            cecs.append(CommunityEventCategory().update(cec))
-        return cecs
+        return [CommunityEventCategory().update(cec) for cec in obj_list]
 
 
 class CommunityEventDetails:

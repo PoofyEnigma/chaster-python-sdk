@@ -442,17 +442,11 @@ class SharedLock:
 
     @staticmethod
     def generate_array(obj_list):
-        shared_locks = []
-        for entry in obj_list:
-            shared_locks.append(SharedLock().update(entry))
-        return shared_locks
+        return [SharedLock().update(entry) for entry in obj_list]
 
     @staticmethod
     def dump_array(shared_locks):
-        out = []
-        for entry in shared_locks:
-            out.append(entry.dump())
-        return out
+        return [entry.dump() for entry in shared_locks]
 
 
 class PageinatedSharedLockList:
@@ -594,10 +588,7 @@ class ExplorePageLock:
 
     @staticmethod
     def generate_array(obj_list):
-        category = []
-        for account in obj_list:
-            category.append(ExplorePageLock().update(account))
-        return category
+        return [ExplorePageLock().update(account) for account in obj_list]
 
 
 class SearchPublicLockCriteriaDuration:
@@ -726,10 +717,7 @@ class VerificationPhotoHistory:
 
     @staticmethod
     def generate_array(obj_list):
-        history = []
-        for account in obj_list:
-            history.append(VerificationPhotoHistory().update(account))
-        return history
+        return [VerificationPhotoHistory().update(account) for account in obj_list]
 
 
 class Combination:
