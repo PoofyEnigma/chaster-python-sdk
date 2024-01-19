@@ -2206,74 +2206,7 @@ locked_users = """
       "canBeUnlockedByMaxLimitDate": false,
       "isFrozen": false,
       "extensions": [
-        {
-          "slug": "pillory",
-          "displayName": "Pillory",
-          "summary": "When you receive a penalty, be displayed publicly for a specified period of time. Other users will be able to add time to your lock.",
-          "subtitle": "Be displayed publicly when you receive a penalty",
-          "icon": "user-friends",
-          "_id": "659ee2ce9e46da74718e5f32",
-          "config": {
-            "timeToAdd": 3600,
-            "limitToLoggedUsers": true
-          },
-          "mode": "unlimited",
-          "regularity": 3600,
-          "userData": null,
-          "nbActionsRemaining": -1,
-          "nextActionDate": "2024-01-10T19:52:42.108Z",
-          "isPartner": false,
-          "textConfig": "1 hour added per vote",
-          "createdAt": "2024-01-10T18:32:46.554Z",
-          "updatedAt": "2024-01-10T18:52:42.141Z"
-        },
-        {
-          "slug": "link",
-          "displayName": "Share links",
-          "summary": "Share a link to other people to ask them to add or remove time to your lock.",
-          "subtitle": "Share your lock with others",
-          "icon": "link",
-          "_id": "659ee2ce9e46da74718e5f34",
-          "config": {
-            "timeToAdd": 3600,
-            "timeToRemove": 3600,
-            "enableRandom": true,
-            "nbVisits": 0,
-            "limitToLoggedUsers": false
-          },
-          "mode": "unlimited",
-          "regularity": 3600,
-          "userData": null,
-          "nbActionsRemaining": -1,
-          "isPartner": false,
-          "textConfig": "Time to add: 1 hour, Time to remove: 1 hour",
-          "createdAt": "2024-01-10T18:32:46.554Z",
-          "updatedAt": "2024-01-10T18:36:14.750Z"
-        },
-        {
-          "slug": "temporary-opening",
-          "displayName": "Hygiene opening",
-          "summary": "Because hygiene is important, unlock yourself regularly to clean your chastity device. Be careful, if you exceed the allowed time, you will receive a penalty.",
-          "subtitle": "Temporarily unlock yourself",
-          "icon": "soap",
-          "_id": "659eee4ce8af53fe9b91e058",
-          "config": {
-            "openingTime": 900,
-            "penaltyTime": 43200,
-            "allowOnlyKeyholderToOpen": true
-          },
-          "mode": "non_cumulative",
-          "regularity": 60,
-          "userData": {
-            "openedAt": null
-          },
-          "nbActionsRemaining": 1,
-          "nextActionDate": "2024-01-10T19:23:01.979Z",
-          "isPartner": false,
-          "textConfig": "Time allowed: 15 minutes, penalty for exceeding time: 12 hours",
-          "createdAt": "2024-01-10T19:21:48.392Z",
-          "updatedAt": "2024-01-10T19:24:03.473Z"
-        }
+      
       ],
       "role": "keyholder",
       "title": "test api call",

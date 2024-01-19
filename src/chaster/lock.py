@@ -2,7 +2,7 @@ import datetime
 
 import dateutil.parser
 
-from . import extensions, user
+from . import extensions, user, util
 from dateutil.parser import isoparse
 
 
@@ -20,11 +20,14 @@ class CreateLock:
         self.hideTimeLogs: bool = True
 
     def dump(self):
-        return self.__dict__.copy()
+        obj = self.__dict__.copy()
+        eh = extensions.ExtensionsHandler()
+        eh.load_defined(self.extensions)
+        obj['extensions'] = eh.dump()
+        return obj
 
 
 class Lock:
-    # TODO: Dates need to be datetime objects
     def __init__(self):
         self._id: str = ''
         self.startDate: str = ''
@@ -36,7 +39,7 @@ class Lock:
         self.limitLockTime: bool = False
         self.status: str = ''
         self.combination: str = ''
-        self.sharedLock: SharedLock = SharedLock()
+        self.sharedLock: SharedLock = None
         self.createdAt: str = ''
         self.updatedAt: str = ''
         self.unlockedAt: datetime.datetime = None
@@ -50,7 +53,7 @@ class Lock:
         self.hideTimeLogs: bool = True
         self.trusted: bool = False
         self.user = user.User()
-        self.keyholder = user.User()
+        self.keyholder = None
         self.isAllowedToViewTime: bool = True
         self.canBeUnlocked: bool = False
         self.canBeUnlockedByMaxLimitDate: bool = False
@@ -58,7 +61,7 @@ class Lock:
         self.extensions = []
         self.role: str = ''
         self.title: str = ''
-        self.lastVerificationPicture = LastVerificationPicture()
+        self.lastVerificationPicture = None
         self.availableHomeActions: list[AvailableHomeAction] = []
         self.reasonsPreventingUnlocking = []
         self.extensionsAllowUnlocking: bool = True
@@ -70,23 +73,41 @@ class Lock:
         return extensions.ExtensionsHandler().load(self.extensions)
 
     def dump(self):
-        obj = self.__dict__
-        obj['shared_lock'] = self.sharedLock.__dict__
-        if self.maxLimitDate is not None:
-            obj['maxLimitDate'] = self.maxLimitDate.isoformat()
-        if self.unlockedAt is not None:
-            obj['unlockedAt'] = self.unlockedAt.isoformat()
-        if self.archivedAt is not None:
-            obj['archivedAt'] = self.archivedAt.isoformat()
-        if self.keyholderArchivedAt is not None:
-            obj['keyholderArchivedAt'] = self.keyholderArchivedAt.isoformat()
+        obj = self.__dict__.copy()
+        obj['user'] = self.user.dump()
+        if 'extensions' in self.__dict__ and self.extensions is not None:
+            eh = extensions.ExtensionsHandler()
+            eh.load_defined(self.extensions)
+            obj['extensions'] = eh.dump()
+        if 'availableHomeActions' in self.__dict__ and self.availableHomeActions is not None:
+            obj['availableHomeActions'] = AvailableHomeAction.dump_array(self.availableHomeActions)
+        if self.keyholder is not None:
+            obj['keyholder'] = self.keyholder.dump()
+        if self.lastVerificationPicture is not None:
+            obj['lastVerificationPicture'] = self.lastVerificationPicture.dump()
+        if self.sharedLock is not None:
+            obj['sharedLock'] = self.sharedLock.dump()
+
+        util.dump_time(self, 'maxLimitDate', obj)
+        util.dump_time(self, 'unlockedAt', obj)
+        util.dump_time(self, 'archivedAt', obj)
+        util.dump_time(self, 'keyholderArchivedAt', obj)
+        util.dump_time(self, 'deletedAt', obj)
+        return obj
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
+        self.user = user.User().update(obj.user)
         if 'extensions' in obj.__dict__:
             self.extensions = extensions.Extension.generate_array(obj.extensions)
         if 'availableHomeActions' in obj.__dict__:
             self.availableHomeActions = AvailableHomeAction.generate_array(obj.availableHomeActions)
+        if 'keyholder' in obj.__dict__ and obj.keyholder is not None:
+            self.keyholder = user.User().update(obj.keyholder)
+        if 'lastVerificationPicture' in obj.__dict__ and obj.lastVerificationPicture is not None:
+            self.lastVerificationPicture = LastVerificationPicture().update(obj.lastVerificationPicture)
+        if 'sharedLock' in obj.__dict__ and obj.sharedLock is not None:
+            self.sharedLock = SharedLock().update(obj.sharedLock)
         if 'maxLimitDate' in obj.__dict__ and obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
         if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
@@ -96,15 +117,16 @@ class Lock:
         if 'keyholderArchivedAt' in obj.__dict__ and obj.keyholderArchivedAt is not None:
             self.keyholderArchivedAt = isoparse(obj.keyholderArchivedAt)
         if 'deletedAt' in obj.__dict__ and obj.deletedAt is not None:
-            self.keyholderArchivedAt = isoparse(obj.deletedAt)
+            self.deletedAt = isoparse(obj.deletedAt)
         return self
 
     @staticmethod
     def generate_array(obj_list):
-        locks = []
-        for lock in obj_list:
-            locks.append(Lock().update(lock))
-        return locks
+        return [Lock().update(lock) for lock in obj_list]
+
+    @staticmethod
+    def dump_array(locks):
+        return [lock.dump() for lock in locks]
 
 
 class LastVerificationPicture:
@@ -123,18 +145,22 @@ class AvailableHomeAction:
         self.description: str = ''
         self.icon: str = ''
         self.extensionPartyId: str = ''
-        self.badge = None
+        self.badge = None # TODO: Needs a type
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
     @staticmethod
     def generate_array(obj_list):
-        available_home_actions = []
-        for availableHomeAction in obj_list:
-            available_home_actions.append(AvailableHomeAction().update(availableHomeAction))
-        return available_home_actions
+        return [AvailableHomeAction().update(availableHomeAction) for availableHomeAction in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
 
 
 class LockedUsers:
@@ -147,6 +173,11 @@ class LockedUsers:
         self.__dict__.update(obj.__dict__)
         self.locks = Lock.generate_array(obj.locks)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['locks'] = Lock.dump_array(self.locks)
+        return obj
 
 
 class ActionLog:
@@ -172,12 +203,20 @@ class ActionLog:
         self.user = user.User().update(obj.user)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['user'] = self.user.dump()
+        util.dump_time(self, 'createdAt', obj)
+        obj['payload'] = self.payload.__dict__.copy()
+        return obj
+
     @staticmethod
     def generate_array(obj_list):
-        action_logs = []
-        for item in obj_list:
-            action_logs.append(ActionLog().update(item))
-        return action_logs
+        return [ActionLog().update(item) for item in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
 
 
 class PageinatedLockHistory:
@@ -191,6 +230,11 @@ class PageinatedLockHistory:
         self.results = ActionLog.generate_array(obj.results)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['results'] = ActionLog.dump_array(self.results)
+        return obj
+
 
 class ExtensionInformation:
     def __init__(self):
@@ -201,8 +245,14 @@ class ExtensionInformation:
         self.lock = Lock().update(obj.lock)
         eh = extensions.ExtensionsHandler()
         eh.add(obj.extension)
-        self.extension = eh.dump()[0]
+        self.extension = eh.generate_array()[0]
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['lock'] = self.lock.dump()
+        obj['extension'] = self.extension.dump()
+        return obj
 
 
 class LockId:
@@ -212,6 +262,9 @@ class LockId:
     def update(self, obj):
         self.__dict__ = obj.__dict__
         return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class LockInfo:
@@ -223,6 +276,9 @@ class LockInfo:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 class UnsplashPhoto:
     def __init__(self):
@@ -230,6 +286,13 @@ class UnsplashPhoto:
         self.name: str = ''
         self.url: str = ''
         self.username: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class IdResponse:
@@ -239,6 +302,9 @@ class IdResponse:
     def update(self, obj):
         self.__dict__ = obj.__dict__
         return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class CreateSharedLock:
@@ -264,11 +330,11 @@ class CreateSharedLock:
     def dump(self):
         dictionary = self.__dict__.copy()
         if self.maxDate is not None:
-            dictionary['maxDate'] = self.maxDate.isoformat()
+            dictionary['maxDate'] = util.datetime_to_chaster_format(self.maxDate)
         if self.minDate is not None:
-            dictionary['minDate'] = self.minDate.isoformat()
+            dictionary['minDate'] = util.datetime_to_chaster_format(self.minDate)
         if self.maxLimitDate is not None:
-            dictionary['maxLimitDate'] = self.maxLimitDate.isoformat()
+            dictionary['maxLimitDate'] = util.datetime_to_chaster_format(self.maxLimitDate)
         return dictionary
 
     def validate(self):
@@ -303,6 +369,10 @@ class CreateSharedLock:
 
 class SharedLock:
     def __init__(self):
+        """
+        Note: self.user is a string and not a user object when acquiring from ChasterAPI.get_user_shared_locks()
+        """
+
         self._id: str = ''
         self.minDuration: int = 86400
         self.maxDuration: int = 90000
@@ -322,14 +392,21 @@ class SharedLock:
         self.hideTimeLogs: bool = False
         self.lastSavedAt: datetime = None
         self.requirePassword: bool = False
-        self.user: user.User = user.User()
+        self.user: user.User = None
         self.durationMode: str = ''
         self.isFindom: bool = False
         self.calculatedMaxLimitDuration: int = None
         self.extensions = []
+        self.joinRules: JoinRules = None  # Not present when getting the user's shared lock
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        self.__dict__ = obj.__dict__.copy()
+        if 'unsplashPhoto' in obj.__dict__ and obj.unsplashPhoto is not None:
+            self.unsplashPhoto = UnsplashPhoto().update(obj.unsplashPhoto)
+        if 'user' in obj.__dict__ and obj.__dict__['user'] is not None and type(obj.user) is not str:
+            self.user = user.User().update(obj.user)
+        if 'joinRules' in obj.__dict__:
+            self.joinRules = JoinRules().update(obj.joinRules)
         if 'extensions' in obj.__dict__:
             self.extensions = extensions.Extension.generate_array(obj.extensions)
         if obj.maxDate is not None:
@@ -342,12 +419,40 @@ class SharedLock:
             self.lastSavedAt = isoparse(obj.lastSavedAt)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        if 'extensions' in self.__dict__:
+            eh = extensions.ExtensionsHandler()
+            eh.load_defined(self.extensions)
+            obj['extensions'] = eh.dump()
+        if self.unsplashPhoto is not None:
+            obj['unsplashPhoto'] = self.unsplashPhoto.dump()
+        util.safe_dump_parameter(self, 'user', obj)
+        if 'joinRules' in self.__dict__ and self.joinRules is not None:
+            obj['joinRules'] = self.joinRules.dump()
+        if self.maxDate is not None:
+            obj['maxDate'] = util.datetime_to_chaster_format(self.maxDate)
+        if self.minDate is not None:
+            obj['minDate'] = util.datetime_to_chaster_format(self.minDate)
+        if self.maxLimitDate is not None:
+            obj['maxLimitDate'] = util.datetime_to_chaster_format(self.maxLimitDate)
+        if self.lastSavedAt is not None:
+            obj['lastSavedAt'] = util.datetime_to_chaster_format(self.lastSavedAt)
+        return obj
+
     @staticmethod
     def generate_array(obj_list):
         shared_locks = []
         for entry in obj_list:
             shared_locks.append(SharedLock().update(entry))
         return shared_locks
+
+    @staticmethod
+    def dump_array(shared_locks):
+        out = []
+        for entry in shared_locks:
+            out.append(entry.dump())
+        return out
 
 
 class PageinatedSharedLockList:
@@ -364,6 +469,11 @@ class PageinatedSharedLockList:
             self.lastId = self.results[-1]._id
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['results'] = SharedLock.dump_array(self.results)
+        return obj
+
 
 class JoinRules:
     def __init__(self):
@@ -371,6 +481,13 @@ class JoinRules:
         self.containsPremiumExtension: bool = True
         self.exceedsExtensionLimit: bool = True
         self.oneOfExtensionsDisabled: bool = True
+
+    def dump(self):
+        return self.__dict__.copy()
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 
 class PublicSharedLockInfo:
@@ -408,6 +525,8 @@ class PublicSharedLockInfo:
     def update(self, obj):
         self.__dict__ = obj.__dict__
         self.extensions = extensions.Extension.generate_array(obj.extensions)
+        self.unsplashPhoto = UnsplashPhoto().update(obj.unsplashPhoto)
+        self.user = user.User().update(obj.user)
         # TODO: Is locks actually in the return obj?
         if 'locks' in obj.__dict__:
             self.locks = Lock.generate_array(obj.locks)
@@ -419,15 +538,37 @@ class PublicSharedLockInfo:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
         if obj.lastSavedAt is not None:
             self.lastSavedAt = isoparse(obj.lastSavedAt)
-        if obj.maxLimitDate is not None:
-            self.maxLimitDate = isoparse(obj.maxLimitDate)
+        if 'createdAt' in obj.__dict__ and obj.createdAt is not None:
+            self.createdAt = isoparse(obj.createdAt)
+        if 'updatedAt' in obj.__dict__ and obj.updatedAt is not None:
+            self.createdAt = isoparse(obj.updatedAt)
         if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
             self.unlockedAt = isoparse(obj.unlockedAt)
         if 'deletedAt' in obj.__dict__ and obj.deletedAt is not None:
             self.deletedAt = isoparse(obj.deletedAt)
-        if 'createdAt' in obj.__dict__ and obj.createdAt is not None:
-            self.createdAt = isoparse(obj.createdAt)
+        self.joinRules = JoinRules().update(obj.joinRules)
+
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['unsplashPhoto'] = self.unsplashPhoto.dump()
+        obj['joinRules'] = self.joinRules.dump()
+        obj['user'] = self.user.dump()
+        eh = extensions.ExtensionsHandler()
+        eh.load_defined(self.extensions)
+        obj['extensions'] = eh.dump()
+        if 'locks' in self.__dict__:
+            obj['locks'] = Lock.dump_array(self.locks)
+        util.dump_time(self, 'maxDate', obj)
+        util.dump_time(self, 'minDate', obj)
+        util.dump_time(self, 'maxLimitDate', obj)
+        util.dump_time(self, 'lastSavedAt', obj)
+        util.dump_time(self, 'createdAt', obj)
+        util.dump_time(self, 'updatedAt', obj)
+        util.dump_time(self, 'unlockedAt', obj)
+        util.dump_time(self, 'deletedAt', obj)
+        return obj
 
 
 class ExplorePageLock:
@@ -446,6 +587,11 @@ class ExplorePageLock:
         self.locks = Lock.generate_array(obj.locks)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['locks'] = Lock.dump_array(self.locks)
+        return obj
+
     @staticmethod
     def generate_array(obj_list):
         category = []
@@ -459,6 +605,10 @@ class SearchPublicLockCriteriaDuration:
         self.minDuration: int = -1
         self.maxDuration: int = -1
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
     def dump(self):
         obj = self.__dict__.copy()
         return obj
@@ -469,6 +619,10 @@ class SearchPublicLockCriteriaExtensions:
         self.extensions: list[str] = []
         self.all: bool = False
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
     def dump(self):
         obj = self.__dict__.copy()
         return obj
@@ -477,6 +631,10 @@ class SearchPublicLockCriteriaExtensions:
 class SearchPublicLockCriteriaFindom:
     def __init__(self):
         self.isFindom: bool = True
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
     def dump(self):
         obj = self.__dict__.copy()
@@ -491,13 +649,24 @@ class SearchPublicLockCriteria:
 
     def dump(self):
         obj = {}
-        if self.extensions is not None:
+        if 'extensions' in self.__dict__:
             obj['extensions'] = self.extensions.dump()
-        if self.isFindom is not None:
+        if 'isFindom' in self.__dict__:
             obj['isFindom'] = self.isFindom.dump()
-        if self.duration is not None:
+        if 'duration' in self.__dict__:
             obj['duration'] = self.duration.dump()
         return obj
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        if 'extensions' in obj.__dict__:
+            self.extensions = SearchPublicLockCriteriaExtensions().update(obj.extensions)
+        if 'isFindom' in obj.__dict__:
+            self.isFindom = SearchPublicLockCriteriaFindom().update(obj.isFindom)
+        if 'duration' in obj.__dict__:
+            self.duration = SearchPublicLockCriteriaDuration().update(obj.duration)
+
+        return self
 
 
 class SearchPublicLock:
@@ -513,6 +682,11 @@ class SearchPublicLock:
             obj['criteria'] = self.criteria.dump()
         return obj
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.criteria = SearchPublicLockCriteria().update(obj.criteria)
+        return self
+
 
 class VerificationPhotoHistoryVotes:
     def __init__(self):
@@ -524,6 +698,9 @@ class VerificationPhotoHistoryVotes:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class VerificationPhotoHistory:
@@ -541,6 +718,12 @@ class VerificationPhotoHistory:
             self.votes = VerificationPhotoHistoryVotes().update(obj.votes)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['submittedAt'] = util.datetime_to_chaster_format(self.submittedAt)
+        obj['votes'] = self.votes.dump()
+        return obj
+
     @staticmethod
     def generate_array(obj_list):
         history = []
@@ -556,3 +739,6 @@ class Combination:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    def dump(self):
+        return self.__dict__.copy()

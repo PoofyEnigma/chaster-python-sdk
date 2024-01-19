@@ -1,5 +1,5 @@
 import datetime
-from . import extensions
+from . import extensions, util
 import dateutil.parser
 
 
@@ -27,7 +27,7 @@ class ActionRequest:
 # request {"action":"getInfo","payload":{}}
 # response {"lockId":"659ee2ce9e46da74718e5f2d","extensionId":"659ee2ce9e46da74718e5f34","votes":1,"minVotes":0,"canVote":false}
 
-class ShareLinkGetInfoResponse:
+class ShareLinkInfoResponse:
     def __init__(self):
         self.lockId: str = ''
         self.extensionId: str = ''
@@ -39,6 +39,9 @@ class ShareLinkGetInfoResponse:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class ShareLinkUrlResponse:
     def __init__(self):
@@ -47,6 +50,9 @@ class ShareLinkUrlResponse:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class ShareLinksVotePayload:
@@ -82,6 +88,9 @@ class ShareLinksVoteReturn:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 # pillory
 # put into pillory
@@ -106,12 +115,18 @@ class Vote:
             self.createdAt = dateutil.parser.isoparse(obj.createdAt)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        util.dump_time(self, 'createdAt', obj)
+        return obj
+
     @staticmethod
     def generate_array(obj_list):
-        votes = []
-        for vote in obj_list:
-            votes.append(Vote().update(vote))
-        return votes
+        return [Vote().update(vote) for vote in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [vote.dump() for vote in obj_list]
 
 
 class PilloryVotes:
@@ -121,6 +136,11 @@ class PilloryVotes:
     def update(self, obj):
         self.votes = Vote.generate_array(obj.votes)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['votes'] = Vote.dump_array(self.votes)
+        return obj
 
 
 class PilloryPayload:
@@ -164,6 +184,9 @@ class DiceRollResult:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 # wheel of fortune
 # to spin the wheel of fortune
@@ -179,6 +202,11 @@ class WheelOfFortuneAction:
         self.segment = extensions.WheelOfFortuneSegment().update(obj.segment)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['segment'] = self.segment.dump()
+        return obj
+
 
 class WheelOfFortuneResult:
     def __init__(self):
@@ -190,6 +218,11 @@ class WheelOfFortuneResult:
         self.__dict__ = obj.__dict__.copy()
         self.action = WheelOfFortuneAction().update(obj.action)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['action'] = self.action.dump()
+        return obj
 
 
 # tasks
@@ -220,3 +253,6 @@ class GuessTheTimerResponse:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    def dump(self):
+        return self.__dict__.copy()

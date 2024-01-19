@@ -2,16 +2,7 @@ import datetime
 import logging
 
 import dateutil.parser
-from . import lock
-
-
-def update(obj):
-    users = []
-
-    for user in obj.users:
-        users.append(User().update(user))
-
-    return users
+from . import lock, util
 
 
 class User:
@@ -42,8 +33,14 @@ class User:
         self.isSuspendedOrDisabled: bool = False
 
     def update(self, obj):
-        self.__dict__ = obj.__dict__
+        self.__dict__ = obj.__dict__.copy()
+        self.metadata = Metadata().update(obj.metadata)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['metadata'] = self.metadata.dump()
+        return obj
 
     @staticmethod
     def generate_array(obj_list):
@@ -51,6 +48,10 @@ class User:
         for user in obj_list:
             users.append(User().update(user))
         return users
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [user.dump() for user in obj_list]
 
 
 class Metadata:
@@ -60,6 +61,13 @@ class Metadata:
         self.chastityMonth2022Points: int = 0
         self.locktober2022Points: int = 0
         self.locktober2023Points: int = 0
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class LockCombination:
@@ -82,6 +90,14 @@ class LockCombination:
             self.updatedAt = dateutil.parser.isoparse(obj.updatedAt)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        if self.createdAt is not None:
+            obj['createdAt'] = util.datetime_to_chaster_format(self.createdAt)
+        if self.updatedAt is not None:
+            obj['updatedAt'] = util.datetime_to_chaster_format(self.updatedAt)
+        return obj
+
 
 class Stats:
     def __init__(self):
@@ -90,6 +106,13 @@ class Stats:
         self.totalTimeLocked: int = 0
         self.maxTimeLocked: int = 0
         self.keyholderNbLocks: int = 0
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class ChastikeyStats:
@@ -102,6 +125,13 @@ class ChastikeyStats:
         self.totalNoOfCompletedLocks: int = 0
         self.username: str = ''
         self.mainRole: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class Achievement:
@@ -117,6 +147,21 @@ class Achievement:
         self.progressEnabled: bool = True
         self.hideIfNotGranted: bool = True
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
+    @staticmethod
+    def generate_array(obj_list):
+        return [Achievement().update(item) for item in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
+
 
 class DetailedUser:
     def __init__(self):
@@ -128,9 +173,24 @@ class DetailedUser:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
-        self.user = User().update(obj.user)
+        if 'user' in obj.__dict__:
+            self.user = User().update(obj.user)
         self.sharedLocks = lock.SharedLock.generate_array(obj.sharedLocks)
+        self.achievements = Achievement.generate_array(obj.achievements)
+        self.stats = Stats().update(obj.stats)
+        if 'chastikeyStats' in obj.__dict__ and obj.chastikeyStats is not None:
+            self.chastikeyStats = ChastikeyStats().update(obj.chastikeyStats)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        if 'user' in self.__dict__:
+            obj['user'] = self.user.dump()
+        obj['sharedLocks'] = lock.SharedLock.dump_array(self.sharedLocks)
+        obj['achievements'] = Achievement.dump_array(self.achievements)
+        util.safe_dump_parameter(self, 'chastikeyStats', obj)
+        util.safe_dump_parameter(self, 'stats', obj)
+        return obj
 
 
 class Badges:
@@ -142,6 +202,9 @@ class Badges:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class AuthProfileSettings:
@@ -156,6 +219,13 @@ class AuthProfileSettings:
         self.displayNsfw: bool = True
         self.showAge: bool = True
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class AuthProfileMetadata:
     def __init__(self):
@@ -165,11 +235,33 @@ class AuthProfileMetadata:
         self.locktober2022Points: int = 0
         self.locktober2023Points: int = 0
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class AuthProfileRegion:
     def __init__(self):
         self.name: str = ''
         self.shortCode: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
+    @staticmethod
+    def generate_array(obj_list):
+        return [AuthProfileRegion().update(item) for item in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
 
 
 class AuthProfileCountry:
@@ -178,10 +270,29 @@ class AuthProfileCountry:
         self.countryShortCode: str = ''
         self.regions: list[AuthProfileRegion] = []
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        if 'regions' in obj.__dict__ and obj.regions is not None:
+            self.regions = AuthProfileRegion.generate_array(obj.regions)
+        return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        if 'regions' in self.__dict__ and self.regions is not None:
+            obj['regions'] = AuthProfileRegion.dump_array(self.regions)
+        return obj
+
 
 class AuthProfilePrivateMetadata:
     def __init__(self):
         self.locktoberPlusModalPending: bool = True
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 
 class AuthProfile:
@@ -220,6 +331,12 @@ class AuthProfile:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
+        self.settings = AuthProfileSettings().update(obj.settings)
+        self.metadata = AuthProfileMetadata().update(obj.metadata)
+        self.country = AuthProfileCountry().update(obj.country)
+        self.region = AuthProfileRegion().update(obj.region)
+        self.privateMetadata = AuthProfilePrivateMetadata().update(obj.privateMetadata)
+
         if obj.subscriptionEnd is not None:
             self.subscriptionEnd = dateutil.parser.isoparse(obj.subscriptionEnd)
         if obj.customSubscriptionEnd is not None:
@@ -227,6 +344,18 @@ class AuthProfile:
         if obj.birthDate is not None:
             self.birthDate = dateutil.parser.isoparse(obj.birthDate)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['settings'] = self.settings.dump()
+        obj['metadata'] = self.metadata.dump()
+        obj['country'] = self.country.dump()
+        obj['region'] = self.region.dump()
+        obj['privateMetadata'] = self.privateMetadata.dump()
+        util.dump_time(self, 'subscriptionEnd', obj)
+        util.dump_time(self, 'customSubscriptionEnd', obj)
+        util.dump_time(self, 'birthDate', obj)
+        return obj
 
 
 class KeyholderOfferEntry:
@@ -252,6 +381,15 @@ class KeyholderOfferEntry:
         if obj.updatedAt is not None:
             self.updatedAt = dateutil.parser.isoparse(obj.updatedAt)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['keyholder'] = self.keyholder.dump()
+        util.dump_time(self, 'validatedAt', obj)
+        util.dump_time(self, 'archivedAt', obj)
+        util.dump_time(self, 'createdAt', obj)
+        util.dump_time(self, 'updatedAt', obj)
+        return obj
 
     @staticmethod
     def generate_array(obj_list):
@@ -307,12 +445,16 @@ class CommunityEventAction:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
     @staticmethod
     def generate_array(obj_list):
-        actions = []
-        for action in obj_list:
-            actions.append(CommunityEventAction().update(action))
-        return actions
+        return [CommunityEventAction().update(item) for item in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
 
 
 class CommunityEventCategory:
@@ -329,6 +471,11 @@ class CommunityEventCategory:
         if 'hidden' not in obj.__dict__:
             self.hidden = False
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['actions'] = CommunityEventAction.dump_array(self.actions)
+        return obj
 
     @staticmethod
     def generate_array(obj_list):
@@ -361,12 +508,16 @@ class CommunityEventTier:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
     @staticmethod
     def generate_array(obj_list):
-        tiers = []
-        for tier in obj_list:
-            tiers.append(CommunityEventTier().update(tier))
-        return tiers
+        return [CommunityEventTier().update(tier) for tier in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [tier.dump for tier in obj_list]
 
 
 class CommunityEvent:
@@ -383,6 +534,11 @@ class CommunityEvent:
         self.__dict__ = obj.__dict__.copy()
         self.tiers = CommunityEventTier.generate_array(obj.tiers)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['tiers'] = CommunityEventTier.dump_array(self.tiers)
+        return obj
 
 
 class AppSettings:
@@ -401,10 +557,17 @@ class AppSettings:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
-        if self.communityEvent is not None:
+        if obj.communityEvent is not None:
             self.communityEvent = CommunityEvent().update(obj.communityEvent)
         self.time = dateutil.parser.isoparse(obj.time)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        if self.communityEvent is not None:
+            obj['communityEvent'] = self.communityEvent.dump()
+        util.dump_time(self, 'time', obj)
+        return obj
 
 
 class FileToken:
@@ -415,6 +578,9 @@ class FileToken:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class FileUrl:
     def __init__(self):
@@ -423,3 +589,6 @@ class FileUrl:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    def dump(self):
+        return self.__dict__.copy()

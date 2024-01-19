@@ -205,7 +205,7 @@ class ApiTestCases(unittest.TestCase):
         ho = extensions.ShareLinks()
         eh.add(ho)
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
 
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
@@ -228,7 +228,7 @@ class ApiTestCases(unittest.TestCase):
         ho = extensions.Pillory()
         eh.add(ho)
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
@@ -263,7 +263,7 @@ class ApiTestCases(unittest.TestCase):
         eh.add(gtt)
 
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
@@ -300,7 +300,7 @@ class ApiTestCases(unittest.TestCase):
 
         eh.add(ho)
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
@@ -330,7 +330,7 @@ class ApiTestCases(unittest.TestCase):
         eh = extensions.ExtensionsHandler()
         eh.add(ho)
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
@@ -364,7 +364,7 @@ class ApiTestCases(unittest.TestCase):
         eh = extensions.ExtensionsHandler()
         eh.add(vp)
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
@@ -434,7 +434,7 @@ class ApiTestCases(unittest.TestCase):
         ho = extensions.HygieneOpening()
         eh.add(ho)
         e = extensions.Extensions()
-        e.extensions = eh.dump()
+        e.extensions = eh.generate_array()
         response = chaster_api.edit_extensions(lock_id.lockId, e)
         self.assertEqual(response.status_code, 201)
 
@@ -654,7 +654,7 @@ class ApiTestCases(unittest.TestCase):
         _, conversation = chaster_api.get_user_conversation(profile._id)
         self.assertIsNotNone(conversation)
 
-        response, message = chaster_api.post_message(conversation._id, 'hello')
+        response, message = chaster_api.send_message(conversation._id, 'hello')
         self.assertIsNotNone(message)
 
         _, conversation = chaster_api.create_conversation(profile._id, 'create')

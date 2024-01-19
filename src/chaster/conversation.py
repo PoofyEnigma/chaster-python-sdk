@@ -1,5 +1,5 @@
 import datetime
-from . import user
+from . import user, util
 from dateutil.parser import isoparse
 
 
@@ -8,13 +8,20 @@ class LastMessage:
         self._id: str = ''
         self.message: str = ''
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
 
 class Conversation:
     def __init__(self):
         self._id: str = ''
         self.users: list[user.User] = []
         self.type: str = ''
-        self.lastMessage: LastMessage = LastMessage()
+        self.lastMessage: LastMessage = None
         self.lastMessageAt: datetime.datetime = None
         self.createdAt: datetime.datetime = None
         self.unread: bool = False
@@ -23,17 +30,28 @@ class Conversation:
         self.isMember: bool = True
 
     def update(self, obj):
-        self.__dict__.update(obj.__dict__)
-        self.users = user.update(obj)
+        self.__dict__ = obj.__dict__.copy()
+        self.users = user.User.generate_array(obj.users)
+        util.safe_update_parameter(obj, 'lastMessage', self, LastMessage().update)
         self.lastMessageAt = isoparse(obj.lastMessageAt)
+        self.createdAt = isoparse(obj.createdAt)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['users'] = user.User.dump_array(self.users)
+        util.safe_dump_parameter(self, 'lastMessage', obj)
+        util.dump_time(self, 'lastMessageAt', obj)
+        util.dump_time(self, 'createdAt', obj)
+        return obj
 
     @staticmethod
     def generate_array(obj_list):
-        conversations = []
-        for item in obj_list:
-            conversations.append(Conversation().update(item))
-        return conversations
+        return [Conversation().update(item) for item in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
 
 
 class Message:
@@ -53,12 +71,22 @@ class Message:
         self.updatedAt = isoparse(obj.updatedAt)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        util.dump_time(self, 'createdAt', obj)
+        util.dump_time(self, 'updatedAt', obj)
+        return obj
+
     @staticmethod
     def generate_array(obj_list):
         messages = []
         for item in obj_list:
             messages.append(Message().update(item))
         return messages
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [item.dump() for item in obj_list]
 
 
 class ConversationMessages:
@@ -72,14 +100,24 @@ class ConversationMessages:
         self.results = Message.generate_array(obj.results)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['results'] = Message.dump_array(self.results)
+        return obj
+
 
 class Conversations:
     def __init__(self):
         self.count: int = 12
         self.hasMore: bool = False
-        self.results: list[Message] = []
+        self.results: list[Conversation] = []
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
         self.results = Conversation.generate_array(obj.results)
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['results'] = Conversation.dump_array(self.results)
+        return obj

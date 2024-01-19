@@ -563,7 +563,7 @@ class MyTestCase(unittest.TestCase):
     def test_post_message(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.conversation_messasge)
-        response, data = api.post_message('', '')
+        response, data = api.send_message('', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_conversation(self):

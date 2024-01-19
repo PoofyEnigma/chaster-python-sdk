@@ -2,80 +2,78 @@
 
 `pip install --upgrade chaster-sdk`
 
-```python
-import os
-import logging
-from chaster import api
-
-logging.basicConfig()
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-
-chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='your_user_agent/1.0')
-response, your_locks = chaster_api.get_shared_locks()
-```
-
 # Releases
 
-| Release     | Conditionals                        | State |
-|-------------|-------------------------------------|-------|
-| v0.1.0.dev1 | Stubbed, Validated, Integrated      | done  |
-| v0.1.0.a1   | Language, Documented                |       |
-| v0.1.0.a2   | Mocked, Tutorial                    |       |
-| v0.1.0      | 3 demos of a few hundred lines each |       |
+| Release     | Conditionals                             | State |
+|-------------|------------------------------------------|-------|
+| v0.1.0.dev1 | Stubbed, Validated, Integrated           | done  |
+| v0.1.0.a1   | Language, Documented                     | done  |
+| v0.1.0.a2   | Backlog and TODOs cleared                | done  |
+| v0.1.0.a3   | 95% coverage on unittest and integration |       |
+| v0.1.0      | Tutorial                                 |       |
 
-# Layer 1 - API call wrappers and mocks<br>
+# v0.1.0 - Layer 1
 
-| API Group                         | Stubbed | Validated | Integrated | Language | Documented | Mocked | Tutorial |
-|-----------------------------------|---------|-----------|------------|----------|------------|--------|----------|
-| Shared Locks                      | done    | done      | done       | done     | done       |        |          |
-| Locks                             | done    | done      | done       | done     | done       |        |          |
-| trigger_extension_actions         | done    | done      | done       | done     | done       |        |          |
-| Lock Creation                     | done    | done      | done       | done     | done       |        |          |
-| Profile                           | done    | done      | done       | done     | done       |        |          |
-| Files                             | done    | done      | blocked    | done     | done       |        |          |
-| Combinations                      | done    | done      | done       | done     | done       |        |          |
-| Extensions                        | done    | done      | done       | done     | done       |        |          |
-| Session Offer                     | done    | done      | done       | done     | done       |        |          |
-| Messaging                         | done    | done      | done       | done     | done       |        |          |
-| Extensions - Temporary Opening    | done    | done      | done       | done     | done       |        |          |
-| Community Events                  | done    | done      | done       | done     | done       |        |          |
-| Partner Extensions                |         |           |            |          |            |        |          |
-| Settings                          | done    | done      | done       | done     | done       |        |          |
-| Users                             | done    | done      | done       | done     | done       |        |          |
-| Keyholder                         | done    | done      | done       | done     | done       |        |          |
-| Reports                           | N/A     | N/A       | N/A        | N/A      | N/A        |        |          |
-| Partner Configurations            |         |           |            |          |            |        |
-| Public Locks                      | done    | done      | done       | done     | done       |        |          |
-| Extensions - Verification Picture | done    | done      | done       | done     | done       |        |          |
-
-Stubbed - API call functions, DTOs defined<br>
-Validated - tested with mocked chaster http response<br>
-Integrated - Integration tests written<br>
-Language - Naming and interface refined and settled<br>
-Documented - Functions are documented<br>
-Mocked - API call has a mock equivalent allowing for local development of bots and functions are documented<br>
-Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published<br>
-
-## Layer 2 - OOP based calls and mocks
-
-OOP Actions - To obfuscate the API calls into function calls on the object itself. For example, rather than having to
-call
-the trigger API to spin the wheel of fortune, instead the interface would be lock.spin_wheel_of_fortune().<br>
-Tested - Test each function by mocking the chaster sdk object
-Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface to the data
+| API Group                         | Stubbed | Validated | Integrated | Language | Documented | Tutorial |
+|-----------------------------------|---------|-----------|------------|----------|------------|----------|
+| Shared Locks                      | done    | done      | done       | done     | done       |          |
+| Locks                             | done    | done      | done       | done     | done       |          |
+| trigger_extension_actions         | done    | done      | done       | done     | done       |          |
+| Lock Creation                     | done    | done      | done       | done     | done       |          |
+| Profile                           | done    | done      | done       | done     | done       |          |
+| Files                             | done    | done      | blocked    | done     | done       |          |
+| Combinations                      | done    | done      | done       | done     | done       |          |
+| Extensions                        | done    | done      | done       | done     | done       |          |
+| Session Offer                     | done    | done      | done       | done     | done       |          |
+| Messaging                         | done    | done      | done       | done     | done       |          |
+| Extensions - Temporary Opening    | done    | done      | done       | done     | done       |          |
+| Community Events                  | done    | done      | done       | done     | done       |          |
+| Partner Extensions                |         |           |            |          |            |          |
+| Settings                          | done    | done      | done       | done     | done       |          |
+| Users                             | done    | done      | done       | done     | done       |          |
+| Keyholder                         | done    | done      | done       | done     | done       |          |
+| Reports                           | N/A     | N/A       | N/A        | N/A      | N/A        |          |
+| Partner Configurations            |         |           |            |          |            |          |
+| Public Locks                      | done    | done      | done       | done     | done       |          |
+| Extensions - Verification Picture | done    | done      | done       | done     | done       |          |
 
 ### Backlog
 
-- Extension Objects - DTO Tested and Validated<br>
+| API Group                         | datetime conversion correctly | Probably remove bespoke objects as input to api functions, such as in triggers |
+|-----------------------------------|-------------------------------|--------------------------------------------------------------------------------|
+| Shared Locks                      | done                          |                                                                                |
+| Locks                             | done                          |                                                                                |
+| trigger_extension_actions         | done                          |                                                                                |
+| Lock Creation                     | done                          |                                                                                |
+| Profile                           | done                          |                                                                                |
+| Files                             | done                          |                                                                                |
+| Combinations                      | done                          |                                                                                |
+| Extensions                        | done                          |                                                                                |
+| Session Offer                     | done                          |                                                                                |
+| Messaging                         | done                          |                                                                                |
+| Extensions - Temporary Opening    | done                          |                                                                                |
+| Community Events                  | done                          |                                                                                |
+| Partner Extensions                |                               |                                                                                |
+| Settings                          | done                          |                                                                                |
+| Users                             | done                          |                                                                                |
+| Keyholder                         | done                          |                                                                                |
+| Reports                           |                               |                                                                                |
+| Partner Configurations            |                               |                                                                                |
+| Public Locks                      | done                          |                                                                                |
+| Extensions - Verification Picture | done                          |                                                                                |
+
 - Extension Information API - C&C the extension information component vs. the extension info in the lock obj
-- Probably remove bespoke objects as input to api functions, such as in triggers
 - Redact bearer token from logs
 - Remove delay and apply intelligent rate limiting reaction
+- embrace util.dump_time
+- embrace one line for loops
+- need more/better extension dump handling. May need to reformat extension handler
+- embrace util.safe_dump_parameter
 
 ## Research
 
-- find a URL object hopefully with query building capabilities
+- Integration test, isolate by function
+
 - connection pool, thread safety of SDK
 - test and tweak retry
 - implement w3c tracing protocol
@@ -93,6 +91,44 @@ Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface
 - Chaster has a sequence of retry headers that may not be honored by the Retry library
 - Retry library has been finicky to validate functionality. A bespoke method may be needed.
 - abstract away success status codes to a wasSuccessful function?
+
+# v0.2.0 - Helpful Mocks
+
+| Mock API Group                    | Stubbed | Connected | Validated | Tutorial |
+|-----------------------------------|---------|-----------|-----------|----------|
+| Shared Locks                      |         |           |           |          |
+| Locks                             |         |           |           |          |
+| trigger_extension_actions         |         |           |           |          |
+| Lock Creation                     |         |           |           |          |
+| Profile                           |         |           |           |          |
+| Files                             |         |           |           |          |
+| Combinations                      |         |           |           |          |
+| Extensions                        |         |           |           |          |
+| Session Offer                     |         |           |           |          |
+| Messaging                         |         |           |           |          |
+| Extensions - Temporary Opening    |         |           |           |          |
+| Community Events                  |         |           |           |          |
+| Partner Extensions                |         |           |           |          |
+| Settings                          |         |           |           |          |
+| Users                             |         |           |           |          |
+| Keyholder                         |         |           |           |          |
+| Reports                           |         |           |           |          |
+| Partner Configurations            |         |           |           |          |
+| Public Locks                      |         |           |           |          |
+| Extensions - Verification Picture |         |           |           |          |
+
+Stubbed - Function calls written
+Connected - Chaster operation simulated
+Validated - tested
+Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
+
+## v0.3.0 Layer 2 - OOP based calls and mocks
+
+OOP Actions - To obfuscate the API calls into function calls on the object itself. For example, rather than having to
+call
+the trigger API to spin the wheel of fortune, instead the interface would be lock.spin_wheel_of_fortune().<br>
+Tested - Test each function by mocking the chaster sdk object
+Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface to the data
 
 # Ops
 
@@ -116,6 +152,19 @@ Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface
 
 Understood - Validated it has a place in the deployment process and is functioning correctly.<br>
 Documented - The file is document in a process doc
+
+## Testing
+
+| Suite       | Stmts | Miss | Cover | Date      |
+|-------------|-------|------|-------|-----------|
+| Unittest    | 3293  | 859  | 74%   | 1/19/2024 |
+| Unittest    | 4055  | 994  | 75%   | 1/19/2024 |
+| Integration | 4055  | 994  | 75%   | 1/19/2024 |
+
+## Linting
+
+`make lint | wc -l`
+455 issues @ 1/19/2024
 
 # Contributing
 

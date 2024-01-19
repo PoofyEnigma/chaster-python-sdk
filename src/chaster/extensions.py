@@ -41,7 +41,8 @@ class Extension:
         h = ExtensionsHandler()
         for extension in obj_list:
             h.add(extension)
-        return h.dump()
+        return h.generate_array()
+
 
 class Extensions:
     def __init__(self):
@@ -52,6 +53,10 @@ class Extensions:
         for extension in self.extensions:
             obj.append(extension.dump())
         return {'extensions': obj}
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 
 class ExtensionsHandler:
@@ -123,12 +128,20 @@ class ExtensionsHandler:
         if extension.slug == 'guess-timer':
             self.guess_timers.append(GuessTheTimer().update(extension))
 
-    def dump(self):
+    def generate_array(self):
         extensions = []
         for item in self.__dict__:
             item = self.__dict__[item]
             for entry in item:
                 extensions.append(entry)
+        return extensions
+
+    def dump(self):
+        extensions = []
+        for item in self.__dict__:
+            item = self.__dict__[item]
+            for entry in item:
+                extensions.append(entry.dump())
         return extensions
 
 
@@ -139,6 +152,7 @@ def generate_punishment(punishment):
         return PunishmentAddTime(punishment.params)
     if punishment.name == 'pillory':
         return PunishmentPillory(punishment.params.duration)
+
 
 class PunishmentPilloryParams:
     def __init__(self, time):
@@ -170,9 +184,13 @@ class Punishment:
 
 
 class PunishmentPillory(Punishment):
-    def __init__(self, time):
+    def __init__(self, pillory_duration):
+        """
+
+        :param pillory_duration: in seconds
+        """
         super().__init__('pillory')
-        self.params: PunishmentPilloryParams = PunishmentPilloryParams(time)
+        self.params: PunishmentPilloryParams = PunishmentPilloryParams(pillory_duration)
 
     def get_time(self):
         return self.params.duration
@@ -220,6 +238,10 @@ class ShareLinksConfig:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class ShareLinks(Extension):
     def __init__(self):
@@ -231,6 +253,7 @@ class ShareLinks(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = ShareLinksConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -248,7 +271,11 @@ class PilloryConfig:
         self.limitToLoggedUsers: bool = True
 
     def dump(self):
-        return  self.__dict__.copy()
+        return self.__dict__.copy()
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 
 class Pillory(Extension):
@@ -261,6 +288,7 @@ class Pillory(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = PilloryConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -281,6 +309,10 @@ class HygieneOpeningConfig:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class HygieneOpening(Extension):
     def __init__(self):
@@ -292,6 +324,7 @@ class HygieneOpening(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = HygieneOpeningConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -310,6 +343,10 @@ class DiceConfig:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class Dice(Extension):
     def __init__(self):
@@ -321,6 +358,7 @@ class Dice(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = DiceConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -332,6 +370,7 @@ class Dice(Extension):
         return obj
 
 
+# TODO: where is freeze/unfreeze?
 class WheelOfFortuneSegment:
     add_time = 'add-time'
     remove_time = 'remove-time'
@@ -353,6 +392,10 @@ class WheelOfFortuneSegment:
         self.__dict__ = obj.__dict__.copy()
         return self
 
+    @staticmethod
+    def generate_array(obj_list):
+        return [WheelOfFortuneSegment().update(item) for item in obj_list]
+
 
 class WheelOfFortuneConfig:
     def __init__(self):
@@ -365,6 +408,11 @@ class WheelOfFortuneConfig:
             obj['segments'].append(segment.dump())
         return obj
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.segments = WheelOfFortuneSegment.generate_array(obj.segments)
+        return self
+
 
 class WheelOfFortune(Extension):
     def __init__(self):
@@ -376,6 +424,7 @@ class WheelOfFortune(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = WheelOfFortuneConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -548,9 +597,9 @@ class PeerVerification:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['punishment'] = []
+        obj['punishments'] = []
         for punishment in self.punishments:
-            obj['punishment'].append(punishment.dump())
+            obj['punishments'].append(punishment.dump())
         return obj
 
 
@@ -693,3 +742,8 @@ class KnownExtension:
         if 'isDevelopedByCommunity' not in obj.__dict__:
             self.isDevelopedByCommunity = False
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['defaultConfig'] = self.defaultConfig.__dict__.copy()
+        return obj
