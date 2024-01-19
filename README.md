@@ -1,4 +1,5 @@
 # Chaster Python SDK
+
 `pip install --upgrade chaster-sdk`
 
 ```python
@@ -10,8 +11,8 @@ logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='PythonSDKDeveloplment/1.0')
-response, your_locks = chaster_api.get_shared_locks(status='')
+chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='your_user_agent/1.0')
+response, your_locks = chaster_api.get_shared_locks()
 ```
 
 # Releases
@@ -27,26 +28,26 @@ response, your_locks = chaster_api.get_shared_locks(status='')
 
 | API Group                         | Stubbed | Validated | Integrated | Language | Documented | Mocked | Tutorial |
 |-----------------------------------|---------|-----------|------------|----------|------------|--------|----------|
-| Shared Locks                      | done    | done      | done       |          |            |        |          |
-| Locks                             | done    | done      | done       |          |            |        |          |
-| trigger_extension_actions         | done    | done      | done       |          |            |        |          |
-| Lock Creation                     | done    | done      | done       |          |            |        |          |
-| Profile                           | done    | done      | done       |          |            |        |          |
-| Files                             | done    | done      | blocked    |          |            |        |          |
-| Combinations                      | done    | done      | done       |          |            |        |          |
-| Extensions                        | done    | done      | done       |          |            |        |          |
-| Session Offer                     | done    | done      | done       |          |            |        |          |
-| Messaging                         | done    | done      | done       |          |            |        |          |
-| Extensions - Temporary Opening    | done    | done      | done       |          |            |        |          |
-| Community Events                  | done    | done      | done       |          |            |        |          |
+| Shared Locks                      | done    | done      | done       | done     | done       |        |          |
+| Locks                             | done    | done      | done       | done     | done       |        |          |
+| trigger_extension_actions         | done    | done      | done       | done     | done       |        |          |
+| Lock Creation                     | done    | done      | done       | done     | done       |        |          |
+| Profile                           | done    | done      | done       | done     | done       |        |          |
+| Files                             | done    | done      | blocked    | done     | done       |        |          |
+| Combinations                      | done    | done      | done       | done     | done       |        |          |
+| Extensions                        | done    | done      | done       | done     | done       |        |          |
+| Session Offer                     | done    | done      | done       | done     | done       |        |          |
+| Messaging                         | done    | done      | done       | done     | done       |        |          |
+| Extensions - Temporary Opening    | done    | done      | done       | done     | done       |        |          |
+| Community Events                  | done    | done      | done       | done     | done       |        |          |
 | Partner Extensions                |         |           |            |          |            |        |          |
-| Settings                          | done    | done      | done       |          |            |        |          |
-| Users                             | done    | done      | done       |          |            |        |          |
-| Keyholder                         | done    | done      | done       |          |            |        |          |
-| Reports                           | N/A     | N/A       | N/A        |          |            |        |          |
-| Partner Configurations            |         |           |            |          |            |        |          |
-| Public Locks                      | done    | done      | done       |          |            |        |          |
-| Extensions - Verification Picture | done    | done      | done       |          |            |        |          |
+| Settings                          | done    | done      | done       | done     | done       |        |          |
+| Users                             | done    | done      | done       | done     | done       |        |          |
+| Keyholder                         | done    | done      | done       | done     | done       |        |          |
+| Reports                           | N/A     | N/A       | N/A        | N/A      | N/A        |        |          |
+| Partner Configurations            |         |           |            |          |            |        |
+| Public Locks                      | done    | done      | done       | done     | done       |        |          |
+| Extensions - Verification Picture | done    | done      | done       | done     | done       |        |          |
 
 Stubbed - API call functions, DTOs defined<br>
 Validated - tested with mocked chaster http response<br>
@@ -69,6 +70,8 @@ Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface
 - Extension Objects - DTO Tested and Validated<br>
 - Extension Information API - C&C the extension information component vs. the extension info in the lock obj
 - Probably remove bespoke objects as input to api functions, such as in triggers
+- Redact bearer token from logs
+- Remove delay and apply intelligent rate limiting reaction
 
 ## Research
 
