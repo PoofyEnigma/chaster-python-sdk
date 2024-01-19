@@ -234,7 +234,7 @@ class ApiTestCases(unittest.TestCase):
 
         pp = triggers.PilloryParameters()
 
-        response = chaster_api.place_user_into_pillory(lock_id, locks[0].extensions[0]._id, pp)
+        response = chaster_api.place_user_into_pillory(lock_id, locks[0].extensions[0]._id, pp, )
         self.assertEqual(response.status_code, 201)
 
         _, info = chaster_api.get_current_pillory_info(lock_id, locks[0].extensions[0]._id)

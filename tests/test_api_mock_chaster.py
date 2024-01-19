@@ -295,10 +295,7 @@ class MyTestCase(unittest.TestCase):
     def test_vote_in_share_links(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.share_link_vote_ack)
-        slv = triggers.ShareLinksVote()
-        slv.payload = triggers.ShareLinksVotePayload()
-        slv.payload.action = 'add'
-        response, data = api.vote_in_share_links('', '', slv)
+        response, data = api.vote_in_share_links('', '', 'remove')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_share_link_url_to_vote(self):
@@ -316,11 +313,7 @@ class MyTestCase(unittest.TestCase):
     def test_place_user_into_pillory(self):
         status_code = 201
         api = self.response_factory(status_code, '')
-        pp = triggers.PilloryParameters()
-        pp.payload = triggers.PilloryPayload()
-        pp.payload.reason = 'mlem'
-        pp.payload.duration = 3600
-        response = api.place_user_into_pillory('', '', pp)
+        response = api.place_user_into_pillory('', '', 'mlem', 3600)
         self.assertEqual(response.status_code, status_code)
 
     def test_get_current_pillory_info(self):

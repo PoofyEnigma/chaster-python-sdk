@@ -78,11 +78,6 @@ class DTOsTest(unittest.TestCase):
     Triggers
     """
 
-    def test_ShareLinksVote_params(self):
-        base = json.loads(response_examples.share_link_vote_ack)
-        cmp = triggers.ShareLinksVoteReturn()
-        self.compare_obj_params(cmp, base)
-
     def test_ShareLinkUrlResponse_params(self):
         base = json.loads(response_examples.share_link_url_response)
         cmp = triggers.ShareLinkUrlResponse()

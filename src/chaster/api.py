@@ -119,8 +119,7 @@ class _ChasterApi:
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, vote: triggers.ShareLinksVote) -> tuple[
-        requests.models.Response, triggers.ShareLinksVoteReturn]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, triggers.ShareLinksVoteReturn]:
         pass
 
     def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[
@@ -131,8 +130,8 @@ class _ChasterApi:
         requests.models.Response, triggers.ShareLinkInfoResponse]:
         pass
 
-    def place_user_into_pillory(self, lock_id: str, extension_id: str,
-                                data: triggers.PilloryParameters) -> requests.models.Response:
+    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str,
+                                duration: int) -> requests.models.Response:
         pass
 
     def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
@@ -798,16 +797,25 @@ class ChasterAPI(_ChasterApi):
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, vote: triggers.ShareLinksVote) -> tuple[
-        requests.models.Response, triggers.ShareLinksVoteReturn]:
+    # TODO: What is session_id for?
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, triggers.ShareLinksVoteReturn]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
         :param extension_id:
-        :param vote:
+        :param action: either 'add', 'remove', or 'random'
+        :param session_id:
         :return:
         """
-        response = self.trigger_extension_action(lock_id, extension_id, vote.dump())
+        data = {
+            'action': 'vote',
+            'payload': {
+                'action': action,
+                'sessionId': session_id
+            }
+        }
+
+        response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
 
     def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[
@@ -836,9 +844,23 @@ class ChasterAPI(_ChasterApi):
         response = self.trigger_extension_action(lock_id, extension_id, data.dump())
         return self._tester_post_request_helper(response, triggers.ShareLinkInfoResponse().update)
 
-    def place_user_into_pillory(self, lock_id: str, extension_id: str,
-                                data: triggers.PilloryParameters) -> requests.models.Response:
-        return self.trigger_extension_action(lock_id, extension_id, data.dump())
+    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str, duration: int) -> requests.models.Response:
+        """
+        `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
+        :param lock_id:
+        :param extension_id:
+        :param reason:
+        :param duration: in seconds
+        :return:
+        """
+        data = {
+            'action': 'submit',
+            'payload': {
+                'duration': duration,
+                'reason': reason
+            }
+        }
+        return self.trigger_extension_action(lock_id, extension_id, data)
 
     def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.PilloryVotes]:
@@ -1623,8 +1645,7 @@ class _MockChasterAPI(_ChasterApi):
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, vote: triggers.ShareLinksVote) -> tuple[
-        requests.models.Response, triggers.ShareLinksVoteReturn]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, triggers.ShareLinksVoteReturn]:
         pass
 
     def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[
@@ -1635,8 +1656,8 @@ class _MockChasterAPI(_ChasterApi):
         requests.models.Response, triggers.ShareLinkInfoResponse]:
         pass
 
-    def place_user_into_pillory(self, lock_id: str, extension_id: str,
-                                data: triggers.PilloryParameters) -> requests.models.Response:
+    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str,
+                                duration: int) -> requests.models.Response:
         pass
 
     def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[

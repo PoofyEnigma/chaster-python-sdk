@@ -39,29 +39,6 @@
 
 ### Backlog
 
-| API Group                         | datetime conversion correctly | Probably remove bespoke objects as input to api functions, such as in triggers |
-|-----------------------------------|-------------------------------|--------------------------------------------------------------------------------|
-| Shared Locks                      | done                          |                                                                                |
-| Locks                             | done                          |                                                                                |
-| trigger_extension_actions         | done                          |                                                                                |
-| Lock Creation                     | done                          |                                                                                |
-| Profile                           | done                          |                                                                                |
-| Files                             | done                          |                                                                                |
-| Combinations                      | done                          |                                                                                |
-| Extensions                        | done                          |                                                                                |
-| Session Offer                     | done                          |                                                                                |
-| Messaging                         | done                          |                                                                                |
-| Extensions - Temporary Opening    | done                          |                                                                                |
-| Community Events                  | done                          |                                                                                |
-| Partner Extensions                |                               |                                                                                |
-| Settings                          | done                          |                                                                                |
-| Users                             | done                          |                                                                                |
-| Keyholder                         | done                          |                                                                                |
-| Reports                           |                               |                                                                                |
-| Partner Configurations            |                               |                                                                                |
-| Public Locks                      | done                          |                                                                                |
-| Extensions - Verification Picture | done                          |                                                                                |
-
 - Extension Information API - C&C the extension information component vs. the extension info in the lock obj
 - Redact bearer token from logs
 - Remove delay and apply intelligent rate limiting reaction
@@ -69,6 +46,7 @@
 - embrace one line for loops
 - need more/better extension dump handling. May need to reformat extension handler
 - embrace util.safe_dump_parameter
+- Probably remove bespoke objects as output to api functions, such as in files
 
 ## Research
 

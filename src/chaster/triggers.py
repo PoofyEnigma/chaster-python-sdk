@@ -54,32 +54,6 @@ class ShareLinkUrlResponse:
     def dump(self):
         return self.__dict__.copy()
 
-
-class ShareLinksVotePayload:
-    action_add = 'add'
-    action_random = 'random'
-    action_remove = 'remove'
-
-    def __init__(self):
-        self.action = ShareLinksVotePayload.action_add
-        self.sessionId: str = ''
-
-    def dump(self):
-        return self.__dict__.copy()
-
-
-class ShareLinksVote(ActionRequest):
-    def __init__(self):
-        super().__init__()
-        self.action = 'vote'
-        self.payload: ShareLinksVotePayload = ShareLinksVotePayload()
-
-    def dump(self):
-        obj = self.__dict__.copy()
-        obj['payload'] = self.payload.dump()
-        return obj
-
-
 class ShareLinksVoteReturn:
     def __init__(self):
         self.duration: int = 0
@@ -143,25 +117,6 @@ class PilloryVotes:
         return obj
 
 
-class PilloryPayload:
-    def __init__(self):
-        self.duration: int = 900
-        self.reason: str = 'default'
-
-    def dump(self):
-        return self.__dict__.copy()
-
-
-class PilloryParameters(ActionRequest):
-    def __init__(self):
-        super().__init__()
-        self.action = 'submit'
-        self.payload: PilloryPayload = PilloryPayload()
-
-    def dump(self):
-        obj = super().dump()
-        obj['payload'] = self.payload.dump()
-        return obj
 
 
 # hygience opening
