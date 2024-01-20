@@ -3,13 +3,11 @@ from . import extensions, util
 import dateutil.parser
 
 
-class ActionRequest:
-    def __init__(self):
-        self.action: str = 'submit'
-        self.payload: any = {}
-
-    def dump(self):
-        return self.__dict__.copy()
+def generic_trigger(action: str):
+    return {
+        'action': action,
+        'payload': {}
+    }
 
 
 # share links

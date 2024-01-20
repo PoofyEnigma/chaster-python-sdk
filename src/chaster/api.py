@@ -118,7 +118,8 @@ class _ChasterApi:
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, int]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id='') -> tuple[
+        requests.models.Response, int]:
         pass
 
     def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
@@ -795,7 +796,8 @@ class ChasterAPI(_ChasterApi):
     """
 
     # TODO: What is session_id for?
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, int]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id='') -> tuple[
+        requests.models.Response, int]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -826,9 +828,8 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return: link url
         """
-        data = triggers.ActionRequest()
-        data.action = 'getLink'
-        response = self.trigger_extension_action(lock_id, extension_id, data.dump())
+        data = triggers.generic_trigger('getLink')
+        response = self.trigger_extension_action(lock_id, extension_id, data)
 
         data = None
         if response.status_code == 201 or response.status_code == 200:
@@ -844,12 +845,12 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = triggers.ActionRequest()
-        data.action = 'getInfo'
-        response = self.trigger_extension_action(lock_id, extension_id, data.dump())
+        data = triggers.generic_trigger('getInfo')
+        response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.ShareLinkInfoResponse().update)
 
-    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str, duration: int) -> requests.models.Response:
+    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str,
+                                duration: int) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -875,9 +876,8 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = triggers.ActionRequest()
-        data.action = 'getStatus'
-        response = self.trigger_extension_action(lock_id, extension_id, data.dump())
+        data = triggers.generic_trigger('getStatus')
+        response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.PilloryVotes().update)
 
     def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
@@ -888,11 +888,10 @@ class ChasterAPI(_ChasterApi):
         :param is_you: True if the authenticated user is unlocking themselves, False if the authenticated user is unlocking someone they are keyholding
         :return:
         """
-        data = triggers.ActionRequest()
-        data.action = 'keyholderOpen'
+        data = triggers.generic_trigger('keyholderOpen')
         if is_you:
-            data.action = 'submit'
-        return self.trigger_extension_action(lock_id, extension_id, data.dump())
+            data = triggers.generic_trigger('submit')
+        return self.trigger_extension_action(lock_id, extension_id, data)
 
     def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.DiceRollResult]:
@@ -902,9 +901,8 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = triggers.ActionRequest()
-        data.action = 'submit'
-        response = self.trigger_extension_action(lock_id, extension_id, data.dump())
+        data = triggers.generic_trigger('submit')
+        response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
 
     def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
@@ -915,9 +913,8 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = triggers.ActionRequest()
-        data.action = 'submit'
-        response = self.trigger_extension_action(lock_id, extension_id, data.dump())
+        data = triggers.generic_trigger('submit')
+        response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.WheelOfFortuneResult().update)
 
     def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
@@ -950,12 +947,7 @@ class ChasterAPI(_ChasterApi):
         :param task:
         :return:
         """
-        data = {
-            "action": "assignTask",
-            "payload": {
-                'task': task.dump()
-            }
-        }
+        data = {"action": "assignTask", "payload": {'task': task.dump()}}
         return self.trigger_extension_action(lock_id, extension_id, data)
 
     def mark_task_done(self, lock_id: str, extension_id: str, complete: bool) -> requests.models.Response:
@@ -976,7 +968,7 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = {"action": "createVerificationRequest", "payload": {}}
+        data = triggers.generic_trigger('createVerificationRequest')
         return self.trigger_extension_action(lock_id, extension_id, data)
 
     def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
@@ -987,7 +979,7 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = {"action": "submit", "payload": {}}
+        data = {"action": "", "payload": {}}
         response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.GuessTheTimerResponse().update)
 
@@ -1666,7 +1658,8 @@ class _MockChasterAPI(_ChasterApi):
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, int]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id='') -> tuple[
+        requests.models.Response, int]:
         pass
 
     def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
