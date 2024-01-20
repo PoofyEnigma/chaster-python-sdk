@@ -66,8 +66,8 @@
 - Redact bearer token from logs
 - Remove delay and apply intelligent rate limiting reaction
 - need more/better extension dump handling. May need to reformat extension handler
-- Probably remove bespoke objects as output to api functions, such as in files
-
+- consider removing the ActionRequest object?
+- 
 ## Research
 
 - Integration test, isolate by function

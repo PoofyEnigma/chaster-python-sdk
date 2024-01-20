@@ -486,6 +486,12 @@ class CommunityEventDetails:
         self.end = dateutil.parser.isoparse(obj.end)
         return self
 
+    def dump(self):
+        obj = self.__dict__.copy()
+        util.dump_time(self, 'start', obj)
+        util.dump_time(self, 'end', obj)
+        return obj
+
 
 class CommunityEventTier:
     def __init__(self):
@@ -556,27 +562,3 @@ class AppSettings:
             obj['communityEvent'] = self.communityEvent.dump()
         util.dump_time(self, 'time', obj)
         return obj
-
-
-class FileToken:
-    def __init__(self):
-        self.token: str = ''
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()
-
-
-class FileUrl:
-    def __init__(self):
-        self.url: str = ''
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()

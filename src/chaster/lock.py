@@ -254,19 +254,6 @@ class ExtensionInformation:
         obj['extension'] = self.extension.dump()
         return obj
 
-
-class LockId:
-    def __init__(self):
-        self.lockId: str = ''
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()
-
-
 class LockInfo:
     def __init__(self):
         self.password: str = None
@@ -293,19 +280,6 @@ class UnsplashPhoto:
 
     def dump(self):
         return self.__dict__.copy()
-
-
-class IdResponse:
-    def __init__(self):
-        self.id: str = ''
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()
-
 
 class CreateSharedLock:
     def __init__(self):
@@ -712,14 +686,3 @@ class VerificationPhotoHistory:
     def generate_array(obj_list):
         return [VerificationPhotoHistory().update(account) for account in obj_list]
 
-
-class Combination:
-    def __init__(self):
-        self.combinationId: str = ''
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()

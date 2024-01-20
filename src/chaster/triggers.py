@@ -43,29 +43,6 @@ class ShareLinkInfoResponse:
         return self.__dict__.copy()
 
 
-class ShareLinkUrlResponse:
-    def __init__(self):
-        self.link: str = ''
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()
-
-class ShareLinksVoteReturn:
-    def __init__(self):
-        self.duration: int = 0
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        return self.__dict__.copy()
-
-
 # pillory
 # put into pillory
 # request {"action":"submit","payload":{"duration":900,"reason":"puppy was bad"}}
@@ -115,8 +92,6 @@ class PilloryVotes:
         obj = self.__dict__.copy()
         obj['votes'] = Vote.dump_array(self.votes)
         return obj
-
-
 
 
 # hygience opening

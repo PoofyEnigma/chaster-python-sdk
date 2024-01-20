@@ -35,8 +35,7 @@ class _ChasterApi:
     def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
         pass
 
-    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[
-        requests.models.Response, lock.IdResponse]:
+    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[requests.models.Response, str]:
         pass
 
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
@@ -119,11 +118,10 @@ class _ChasterApi:
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, triggers.ShareLinksVoteReturn]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, int]:
         pass
 
-    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.ShareLinkUrlResponse]:
+    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
         pass
 
     def get_share_link_vote_info(self, lock_id: str, extension_id: str) -> tuple[
@@ -155,7 +153,7 @@ class _ChasterApi:
     def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
         pass
 
-    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task):
+    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task) -> requests.models.Response:
         pass
 
     def mark_task_done(self, lock_id: str, extension_id: str, complete: bool) -> requests.models.Response:
@@ -172,14 +170,14 @@ class _ChasterApi:
     Lock Creation
     """
 
-    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, lock.LockId]:
+    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, str]:
         pass
 
     def edit_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
         pass
 
     def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
-        requests.models.Response, lock.LockId]:
+        requests.models.Response, str]:
         pass
 
     """
@@ -211,10 +209,10 @@ class _ChasterApi:
     Files
     """
 
-    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, user.FileToken]:
+    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, str]:
         pass
 
-    def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
+    def find_file(self, file_key) -> tuple[requests.models.Response, str]:
         pass
 
     """
@@ -222,10 +220,10 @@ class _ChasterApi:
     """
 
     def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[
-        requests.models.Response, lock.Combination]:
+        requests.models.Response, str]:
         pass
 
-    def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
+    def create_combination_code(self, code: str) -> tuple[requests.models.Response, str]:
         pass
 
     """
@@ -508,22 +506,21 @@ class ChasterAPI(_ChasterApi):
 
         return response, data
 
-    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[
-        requests.models.Response, lock.IdResponse]:
+    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_create>`_
 
         Creates the given shared lock.
         :param create:
-        :return:
+        :return: the newly created lock id
         """
 
         create.validate()
         response = self._post('/locks/shared-locks', create.dump())
         data = None
         if response.status_code == 201:
-            x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.IdResponse().update(x)
+            x = response.json()
+            data = x['id']
         return response, data
 
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
@@ -798,14 +795,14 @@ class ChasterAPI(_ChasterApi):
     """
 
     # TODO: What is session_id for?
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, triggers.ShareLinksVoteReturn]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, int]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
         :param extension_id:
         :param action: either 'add', 'remove', or 'random'
         :param session_id:
-        :return:
+        :return: the amount of time changed in seconds
         """
         data = {
             'action': 'vote',
@@ -816,20 +813,28 @@ class ChasterAPI(_ChasterApi):
         }
 
         response = self.trigger_extension_action(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
+        data = None
+        if response.status_code == 201 or response.status_code == 200:
+            data = response.json()
+            data = data['duration']
+        return response, data
 
-    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.ShareLinkUrlResponse]:
+    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
         :param extension_id:
-        :return:
+        :return: link url
         """
         data = triggers.ActionRequest()
         data.action = 'getLink'
         response = self.trigger_extension_action(lock_id, extension_id, data.dump())
-        return self._tester_post_request_helper(response, triggers.ShareLinksVoteReturn().update)
+
+        data = None
+        if response.status_code == 201 or response.status_code == 200:
+            data = response.json()
+            data = data['link']
+        return response, data
 
     def get_share_link_vote_info(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.ShareLinkInfoResponse]:
@@ -936,7 +941,8 @@ class ChasterAPI(_ChasterApi):
         data = {"action": "submit", "payload": {"requestVote": True, "voteDuration": vote_duration}}
         return self.trigger_extension_action(lock_id, extension_id, data)
 
-    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task):
+    # TODO: validate this has no special return value
+    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -989,18 +995,18 @@ class ChasterAPI(_ChasterApi):
     Lock Creation
     """
 
-    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, lock.LockId]:
+    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Lock%20Creation/LockCreationController_create>`_
         :param self_lock:
-        :return:
+        :return: the new lock's id
         """
         response = self._post('locks', data=self_lock.dump())
 
         data = None
         if response.status_code == 201:
-            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.LockId().update(data)
+            data = response.json()
+            data = data['lockId']
         return response, data
 
     def edit_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
@@ -1013,19 +1019,19 @@ class ChasterAPI(_ChasterApi):
         return self._post(f'locks/{lock_id}/extensions', data=ext.dump())
 
     def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
-        requests.models.Response, lock.LockId]:
+        requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Lock%20Creation/LockCreationController_createLockFromSharedLock>`_
         :param shared_lock_id:
         :param lock_details:
-        :return:
+        :return: the new lock's id
         """
         response = self._post(f'public-locks/{shared_lock_id}/create-lock', data=lock_details.dump())
 
         data = None
         if response.status_code == 201:
-            data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.LockId().update(data)
+            data = response.json()
+            data = data['lockId']
         return response, data
 
     """
@@ -1089,40 +1095,48 @@ class ChasterAPI(_ChasterApi):
     Files
     """
 
-    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, user.FileToken]:
+    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Files/StorageController_uploadFiles>`_
         :param uri:
         :param usage: 'messaging' or 'community_event_challenge'
-        :return:
+        :return: the file token
         """
         fmf = generate_multipart_form_from_uri(uri)
         files = {'files': (fmf.name, open(fmf.uri, 'rb'), fmf.type),
                  'type': (None, usage)}
 
         response = self._post_form('/files/upload', files)
+        data = None
+        if response.status_code == 201:
+            data = response.json()
+            data = data['token']
+        return response, data
 
-        return self._tester_post_request_helper(response, user.FileToken().update)
-
-    def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
+    def find_file(self, file_key) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Files/StorageController_getFileFromKey>`_
         :param file_key:
         :return:
         """
-        return self._tester_get_wrapper(f'/files/{file_key}', user.FileUrl().update)
+
+        response = self._get(f'/files/{file_key}')
+        data = None
+        if response.status_code == 200:
+            data = response.json()
+            data = data['url']
+        return response, data
 
     """
     Combinations
     """
 
-    def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[
-        requests.models.Response, lock.Combination]:
+    def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Combinations/CombinationController_uploadImage>`_
         :param uri:
         :param manual_check:
-        :return:
+        :return: combination id
         """
         fmf = generate_multipart_form_from_uri(uri)
         with open(fmf.uri, 'rb') as f:
@@ -1131,16 +1145,24 @@ class ChasterAPI(_ChasterApi):
             files = {'file': (fmf.name, content, fmf.type),
                      'enableManualCheck': (None, str(manual_check).lower())}
         response = self._post_form('combinations/image', files)
-        return self._tester_post_request_helper(response, lock.Combination().update)
+        data = None
+        if response.status_code == 201 or response.status_code == 200:
+            data = response.json()
+            data = data['combinationId']
+        return response, data
 
-    def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
+    def create_combination_code(self, code: str) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Combinations/CombinationController_createCode>`_
         :param code:
-        :return:
+        :return: combination id
         """
         response = self._post(f'combinations/code', {'code': code})
-        return self._tester_post_request_helper(response, lock.Combination().update)
+        data = None
+        if response.status_code == 201 or response.status_code == 200:
+            data = response.json()
+            data = data['combinationId']
+        return response, data
 
     """
     Extensions
@@ -1561,8 +1583,7 @@ class _MockChasterAPI(_ChasterApi):
     def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
         pass
 
-    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[
-        requests.models.Response, lock.IdResponse]:
+    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[requests.models.Response, str]:
         pass
 
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
@@ -1645,11 +1666,10 @@ class _MockChasterAPI(_ChasterApi):
     Triggers
     """
 
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, triggers.ShareLinksVoteReturn]:
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id = '') -> tuple[requests.models.Response, int]:
         pass
 
-    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.ShareLinkUrlResponse]:
+    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
         pass
 
     def get_share_link_vote_info(self, lock_id: str, extension_id: str) -> tuple[
@@ -1681,7 +1701,7 @@ class _MockChasterAPI(_ChasterApi):
     def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
         pass
 
-    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task):
+    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task) -> requests.models.Response:
         pass
 
     def mark_task_done(self, lock_id: str, extension_id: str, complete: bool) -> requests.models.Response:
@@ -1698,14 +1718,14 @@ class _MockChasterAPI(_ChasterApi):
     Lock Creation
     """
 
-    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, lock.LockId]:
+    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, str]:
         pass
 
     def edit_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
         pass
 
     def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
-        requests.models.Response, lock.LockId]:
+        requests.models.Response, str]:
         pass
 
     """
@@ -1737,10 +1757,10 @@ class _MockChasterAPI(_ChasterApi):
     Files
     """
 
-    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, user.FileToken]:
+    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, str]:
         pass
 
-    def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
+    def find_file(self, file_key) -> tuple[requests.models.Response, str]:
         pass
 
     """
@@ -1748,10 +1768,10 @@ class _MockChasterAPI(_ChasterApi):
     """
 
     def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[
-        requests.models.Response, lock.Combination]:
+        requests.models.Response, str]:
         pass
 
-    def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
+    def create_combination_code(self, code: str) -> tuple[requests.models.Response, str]:
         pass
 
     """
