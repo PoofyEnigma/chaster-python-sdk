@@ -79,7 +79,7 @@ create_lock.maxDuration = datetime.timedelta(hours=6).total_seconds()
 create_lock.maxLimitDuration = datetime.timedelta(days=1).total_seconds()
 create_lock.displayRemainingTime = True
 create_lock.limitLockTime = True
-create_lock.combinationId = combination.combinationId
+create_lock.combinationId = combination
 create_lock.extensions = []
 create_lock.allowSessionOffer = False
 create_lock.isTestLock = False
@@ -93,7 +93,7 @@ create_lock.extensions.append(hygiene_opening)
 create_lock.extensions.append(pillory)
 
 _, lock_id_data = chaster_api.create_personal_lock(create_lock)
-_, lock = chaster_api.get_lock_details(lock_id_data.lockId)
+_, lock = chaster_api.get_lock_details(lock_id_data)
 
 eh = extensions.ExtensionsHandler()
 eh.load_defined(lock.extensions)

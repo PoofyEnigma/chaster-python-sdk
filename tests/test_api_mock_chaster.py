@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Module documentation goes here."""
+import asyncio
 import datetime
 import unittest
 from unittest.mock import MagicMock

@@ -1,3 +1,4 @@
+import asyncio
 from . import conversation, extensions, lock, triggers, user, util
 import datetime
 import json
@@ -408,6 +409,8 @@ class ChasterAPI(_ChasterApi):
             'Accept-Language': 'en-US,en;q=0.5',
             'Connection': 'keep-alive'
         }
+
+        # The retries are left here as a good measure but is not a proven necessary component of the class.
         retries = Retry(total=3,
                         backoff_factor=0.1,
                         status_forcelist=[500, 502, 503, 504],
@@ -482,7 +485,7 @@ class ChasterAPI(_ChasterApi):
     Shared Locks
     """
 
-    def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
+    async def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
         """
          `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_findAll>`_
 

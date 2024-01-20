@@ -8,7 +8,7 @@
 |-------------|------------------------------------------|-------|
 | v0.1.0.dev1 | Stubbed, Validated, Integrated           | done  |
 | v0.1.0.a1   | Language, Documented                     | done  |
-| v0.1.0.a2   | Backlog and TODOs cleared                | done  |
+| v0.1.0.a2   | Backlog and TODOs cleared                | ip    |
 | v0.1.0.a3   | 95% coverage on unittest and integration |       |
 | v0.1.0      | Tutorial                                 |       |
 
@@ -39,54 +39,25 @@
 
 ### Backlog
 
-| API Group                         | util.safe_dump_parameter |
-|-----------------------------------|--------------------------|
-| Shared Locks                      |                          |
-| Locks                             |                          |
-| trigger_extension_actions         |                          |
-| Lock Creation                     |                          |
-| Profile                           |                          |
-| Files                             |                          |
-| Combinations                      |                          |
-| Extensions                        |                          |
-| Session Offer                     |                          |
-| Messaging                         |                          |
-| Extensions - Temporary Opening    |                          |
-| Community Events                  |                          |
-| Partner Extensions                |                          |
-| Settings                          |                          |
-| Users                             |                          |
-| Keyholder                         |                          |
-| Reports                           |                          |
-| Partner Configurations            |                          |
-| Public Locks                      |                          |
-| Extensions - Verification Picture |                          |
-
-- Extension Information API - C&C the extension information component vs. the extension info in the lock obj
-- Redact bearer token from logs
-- Remove delay and apply intelligent rate limiting reaction
 - need more/better extension dump handling. May need to reformat extension handler
-
-## Research
-
+- documenting enums as parameters
+- Request prevalidation, yes or no?
 - Integration test, isolate by function
-- connection pool, thread safety of SDK
-- test and tweak retry
-- implement w3c tracing protocol
-- measure I/O
-- circuit breaker: https://github.com/danielfm/pybreaker
-- cancellation tokens: https://github.com/pomponchik/cantok
-- Enums vs. request validating vs. nothing
-- https://github.com/pydantic/pydantic
-- Templatize Result object to avoid returning a
-  tuple? https://stackoverflow.com/questions/6725868/generics-templates-in-python
-- need a wrapper for multipart/form-data requests
-- async funcs
-- Credentials stack object
-- Other authentication support
-- Chaster has a sequence of retry headers that may not be honored by the Retry library
-- Retry library has been finicky to validate functionality. A bespoke method may be needed.
+- util.safe_dump_parameter
+
+#### Rate limiting and Delaying
+
+- Chaster has a sequence of retry headers that may not be honored by the Retry library. I should do more handling in this regard and provide functions for to interface with the current state of the retries 
+- Remove delay and apply intelligent rate limiting reaction
+
+#### Authentication and Safe Logging
+
+Would need to utilize a credentials stack object in order to simplify finding credentials should
+the SDK open to support more types of authentication.
+support clientId/clientSecret unsupported authentication
 - abstract away success status codes to a wasSuccessful function?
+  - I would leverage logging instead
+  - Redact bearer token from logs
 
 # v0.2.0 - Helpful Mocks
 
