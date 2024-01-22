@@ -301,7 +301,7 @@ class MyTestCase(unittest.TestCase):
     def test_vote_in_share_links(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.share_link_vote_ack, raw_json=True)
-        response, data = api.vote_in_share_links('', '', 'remove')
+        response, data = api.vote_in_share_links('', '', 'remove', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_share_link_url_to_vote(self):

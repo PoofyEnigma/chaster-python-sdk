@@ -3,7 +3,7 @@ import datetime
 import os
 import logging
 
-from src.chaster import api, lock, extensions
+from chaster import api, lock, extensions
 
 logging.basicConfig()
 logger = logging.getLogger()
@@ -16,21 +16,21 @@ _, combination = chaster_api.create_combination_code('1234')
 
 # Create Wheel of Fortune
 s1 = extensions.WheelOfFortuneSegment()
-s1.type = extensions.WheelOfFortuneSegment.add_time
+s1.type = 'add-time'
 s1.duration = datetime.timedelta(hours=1).total_seconds()
 
 s2 = extensions.WheelOfFortuneSegment()
-s2.type = extensions.WheelOfFortuneSegment.remove_time
+s2.type = 'remove-time'
 s2.duration = datetime.timedelta(hours=1).total_seconds()
 
 s3 = extensions.WheelOfFortuneSegment()
-s3.type = extensions.WheelOfFortuneSegment.set_freeze
+s3.type = 'set-freeze'
 
 s4 = extensions.WheelOfFortuneSegment()
-s4.type = extensions.WheelOfFortuneSegment.set_unfreeze
+s4.type = 'set-unfreeze'
 
 s5 = extensions.WheelOfFortuneSegment()
-s5.type = extensions.WheelOfFortuneSegment.text
+s5.type = 'text'
 s5.text = 'do a thing'
 
 wof = extensions.WheelOfFortune()
@@ -46,7 +46,7 @@ wof.config.segments.append(s5)
 verification = extensions.VerificationPicture()
 verification.config = extensions.VerificationPictureConfig()
 verification.regularity = 3600
-verification.config.visibility = extensions.VerificationPictureConfig.visability_all
+verification.config.visibility = 'all'
 verification.config.peerVerification = extensions.PeerVerification()
 verification.config.peerVerification.enabled = True
 pillory_punishment = extensions.PunishmentPillory(datetime.timedelta(hours=1).total_seconds())

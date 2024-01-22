@@ -2,6 +2,7 @@ import datetime
 
 import dateutil.parser
 
+# TODO: Figure out modes
 mode_non_cumulative = 'non_cumulative'
 mode_unlimited = 'unlimited'
 
@@ -369,18 +370,28 @@ class Dice(Extension):
 
 # TODO: where is freeze/unfreeze?
 class WheelOfFortuneSegment:
-    add_time = 'add-time'
-    remove_time = 'remove-time'
-    add_remove_time = 'add-remove-time'
-    text = 'text'
-    set_freeze = 'set-freeze'
-    set_unfreeze = 'set-unfreeze'
-    pillory = 'pillory'
 
     def __init__(self):
         self.type: str = ''
+        """can equal one of the following: 
+        'add-time' 
+        'remove-time'
+        'add-remove-time'
+        'text'
+        'set-freeze'
+        'set-unfreeze'
+        'pillory'
+        """
         self.text: str = ''
         self.duration: int = 0
+
+    def set_type(self, type):
+        """
+
+        :param type: can be one of the following:
+        :return:
+        """
+        self.type = type
 
     def dump(self):
         return self.__dict__.copy()
@@ -528,7 +539,7 @@ class Penalty:
     def dump(self):
         obj = self.__dict__.copy()
         obj['params'] = self.params.dump()
-        obj['punishments'] = [] # TODO: Move this to a dump_array funciton after punishments have been dto tested
+        obj['punishments'] = []  # TODO: Move this to a dump_array funciton after punishments have been dto tested
         for punishment in self.punishments:
             obj['punishments'].append(punishment.dump())
         return obj
@@ -548,7 +559,7 @@ class PenaltiesConfig:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['penalties'] = [] # TODO: Move this to a dump_array funciton after penalties have been dto tested
+        obj['penalties'] = []  # TODO: Move this to a dump_array funciton after penalties have been dto tested
         for penalty in self.penalties:
             obj['penalties'].append(penalty.dump())
         return obj
@@ -588,19 +599,20 @@ class PeerVerification:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['punishments'] = [] # TODO: Move this to a dump_array funciton after punishments have been dto tested
+        obj['punishments'] = []  # TODO: Move this to a dump_array funciton after punishments have been dto tested
         for punishment in self.punishments:
             obj['punishments'].append(punishment.dump())
         return obj
 
 
 class VerificationPictureConfig:
-    visability_all = 'all'
-    visability_keyholder = 'keyholder'
-
     def __init__(self):
         self.peerVerification: PeerVerification = PeerVerification()
-        self.visibility: str = VerificationPictureConfig.visability_all
+        self.visibility: str = 'all'
+        """can equal of the following:
+        'all'
+        'keyholder'
+        """
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
@@ -614,9 +626,6 @@ class VerificationPictureConfig:
 
 
 class VerificationPicture(Extension):
-    visibility_all = 'all'
-    visibility_only_kh = 'keyholder'
-
     def __init__(self):
         super().__init__()
         self.slug: str = "verification-picture"

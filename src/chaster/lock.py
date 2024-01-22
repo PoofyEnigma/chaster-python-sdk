@@ -137,6 +137,12 @@ class LastVerificationPicture:
         self.imageKey: str = ''
         self.submittedAt: str = ''
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
 
 class AvailableHomeAction:
     def __init__(self):

@@ -321,7 +321,7 @@ class _ChasterApi:
     """
     Partner Extensions
     """
-    # TODO: Gain access
+    # Not doing for now. Access will be needed
 
     """
     Settings
@@ -485,7 +485,7 @@ class ChasterAPI(_ChasterApi):
     Shared Locks
     """
 
-    async def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
+    def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
         """
          `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_findAll>`_
 
@@ -535,7 +535,7 @@ class ChasterAPI(_ChasterApi):
         :return:
         """
 
-        response = self._get(f'/lock/shared-locks/{shared_lock_id}')
+        response = self._get(f'/locks/shared-locks/{shared_lock_id}')
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
@@ -550,7 +550,7 @@ class ChasterAPI(_ChasterApi):
         :return:
         """
         update.validate()
-        return self._put(f'/lock/shared-lock/{shared_lock_id}', update.dump())
+        return self._put(f'/locks/shared-locks/{shared_lock_id}', update.dump())
 
     def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
         """
@@ -798,15 +798,14 @@ class ChasterAPI(_ChasterApi):
     Triggers
     """
 
-    # TODO: What is session_id for?
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id='') -> tuple[
+    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id) -> tuple[
         requests.models.Response, int]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
         :param extension_id:
         :param action: either 'add', 'remove', or 'random'
-        :param session_id:
+        :param session_id: you can find it as the last part of the share links url
         :return: the amount of time changed in seconds
         """
         data = {
@@ -982,7 +981,7 @@ class ChasterAPI(_ChasterApi):
         :param extension_id:
         :return:
         """
-        data = {"action": "", "payload": {}}
+        data = {"action": "submit", "payload": {}}
         response = self.trigger_extension_action(lock_id, extension_id, data)
         return self._tester_post_request_helper(response, triggers.GuessTheTimerResponse().update)
 
@@ -1098,8 +1097,10 @@ class ChasterAPI(_ChasterApi):
         :return: the file token
         """
         fmf = generate_multipart_form_from_uri(uri)
-        files = {'files': (fmf.name, open(fmf.uri, 'rb'), fmf.type),
-                 'type': (None, usage)}
+        with open(fmf.uri, 'rb') as f:
+            content = f.read()
+            files = {'files': (fmf.name, content, fmf.type),
+                     'type': (None, usage)}
 
         response = self._post_form('/files/upload', files)
         data = None
@@ -1108,6 +1109,7 @@ class ChasterAPI(_ChasterApi):
             data = data['token']
         return response, data
 
+    # I have no idea how this one works
     def find_file(self, file_key) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Files/StorageController_getFileFromKey>`_
@@ -1136,7 +1138,6 @@ class ChasterAPI(_ChasterApi):
         fmf = generate_multipart_form_from_uri(uri)
         with open(fmf.uri, 'rb') as f:
             content = f.read()
-            print(len(content))
             files = {'file': (fmf.name, content, fmf.type),
                      'enableManualCheck': (None, str(manual_check).lower())}
         response = self._post_form('combinations/image', files)
@@ -1239,14 +1240,16 @@ class ChasterAPI(_ChasterApi):
     """
 
     # TODO: Flushout offset
-    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = '') -> tuple[
+    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None) -> tuple[
         requests.models.Response, conversation.Conversations]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_getConversations>`_
         :param limit:
         :param status: 'approved', 'pending', 'ignored', or None for all conversations.
+        :param offset:
         :return:
         """
+
         path = 'conversations'
         if limit is not None or status is not None:
             path += "?"
@@ -1255,7 +1258,7 @@ class ChasterAPI(_ChasterApi):
         if status is not None:
             path += f'status={status}&'
         if offset is not None:
-            path += f'status={offset}&'
+            path += f'offset={offset}&'
         return self._tester_get_wrapper(path, conversation.Conversations().update)
 
     # TODO: Input object? Are there multiple types?
@@ -1534,8 +1537,10 @@ class ChasterAPI(_ChasterApi):
         :return:
         """
         fmf = generate_multipart_form_from_uri(uri)
-        files = {'file': (fmf.name, open(fmf.uri, 'rb'), fmf.type),
-                 'enableVerificationCode': (None, enable_verification_code)}
+        with open(fmf.uri, 'rb') as f:
+            content = f.read()
+            files = {'file': (fmf.name, content, fmf.type),
+                     'enableVerificationCode': (None, enable_verification_code)}
         return self._post_form(f'/extensions/verification-picture/{lock_id}/submit', files)
 
     def get_verification_history(self, lock_id: str) -> tuple[

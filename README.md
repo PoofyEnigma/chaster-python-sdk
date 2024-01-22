@@ -1,6 +1,6 @@
 # Chaster Python SDK
 
-`pip install --upgrade chaster-sdk`
+``
 
 # Releases
 
@@ -8,9 +8,8 @@
 |-------------|------------------------------------------|-------|
 | v0.1.0.dev1 | Stubbed, Validated, Integrated           | done  |
 | v0.1.0.a1   | Language, Documented                     | done  |
-| v0.1.0.a2   | Backlog and TODOs cleared                | ip    |
-| v0.1.0.a3   | 95% coverage on unittest and integration |       |
-| v0.1.0      | Tutorial                                 |       |
+| v0.1.0.a2   | Backlog and TODOs work                   | done  |
+| v0.1.0      | 95% coverage on unittest and integration | done  |
 
 # v0.1.0 - Layer 1
 
@@ -36,28 +35,6 @@
 | Partner Configurations            |         |           |            |          |            |          |
 | Public Locks                      | done    | done      | done       | done     | done       |          |
 | Extensions - Verification Picture | done    | done      | done       | done     | done       |          |
-
-### Backlog
-
-- need more/better extension dump handling. May need to reformat extension handler
-- documenting enums as parameters
-- Request prevalidation, yes or no?
-- Integration test, isolate by function
-- util.safe_dump_parameter
-
-#### Rate limiting and Delaying
-
-- Chaster has a sequence of retry headers that may not be honored by the Retry library. I should do more handling in this regard and provide functions for to interface with the current state of the retries 
-- Remove delay and apply intelligent rate limiting reaction
-
-#### Authentication and Safe Logging
-
-Would need to utilize a credentials stack object in order to simplify finding credentials should
-the SDK open to support more types of authentication.
-support clientId/clientSecret unsupported authentication
-- abstract away success status codes to a wasSuccessful function?
-  - I would leverage logging instead
-  - Redact bearer token from logs
 
 # v0.2.0 - Helpful Mocks
 
@@ -88,6 +65,28 @@ Stubbed - Function calls written
 Connected - Chaster operation simulated
 Validated - tested
 Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
+
+### Backlog
+
+- need more/better extension dump handling. May need to reformat extension handler. Need to handle unknown extensions
+  better.
+- util.safe_dump_parameter
+
+#### Rate limiting and Delaying
+
+- Chaster has a sequence of retry headers that may not be honored by the Retry library. I should do more handling in
+  this regard and provide functions for to interface with the current state of the retries
+- Remove delay and apply intelligent rate limiting reaction
+
+#### Authentication and Safe Logging
+
+Would need to utilize a credentials stack object in order to simplify finding credentials should
+the SDK open to support more types of authentication.
+support clientId/clientSecret unsupported authentication
+
+- abstract away success status codes to a wasSuccessful function?
+    - I would leverage logging instead
+    - Redact bearer token from logs
 
 ## v0.3.0 Layer 2 - OOP based calls and mocks
 

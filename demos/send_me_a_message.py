@@ -1,5 +1,5 @@
 import os
-from src.chaster import api
+from chaster import api
 
 chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='self_lock_creator/1.0')
 
