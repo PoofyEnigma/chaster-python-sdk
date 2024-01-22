@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Module documentation goes here."""
+import asyncio
 import datetime
 import unittest
 from unittest.mock import MagicMock
@@ -117,11 +118,11 @@ class MyTestCase(unittest.TestCase):
         # avoid making an api call if the exception is not raised
         response = Response()
         response.json = MagicMock(
-            return_value=json.loads(response_examples.created_shared_lock, object_hook=lambda d: SimpleNamespace(**d)))
+            return_value=json.loads(response_examples.created_shared_lock))
         response.status_code = 201
         api._post = MagicMock(return_value=response)
         _, data = api.create_shared_lock(csl)
-        self.assertEqual(data.id, '12345')
+        self.assertEqual(data, '12345')
 
     def test_get_shared_lock_details(self):
         api = ChasterAPI('')
@@ -197,14 +198,19 @@ class MyTestCase(unittest.TestCase):
     Locks
     """
 
-    def response_factory(self, status_code, json_str):
+    def response_factory(self, status_code, json_str, raw_json=False):
         if json_str == '':
             json_str = '{}'
         api = ChasterAPI('')
         response = Response()
         response.status_code = status_code
-        response.json = MagicMock(
-            return_value=json.loads(json_str, object_hook=lambda d: SimpleNamespace(**d)))
+        if raw_json:
+            response.json = MagicMock(
+                return_value=json.loads(json_str))
+        else:
+            response.json = MagicMock(
+                return_value=json.loads(json_str, object_hook=lambda d: SimpleNamespace(**d)))
+
         api._get = MagicMock(return_value=response)
         api._post = MagicMock(return_value=response)
         api._put = MagicMock(return_value=response)
@@ -294,16 +300,13 @@ class MyTestCase(unittest.TestCase):
 
     def test_vote_in_share_links(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.share_link_vote_ack)
-        slv = triggers.ShareLinksVote()
-        slv.payload = triggers.ShareLinksVotePayload()
-        slv.payload.action = 'add'
-        response, data = api.vote_in_share_links('', '', slv)
+        api = self.response_factory(status_code, response_examples.share_link_vote_ack, raw_json=True)
+        response, data = api.vote_in_share_links('', '', 'remove', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_share_link_url_to_vote(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.share_link_url_response)
+        api = self.response_factory(status_code, response_examples.share_link_url_response, raw_json=True)
         response, data = api.get_share_link_vote_url('', '')
         self.assertEqual(response.status_code, status_code)
 
@@ -316,11 +319,7 @@ class MyTestCase(unittest.TestCase):
     def test_place_user_into_pillory(self):
         status_code = 201
         api = self.response_factory(status_code, '')
-        pp = triggers.PilloryParameters()
-        pp.payload = triggers.PilloryPayload()
-        pp.payload.reason = 'mlem'
-        pp.payload.duration = 3600
-        response = api.place_user_into_pillory('', '', pp)
+        response = api.place_user_into_pillory('', '', 'mlem', 3600)
         self.assertEqual(response.status_code, status_code)
 
     def test_get_current_pillory_info(self):
@@ -383,7 +382,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_create_personal_lock(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.lock_id_response)
+        api = self.response_factory(status_code, response_examples.lock_id_response, raw_json=True)
         response, data = api.create_personal_lock(lock.CreateLock())
         self.assertEqual(response.status_code, status_code)
 
@@ -395,7 +394,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_create_lock_from_shared_lock(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.lock_id_response)
+        api = self.response_factory(status_code, response_examples.lock_id_response, raw_json=True)
         response, data = api.create_lock_from_shared_lock('', lock.LockInfo())
         self.assertEqual(response.status_code, status_code)
 
@@ -452,14 +451,14 @@ class MyTestCase(unittest.TestCase):
     # def upload_file(self) -> tuple[requests.models.Response, user.FileToken]:
     def test_upload_file(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.file_token)
+        api = self.response_factory(status_code, response_examples.file_token, raw_json=True)
         response, data = api.upload_file('./tests/test_api_mock_chaster.py')
         self.assertEqual(response.status_code, status_code)
 
     # def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
     def test_find_file(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.file_url)
+        api = self.response_factory(status_code, response_examples.file_url, raw_json=True)
         response, data = api.find_file('')
         self.assertEqual(response.status_code, status_code)
 
@@ -470,14 +469,14 @@ class MyTestCase(unittest.TestCase):
     # def upload_combination_image(self) -> tuple[requests.models.Response, lock.Combination]:
     def test_upload_combination_image(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.combination_id_response)
+        api = self.response_factory(status_code, response_examples.combination_id_response, raw_json=True)
         response, data = api.upload_combination_image('./tests/test_api_mock_chaster.py')
         self.assertEqual(response.status_code, status_code)
 
     # def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
     def test_create_combination_code(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.combination_id_response)
+        api = self.response_factory(status_code, response_examples.combination_id_response, raw_json=True)
         response, data = api.create_combination_code('')
         self.assertEqual(response.status_code, status_code)
 
@@ -563,7 +562,7 @@ class MyTestCase(unittest.TestCase):
     def test_post_message(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.conversation_messasge)
-        response, data = api.post_message('', '')
+        response, data = api.send_message('', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_conversation(self):

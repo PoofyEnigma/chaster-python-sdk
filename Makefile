@@ -22,6 +22,7 @@ test: ## Test the code
 	@type coverage >/dev/null 2>&1 || (echo "Run '$(PIP) install coverage' first." >&2 ; exit 1)
 	@coverage run --source . -m unittest
 	@coverage report
+	@coverage html
 
 test_integration: ## Test the code
 	@type coverage >/dev/null 2>&1 || (echo "Run '$(PIP) install coverage' first." >&2 ; exit 1)

@@ -2,6 +2,7 @@ import datetime
 
 import dateutil.parser
 
+# TODO: Figure out modes
 mode_non_cumulative = 'non_cumulative'
 mode_unlimited = 'unlimited'
 
@@ -41,7 +42,8 @@ class Extension:
         h = ExtensionsHandler()
         for extension in obj_list:
             h.add(extension)
-        return h.dump()
+        return h.generate_array()
+
 
 class Extensions:
     def __init__(self):
@@ -52,6 +54,10 @@ class Extensions:
         for extension in self.extensions:
             obj.append(extension.dump())
         return {'extensions': obj}
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 
 class ExtensionsHandler:
@@ -123,12 +129,20 @@ class ExtensionsHandler:
         if extension.slug == 'guess-timer':
             self.guess_timers.append(GuessTheTimer().update(extension))
 
-    def dump(self):
+    def generate_array(self):
         extensions = []
         for item in self.__dict__:
             item = self.__dict__[item]
             for entry in item:
                 extensions.append(entry)
+        return extensions
+
+    def dump(self):
+        extensions = []
+        for item in self.__dict__:
+            item = self.__dict__[item]
+            for entry in item:
+                extensions.append(entry.dump())
         return extensions
 
 
@@ -139,6 +153,7 @@ def generate_punishment(punishment):
         return PunishmentAddTime(punishment.params)
     if punishment.name == 'pillory':
         return PunishmentPillory(punishment.params.duration)
+
 
 class PunishmentPilloryParams:
     def __init__(self, time):
@@ -163,16 +178,17 @@ class Punishment:
 
     @staticmethod
     def generate_array(obj_list):
-        punishments = []
-        for punishment in obj_list:
-            punishments.append(generate_punishment(punishment))
-        return punishments
+        return [generate_punishment(punishment) for punishment in obj_list]
 
 
 class PunishmentPillory(Punishment):
-    def __init__(self, time):
+    def __init__(self, pillory_duration):
+        """
+
+        :param pillory_duration: in seconds
+        """
         super().__init__('pillory')
-        self.params: PunishmentPilloryParams = PunishmentPilloryParams(time)
+        self.params: PunishmentPilloryParams = PunishmentPilloryParams(pillory_duration)
 
     def get_time(self):
         return self.params.duration
@@ -220,6 +236,10 @@ class ShareLinksConfig:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class ShareLinks(Extension):
     def __init__(self):
@@ -231,6 +251,7 @@ class ShareLinks(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = ShareLinksConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -248,7 +269,11 @@ class PilloryConfig:
         self.limitToLoggedUsers: bool = True
 
     def dump(self):
-        return  self.__dict__.copy()
+        return self.__dict__.copy()
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
 
 
 class Pillory(Extension):
@@ -261,6 +286,7 @@ class Pillory(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = PilloryConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -281,6 +307,10 @@ class HygieneOpeningConfig:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class HygieneOpening(Extension):
     def __init__(self):
@@ -292,6 +322,7 @@ class HygieneOpening(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = HygieneOpeningConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -310,6 +341,10 @@ class DiceConfig:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class Dice(Extension):
     def __init__(self):
@@ -321,6 +356,7 @@ class Dice(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = DiceConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -332,19 +368,30 @@ class Dice(Extension):
         return obj
 
 
+# TODO: where is freeze/unfreeze?
 class WheelOfFortuneSegment:
-    add_time = 'add-time'
-    remove_time = 'remove-time'
-    add_remove_time = 'add-remove-time'
-    text = 'text'
-    set_freeze = 'set-freeze'
-    set_unfreeze = 'set-unfreeze'
-    pillory = 'pillory'
 
     def __init__(self):
         self.type: str = ''
+        """can equal one of the following: 
+        'add-time' 
+        'remove-time'
+        'add-remove-time'
+        'text'
+        'set-freeze'
+        'set-unfreeze'
+        'pillory'
+        """
         self.text: str = ''
         self.duration: int = 0
+
+    def set_type(self, type):
+        """
+
+        :param type: can be one of the following:
+        :return:
+        """
+        self.type = type
 
     def dump(self):
         return self.__dict__.copy()
@@ -352,6 +399,10 @@ class WheelOfFortuneSegment:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
+    @staticmethod
+    def generate_array(obj_list):
+        return [WheelOfFortuneSegment().update(item) for item in obj_list]
 
 
 class WheelOfFortuneConfig:
@@ -365,6 +416,11 @@ class WheelOfFortuneConfig:
             obj['segments'].append(segment.dump())
         return obj
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.segments = WheelOfFortuneSegment.generate_array(obj.segments)
+        return self
+
 
 class WheelOfFortune(Extension):
     def __init__(self):
@@ -376,6 +432,7 @@ class WheelOfFortune(Extension):
 
     def update(self, obj):
         super().update(obj)
+        self.config = WheelOfFortuneConfig().update(obj.config)
         return self
 
     def dump(self):
@@ -401,10 +458,7 @@ class Task:
 
     @staticmethod
     def generate_array(obj_list):
-        tasks = []
-        for item in obj_list:
-            tasks.append(Task().update(item))
-        return tasks
+        return [Task().update(item) for item in obj_list]
 
 
 class TasksConfig:
@@ -485,17 +539,14 @@ class Penalty:
     def dump(self):
         obj = self.__dict__.copy()
         obj['params'] = self.params.dump()
-        obj['punishments'] = []
+        obj['punishments'] = []  # TODO: Move this to a dump_array funciton after punishments have been dto tested
         for punishment in self.punishments:
             obj['punishments'].append(punishment.dump())
         return obj
 
     @staticmethod
     def generate_array(obj_list):
-        penalties = []
-        for penalty in obj_list:
-            penalties.append(Penalty().update(penalty))
-        return penalties
+        return [Penalty().update(penalty) for penalty in obj_list]
 
 
 class PenaltiesConfig:
@@ -508,7 +559,7 @@ class PenaltiesConfig:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['penalties'] = []
+        obj['penalties'] = []  # TODO: Move this to a dump_array funciton after penalties have been dto tested
         for penalty in self.penalties:
             obj['penalties'].append(penalty.dump())
         return obj
@@ -548,19 +599,20 @@ class PeerVerification:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['punishment'] = []
+        obj['punishments'] = []  # TODO: Move this to a dump_array funciton after punishments have been dto tested
         for punishment in self.punishments:
-            obj['punishment'].append(punishment.dump())
+            obj['punishments'].append(punishment.dump())
         return obj
 
 
 class VerificationPictureConfig:
-    visability_all = 'all'
-    visability_keyholder = 'keyholder'
-
     def __init__(self):
         self.peerVerification: PeerVerification = PeerVerification()
-        self.visibility: str = VerificationPictureConfig.visability_all
+        self.visibility: str = 'all'
+        """can equal of the following:
+        'all'
+        'keyholder'
+        """
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
@@ -574,9 +626,6 @@ class VerificationPictureConfig:
 
 
 class VerificationPicture(Extension):
-    visibility_all = 'all'
-    visibility_only_kh = 'keyholder'
-
     def __init__(self):
         super().__init__()
         self.slug: str = "verification-picture"
@@ -660,13 +709,6 @@ class GuessTheTimer(Extension):
         return obj
 
 
-def known_extension_list_update(obj):
-    out = []
-    for item in obj:
-        out.append(KnownExtension().update(item))
-    return out
-
-
 class KnownExtension:
     def __init__(self):
         self.defaultConfig: dict = {}  # TODO: Flush out based on known extensions
@@ -693,3 +735,12 @@ class KnownExtension:
         if 'isDevelopedByCommunity' not in obj.__dict__:
             self.isDevelopedByCommunity = False
         return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['defaultConfig'] = self.defaultConfig.__dict__.copy()
+        return obj
+
+    @staticmethod
+    def generate_array(obj_list):
+        return [KnownExtension().update(item) for item in obj_list]
