@@ -67,11 +67,6 @@ class Lock:
         self.extensionsAllowUnlocking: bool = True
         self.deletedAt: datetime.datetime = None
 
-    # TODO: Figure this out. Would the extension handler have a reference to this
-    # TODO cont.: object and be allowed to edit this object's extension array?
-    def get_extension_handler(self):
-        return extensions.ExtensionsHandler().load(self.extensions)
-
     def dump(self):
         obj = self.__dict__.copy()
         obj['user'] = self.user.dump()
@@ -144,6 +139,7 @@ class LastVerificationPicture:
     def dump(self):
         return self.__dict__.copy()
 
+
 class AvailableHomeAction:
     def __init__(self):
         self.slug: str = ''
@@ -151,7 +147,7 @@ class AvailableHomeAction:
         self.description: str = ''
         self.icon: str = ''
         self.extensionPartyId: str = ''
-        self.badge = None # TODO: Needs a type
+        self.badge: str = ''
 
     def update(self, obj):
         self.__dict__.update(obj.__dict__)
@@ -225,7 +221,7 @@ class ActionLog:
         return [item.dump() for item in obj_list]
 
 
-class PageinatedLockHistory:
+class PaginatedLockHistory:
     def __init__(self):
         self.count: int = 0
         self.hasMore: bool = False
@@ -260,6 +256,7 @@ class ExtensionInformation:
         obj['extension'] = self.extension.dump()
         return obj
 
+
 class LockInfo:
     def __init__(self):
         self.password: str = None
@@ -272,6 +269,7 @@ class LockInfo:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         return self
+
 
 class UnsplashPhoto:
     def __init__(self):
@@ -286,6 +284,7 @@ class UnsplashPhoto:
 
     def dump(self):
         return self.__dict__.copy()
+
 
 class CreateSharedLock:
     def __init__(self):
@@ -313,25 +312,6 @@ class CreateSharedLock:
         util.dump_time(self, 'minDate', dictionary)
         util.dump_time(self, 'maxLimitDate', dictionary)
         return dictionary
-
-    def validate(self):
-        # TODO: This may be an intended feature to remember the max limit date when you set the limit lock time to false
-        if (self.maxLimitDuration is not None or self.maxLimitDate is not None) and not self.limitLockTime:
-            raise ValueError('a max limit on the lock is set, limitLockTime should be true')
-        if self.limitLockTime:
-            if self.maxLimitDuration is not None and self.maxDuration > self.maxLimitDuration:
-                raise ValueError('the max duration should not be greater than the limit duration')
-            if self.maxLimitDate is not None and self.maxDate > self.maxLimitDate:
-                raise ValueError('the max date should not be greater than the limit date')
-        if self.minDuration > self.maxDuration:
-            raise ValueError('the min duration should not be larger than the maximum duration')
-        if self.maxDate is None and self.minDate is not None:
-            raise ValueError('if min date is set max date must also be set')
-        if self.maxDate is not None and self.minDate is None:
-            raise ValueError('if max date is set then min date must also be set')
-        if self.maxDate is not None and self.minDate is not None:
-            if self.maxDate < self.minDate:
-                raise ValueError('min date should not be larger than the max date')
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
@@ -422,7 +402,7 @@ class SharedLock:
         return [entry.dump() for entry in shared_locks]
 
 
-class PageinatedSharedLockList:
+class PaginatedSharedLockList:
     def __init__(self):
         self.lastId: str = ''
         self.hasMore: bool = True
@@ -494,7 +474,6 @@ class PublicSharedLockInfo:
         self.extensions = extensions.Extension.generate_array(obj.extensions)
         self.unsplashPhoto = UnsplashPhoto().update(obj.unsplashPhoto)
         self.user = user.User().update(obj.user)
-        # TODO: Is locks actually in the return obj?
         if 'locks' in obj.__dict__:
             self.locks = Lock.generate_array(obj.locks)
         if obj.maxDate is not None:
@@ -691,4 +670,3 @@ class VerificationPhotoHistory:
     @staticmethod
     def generate_array(obj_list):
         return [VerificationPhotoHistory().update(account) for account in obj_list]
-

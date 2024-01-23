@@ -151,7 +151,7 @@ class ApiTestCases(unittest.TestCase):
                                                          max_limit_date, False)
         self.assertEqual(response.status_code, 204)
 
-        response, locked_users = chaster_api.post_keyholder_locks_search()
+        response, locked_users = chaster_api.find_locked_users()
         self.assertIsNotNone(locked_users)
         self.assertEqual(len(locked_users.locks), 1)
         lock_before = locked_users.locks[0]
@@ -164,7 +164,7 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api_lockee.set_max_limit_date(lock_id, max_limit_date, True)
         self.assertEqual(response.status_code, 204)
 
-        response, locked_users = chaster_api.post_keyholder_locks_search()
+        response, locked_users = chaster_api.find_locked_users()
         self.assertIsNotNone(locked_users)
         self.assertEqual(len(locked_users.locks), 1)
         lock_after = locked_users.locks[0]
@@ -370,7 +370,9 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api.trigger_new_verification(lock_id, locks[0].extensions[0]._id)
         self.assertEqual(response.status_code, 201)
 
-        response = chaster_api_lockee.submit_verification(lock_id, './tests/test.png')
+        response = chaster_api_lockee.submit_verification(lock_id, './tests/test.png',
+                                                          'test.png',
+                                                          'image/png')
         self.assertEqual(response.status_code, 201)
 
         _, history = chaster_api_lockee.get_verification_history(lock_id)
@@ -411,7 +413,9 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_add_extensions(self):
-        response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png')
+        response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png',
+                                                          'test.png',
+                                                          'image/png')
         self.assertIsNotNone(combination)
         self.assertNotEqual(combination, '')
 
@@ -434,7 +438,7 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api.edit_extensions(lock_id, e)
         self.assertEqual(response.status_code, 201)
 
-        response, locked_users = chaster_api.post_keyholder_locks_search()
+        response, locked_users = chaster_api.find_locked_users()
         self.assertIsNotNone(locked_users)
         self.assertEqual(len(locked_users.locks), 1)
         lock_after = locked_users.locks[0]
@@ -456,7 +460,9 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_create_lock_from_shared_lock(self):
-        response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png')
+        response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png',
+                                                          'test.png',
+                                                          'image/png')
         self.assertIsNotNone(combination)
         self.assertNotEqual(combination, '')
 
@@ -474,7 +480,7 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api.archive_lock_as_keyholder(lock_id)
         self.assertEqual(response.status_code, 204)
 
-        response, locked_users = chaster_api.post_keyholder_locks_search()
+        response, locked_users = chaster_api.find_locked_users()
         self.assertIsNotNone(locked_users)
         self.assertEqual(len(locked_users.locks), 0)
 
@@ -519,7 +525,9 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_upload_and_find_file(self):
-        response, file_info = chaster_api.upload_file('./tests/test.png')
+        response, file_info = chaster_api.upload_file('./tests/test.png',
+                                                          'test.png',
+                                                          'image/png')
         self.assertIsNotNone(file_info)
 
 
@@ -703,7 +711,7 @@ class ApiTestCases(unittest.TestCase):
         _, details = chaster_api.find_public_shared_lock('64e69feb2f626eb789dafd6e')
         self.assertIsNotNone(details)
 
-        response = chaster_api.generate_public_shared_lock_flyer('64e69feb2f626eb789dafd6e')
+        response = chaster_api.generate_public_shared_lock_flyer('64e69feb2f626eb789dafd6e', './here.png')
         self.assertEqual(response.status_code, 200)
 
         _, page = chaster_api.search_for_public_locks(lock.SearchPublicLock())

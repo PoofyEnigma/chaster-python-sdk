@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""Module documentation goes here."""
-import asyncio
 import datetime
 import unittest
 from unittest.mock import MagicMock
@@ -10,7 +5,6 @@ from requests import Response
 import json
 from src.chaster.api import ChasterAPI
 import src.chaster.lock as lock
-import src.chaster.triggers as triggers
 import src.chaster.extensions as extensions
 from types import SimpleNamespace
 from . import response_examples
@@ -78,39 +72,6 @@ class MyTestCase(unittest.TestCase):
         csl.hideTimeLogs = False
         csl.isFindom = False
         return csl
-
-    def test_create_shared_lock_fail(self):
-
-        tests = [
-            ('min duration gt max duration', self.generate_csl(min_duration=51, max_duration=50)),
-            ('max duration gt limit duration',
-             self.generate_csl(max_duration=50, maxLimitDuration=49, limitLockTime=True)),
-            ('min date gt max date', self.generate_csl(minDate=datetime.datetime.now() + datetime.timedelta(hours=8),
-                                                       maxDate=datetime.datetime.now())),
-            ('max date gt limit date', self.generate_csl(minDate=datetime.datetime.now(),
-                                                         maxDate=datetime.datetime.now() + datetime.timedelta(hours=8),
-                                                         maxLimitDate=datetime.datetime.now(),
-                                                         limitLockTime=True)),
-            ('max date none min date not none', self.generate_csl(minDate=datetime.datetime.now(),
-                                                                  maxDate=None)),
-            ('max date not none min date none', self.generate_csl(minDate=None,
-                                                                  maxDate=datetime.datetime.now())),
-            ('limit duration set but limit lock time is not', self.generate_csl(min_duration=49, max_duration=50,
-                                                                                maxLimitDuration=51)),
-            ('limit date set but limit lock time is not', self.generate_csl(minDate=datetime.datetime.now(),
-                                                                            maxDate=datetime.datetime.now(),
-                                                                            maxLimitDate=datetime.datetime.now() + datetime.timedelta(
-                                                                                hours=8))),
-        ]
-        for test in tests:
-            with self.subTest(name=test[0]):
-                with self.assertRaises(ValueError):
-                    api = ChasterAPI('')
-                    # avoid making an api call if the exception is not raised
-                    response = Response()
-                    response.status_code = 500
-                    api._post = MagicMock(return_value=response)
-                    _, _ = api.create_shared_lock(test[1])
 
     def test_create_shared_lock_success(self):
         csl = self.generate_csl()
@@ -210,7 +171,6 @@ class MyTestCase(unittest.TestCase):
         else:
             response.json = MagicMock(
                 return_value=json.loads(json_str, object_hook=lambda d: SimpleNamespace(**d)))
-
         api._get = MagicMock(return_value=response)
         api._post = MagicMock(return_value=response)
         api._put = MagicMock(return_value=response)
@@ -452,7 +412,9 @@ class MyTestCase(unittest.TestCase):
     def test_upload_file(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.file_token, raw_json=True)
-        response, data = api.upload_file('./tests/test_api_mock_chaster.py')
+        response, data = api.upload_file('./tests/test_api_mock_chaster.py',
+                                         'test.png',
+                                         'image/png')
         self.assertEqual(response.status_code, status_code)
 
     # def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
@@ -470,7 +432,9 @@ class MyTestCase(unittest.TestCase):
     def test_upload_combination_image(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.combination_id_response, raw_json=True)
-        response, data = api.upload_combination_image('./tests/test_api_mock_chaster.py')
+        response, data = api.upload_combination_image('./tests/test_api_mock_chaster.py',
+                                                      'test.png',
+                                                      'image/png')
         self.assertEqual(response.status_code, status_code)
 
     # def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
@@ -630,7 +594,6 @@ class MyTestCase(unittest.TestCase):
     """
     Partner Extensions
     """
-    # TODO: Gain access
 
     """
     Settings
@@ -667,7 +630,7 @@ class MyTestCase(unittest.TestCase):
     def test_post_keyholder_locks_search(self):
         status_code = 201
         api = self.response_factory(status_code, response_examples.locked_users)
-        response, data = api.post_keyholder_locks_search()
+        response, data = api.find_locked_users()
         self.assertEqual(response.status_code, status_code)
 
     """
@@ -677,7 +640,6 @@ class MyTestCase(unittest.TestCase):
     """
     Partner Configurations
     """
-    # TODO: Gain access
 
     """
     Public Locks
@@ -691,8 +653,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_generate_public_shared_lock_flyer(self):
         status_code = 200
-        api = self.response_factory(status_code, '')
-        response = api.generate_public_shared_lock_flyer('')
+        api = self.response_factory(status_code, '{}')
+        response = api.generate_public_shared_lock_flyer('', './here.png')
         self.assertEqual(response.status_code, status_code)
 
     def test_search_for_public_locks(self):
@@ -716,7 +678,9 @@ class MyTestCase(unittest.TestCase):
     def test_submit_verification(self):
         status_code = 201
         api = self.response_factory(status_code, '')
-        response = api.submit_verification('', './tests/test.png')
+        response = api.submit_verification('', './tests/test.png',
+                                           'test.png',
+                                           'image/png')
         self.assertEqual(response.status_code, status_code)
 
     # def get_verification_history(self, lock_id: str) -> tuple

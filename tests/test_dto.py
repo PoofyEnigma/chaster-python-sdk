@@ -1,3 +1,4 @@
+import datetime
 import json
 import unittest
 from src.chaster import conversation, extensions, lock, triggers, user
@@ -37,7 +38,7 @@ class DTOsTest(unittest.TestCase):
 
     def test_pageinatedSharedLockList_params(self):
         base = json.loads(response_examples.get_favorited_share_locks)
-        cmp = lock.PageinatedSharedLockList()
+        cmp = lock.PaginatedSharedLockList()
         self.compare_obj_params(cmp, base)
 
     """
@@ -56,7 +57,7 @@ class DTOsTest(unittest.TestCase):
 
     def test_PageinatedLockHistory_params(self):
         base = json.loads(response_examples.lock_history)
-        cmp = lock.PageinatedLockHistory()
+        cmp = lock.PaginatedLockHistory()
         self.compare_obj_params(cmp, base)
         cmp = lock.ActionLog()
         self.compare_obj_params(cmp, base['results'][0])
@@ -247,7 +248,7 @@ class DTOsTest(unittest.TestCase):
     def test_PageinatedSharedLockList_params(self):
         base = json.loads(response_examples.search_public_locks)
         base['lastId'] = ''
-        cmp = lock.PageinatedSharedLockList()
+        cmp = lock.PaginatedSharedLockList()
         self.compare_obj_params(cmp, base)
 
     def test_ExplorePageLock_params(self):
