@@ -221,7 +221,7 @@ class ActionLog:
         return [item.dump() for item in obj_list]
 
 
-class PageinatedLockHistory:
+class PaginatedLockHistory:
     def __init__(self):
         self.count: int = 0
         self.hasMore: bool = False
@@ -402,7 +402,7 @@ class SharedLock:
         return [entry.dump() for entry in shared_locks]
 
 
-class PageinatedSharedLockList:
+class PaginatedSharedLockList:
     def __init__(self):
         self.lastId: str = ''
         self.hasMore: bool = True

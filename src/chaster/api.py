@@ -1,4 +1,3 @@
-import asyncio
 from . import conversation, extensions, lock, triggers, user, util
 import datetime
 import json
@@ -210,7 +209,7 @@ class ChasterAPI:
         return self._delete(f'/shared-locks/{shared_lock_id}/favorite')
 
     def get_favorite_shared_locks(self, limit: int = 15, last_id: str = None) -> tuple[
-        requests.models.Response, lock.PageinatedSharedLockList]:
+        requests.models.Response, lock.PaginatedSharedLockList]:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockFavoritesController_getFavoriteSharedLocks>`_
         :param limit: maximum number of shared locks in the response
@@ -224,7 +223,7 @@ class ChasterAPI:
         data = None
         if response.status_code == 201:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.PageinatedSharedLockList().update(x)
+            data = lock.PaginatedSharedLockList().update(x)
         return response, data
 
     """
@@ -359,7 +358,7 @@ class ChasterAPI:
         return response, data
 
     def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 25, last_id: str = None) -> tuple[
-        requests.models.Response, lock.PageinatedLockHistory]:
+        requests.models.Response, lock.PaginatedLockHistory]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockController_getLockHistory>`_
         :param lock_id:
@@ -380,7 +379,7 @@ class ChasterAPI:
         data = None
         if response.status_code == 201:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.PageinatedLockHistory().update(data)
+            data = lock.PaginatedLockHistory().update(data)
         return response, data
 
     def set_as_test_lock(self, lock_id: str) -> requests.models.Response:
@@ -1144,7 +1143,7 @@ class ChasterAPI:
         return response
 
     def search_for_public_locks(self, params: lock.SearchPublicLock) -> \
-            tuple[requests.models.Response, lock.PageinatedSharedLockList]:
+            tuple[requests.models.Response, lock.PaginatedSharedLockList]:
         """
         `endpoint <https://api.chaster.app/api#/Public Locks/PublicLockController_search>`_
         :param params:
@@ -1155,7 +1154,7 @@ class ChasterAPI:
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
-            data = lock.PageinatedSharedLockList().update(x)
+            data = lock.PaginatedSharedLockList().update(x)
         return response, data
 
     def find_explore_page_locks(self) -> tuple[requests.models.Response, list[lock.ExplorePageLock]]:

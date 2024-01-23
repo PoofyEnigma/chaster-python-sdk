@@ -1,5 +1,4 @@
 import datetime
-
 import dateutil.parser
 
 mode_non_cumulative = 'non_cumulative'
