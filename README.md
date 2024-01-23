@@ -1,6 +1,7 @@
 # Chaster Python SDK
+`pip install --upgrade chaster-sdk`
 
-``
+[pypi project](https://pypi.org/project/chaster-sdk/)
 
 # Releases
 
@@ -11,7 +12,7 @@
 | v0.1.0.a2   | Backlog and TODOs work                   | done  |
 | v0.1.0      | 95% coverage on unittest and integration | done  |
 
-# v0.1.0 - Layer 1
+# Progress
 
 | API Group                         | Stubbed | Validated | Integrated | Language | Documented | Tutorial |
 |-----------------------------------|---------|-----------|------------|----------|------------|----------|
@@ -36,41 +37,13 @@
 | Public Locks                      | done    | done      | done       | done     | done       |          |
 | Extensions - Verification Picture | done    | done      | done       | done     | done       |          |
 
-# v0.2.0 - Helpful Mocks
-
-| Mock API Group                    | Stubbed | Connected | Validated | Tutorial |
-|-----------------------------------|---------|-----------|-----------|----------|
-| Shared Locks                      |         |           |           |          |
-| Locks                             |         |           |           |          |
-| trigger_extension_actions         |         |           |           |          |
-| Lock Creation                     |         |           |           |          |
-| Profile                           |         |           |           |          |
-| Files                             |         |           |           |          |
-| Combinations                      |         |           |           |          |
-| Extensions                        |         |           |           |          |
-| Session Offer                     |         |           |           |          |
-| Messaging                         |         |           |           |          |
-| Extensions - Temporary Opening    |         |           |           |          |
-| Community Events                  |         |           |           |          |
-| Partner Extensions                |         |           |           |          |
-| Settings                          |         |           |           |          |
-| Users                             |         |           |           |          |
-| Keyholder                         |         |           |           |          |
-| Reports                           |         |           |           |          |
-| Partner Configurations            |         |           |           |          |
-| Public Locks                      |         |           |           |          |
-| Extensions - Verification Picture |         |           |           |          |
-
-Stubbed - Function calls written
-Connected - Chaster operation simulated
-Validated - tested
-Tutorial - A tutorial demonstrating usage of the function written and the SDK pypi docs published
-
 ### Backlog
-
 - need more/better extension dump handling. May need to reformat extension handler. Need to handle unknown extensions
   better.
 - util.safe_dump_parameter
+- http://jsonpickle.github.io/
+- datetime.timedelta().total_seconds returns a float
+- pagination is how it is spelled
 
 #### Rate limiting and Delaying
 
@@ -87,14 +60,6 @@ support clientId/clientSecret unsupported authentication
 - abstract away success status codes to a wasSuccessful function?
     - I would leverage logging instead
     - Redact bearer token from logs
-
-## v0.3.0 Layer 2 - OOP based calls and mocks
-
-OOP Actions - To obfuscate the API calls into function calls on the object itself. For example, rather than having to
-call
-the trigger API to spin the wheel of fortune, instead the interface would be lock.spin_wheel_of_fortune().<br>
-Tested - Test each function by mocking the chaster sdk object
-Mocked - Similar spirit to mocking of layer 1 but instead simplify the interface to the data
 
 # Ops
 
@@ -122,7 +87,6 @@ Documented - The file is document in a process doc
 ## Linting
 
 `make lint | wc -l`
-455 issues @ 1/19/2024
 
 # Contributing
 

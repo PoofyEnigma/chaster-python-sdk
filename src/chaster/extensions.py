@@ -2,8 +2,8 @@ import datetime
 
 import dateutil.parser
 
-# TODO: Figure out modes
 mode_non_cumulative = 'non_cumulative'
+mode_cumulative = 'cumulative'
 mode_unlimited = 'unlimited'
 
 
@@ -180,6 +180,10 @@ class Punishment:
     def generate_array(obj_list):
         return [generate_punishment(punishment) for punishment in obj_list]
 
+    @staticmethod
+    def dump_array(obj_list):
+        return [punishment.dump() for punishment in obj_list]
+
 
 class PunishmentPillory(Punishment):
     def __init__(self, pillory_duration):
@@ -247,6 +251,9 @@ class ShareLinks(Extension):
         self.slug: str = 'link'
         self.config: ShareLinksConfig = ShareLinksConfig()
         self.mode: str = mode_unlimited
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -282,6 +289,9 @@ class Pillory(Extension):
         self.slug: str = 'pillory'
         self.config: PilloryConfig = PilloryConfig()
         self.mode: str = mode_unlimited
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -318,6 +328,9 @@ class HygieneOpening(Extension):
         self.slug: str = 'temporary-opening'
         self.config: HygieneOpeningConfig = HygieneOpeningConfig()
         self.mode: str = mode_non_cumulative
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 172800
 
     def update(self, obj):
@@ -368,7 +381,6 @@ class Dice(Extension):
         return obj
 
 
-# TODO: where is freeze/unfreeze?
 class WheelOfFortuneSegment:
 
     def __init__(self):
@@ -381,6 +393,7 @@ class WheelOfFortuneSegment:
         'set-freeze'
         'set-unfreeze'
         'pillory'
+        'freeze' - this one toggles freeze
         """
         self.text: str = ''
         self.duration: int = 0
@@ -427,7 +440,10 @@ class WheelOfFortune(Extension):
         super().__init__()
         self.slug: str = "wheel-of-fortune"
         self.config: WheelOfFortuneConfig = WheelOfFortuneConfig()
-        self.mode: str = 'non_cumulative'
+        self.mode: str = mode_non_cumulative
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -498,6 +514,9 @@ class Tasks(Extension):
         self.slug: str = 'tasks'
         self.config: TasksConfig = TasksConfig()
         self.mode: str = mode_non_cumulative
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -505,7 +524,6 @@ class Tasks(Extension):
         self.config = TasksConfig().update(obj.config)
         return self
 
-    # TODO: slug, mode, regularity, config is a common pattern. Use inheritance?
     def dump(self):
         obj = {}
         obj['slug'] = self.slug
@@ -539,14 +557,16 @@ class Penalty:
     def dump(self):
         obj = self.__dict__.copy()
         obj['params'] = self.params.dump()
-        obj['punishments'] = []  # TODO: Move this to a dump_array funciton after punishments have been dto tested
-        for punishment in self.punishments:
-            obj['punishments'].append(punishment.dump())
+        obj['punishments'] = Punishment.dump_array(self.punishments)
         return obj
 
     @staticmethod
     def generate_array(obj_list):
         return [Penalty().update(penalty) for penalty in obj_list]
+
+    @staticmethod
+    def dump_array(obj_list):
+        return [penalty.dump() for penalty in obj_list]
 
 
 class PenaltiesConfig:
@@ -559,9 +579,7 @@ class PenaltiesConfig:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['penalties'] = []  # TODO: Move this to a dump_array funciton after penalties have been dto tested
-        for penalty in self.penalties:
-            obj['penalties'].append(penalty.dump())
+        obj['penalties'] = Penalty.dump_array(self.penalties)
         return obj
 
 
@@ -571,6 +589,9 @@ class Penalties(Extension):
         self.slug: str = 'penalty'
         self.config: PenaltiesConfig = PenaltiesConfig()
         self.mode: str = mode_unlimited
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -599,9 +620,7 @@ class PeerVerification:
 
     def dump(self):
         obj = self.__dict__.copy()
-        obj['punishments'] = []  # TODO: Move this to a dump_array funciton after punishments have been dto tested
-        for punishment in self.punishments:
-            obj['punishments'].append(punishment.dump())
+        obj['punishments'] = Punishment.dump_array(self.punishments)
         return obj
 
 
@@ -632,6 +651,9 @@ class VerificationPicture(Extension):
         self.config: VerificationPictureConfig = VerificationPictureConfig()
         self.regularity: int = 3600
         self.mode: str = mode_non_cumulative
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
 
     def update(self, obj):
         super().update(obj)
@@ -664,6 +686,9 @@ class RandomEvents(Extension):
         self.slug: str = 'random-events'
         self.config: RandomEventsConfig = RandomEventsConfig()
         self.mode: str = mode_unlimited
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -694,6 +719,9 @@ class GuessTheTimer(Extension):
         self.slug: str = 'guess-timer'
         self.config: GuessTheTimerConfig = GuessTheTimerConfig()
         self.mode: str = mode_unlimited
+        """
+        options 'non_cumulative', 'cumulative', 'unlimited'
+        """
         self.regularity: int = 3600
 
     def update(self, obj):
@@ -711,7 +739,7 @@ class GuessTheTimer(Extension):
 
 class KnownExtension:
     def __init__(self):
-        self.defaultConfig: dict = {}  # TODO: Flush out based on known extensions
+        self.defaultConfig: dict = {}
         self.partnerExtensionId: str = ''
         self.configIframeUrl: str = ''
         self.isTesting: bool = True

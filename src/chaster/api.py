@@ -10,383 +10,7 @@ from types import SimpleNamespace
 from urllib.parse import urlparse, urljoin
 
 
-class FileMultipartForm:
-    def __init__(self):
-        self.uri: str = ''
-        self.name: str = ''
-        self.type: str = ''
-
-
-def generate_multipart_form_from_uri(uri) -> FileMultipartForm:
-    fmf = FileMultipartForm()
-    fmf.uri = uri
-    fmf.name = 'test.png'
-    fmf.type = 'image/png'
-    return fmf
-
-
-class _ChasterApi:
-    def __init__(self):
-        pass
-
-    """
-    Shared Locks
-    """
-
-    def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
-        pass
-
-    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[requests.models.Response, str]:
-        pass
-
-    def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
-        requests.models.Response, lock.SharedLock]:
-        pass
-
-    def update_shared_lock(self, shared_lock_id: str, update: lock.CreateSharedLock) -> requests.models.Response:
-        pass
-
-    def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def check_if_favorited(self, shared_lock_id: str) -> tuple[requests.models.Response, bool]:
-        pass
-
-    def favorite(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def remove_favorite(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def get_favorite_shared_locks(self, limit: int = 15, last_id: str = None) -> tuple[
-        requests.models.Response, lock.PageinatedSharedLockList]:
-        pass
-
-    """
-    Locks
-    """
-
-    def get_user_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.Lock]]:
-        pass
-
-    def get_lock_details(self, lock_id: str) -> tuple[requests.models.Response, lock.Lock]:
-        pass
-
-    def archive_lock(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def archive_lock_as_keyholder(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def update_lock_duration(self, lock_id: str, time: int) -> requests.models.Response:
-        pass
-
-    def set_freeze(self, lock_id: str, freeze: bool) -> requests.models.Response:
-        pass
-
-    def unlock(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def update_lock_settings(self, lock_id: str, display_remaining_time: bool,
-                             hide_time_logs: bool) -> requests.models.Response:
-        pass
-
-    def set_max_limit_date(self, lock_id: str, max_limit_date: datetime.datetime,
-                           disable_max_time_limit: bool) -> requests.models.Response:
-        pass
-
-    def trust_keyholder(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def get_lock_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
-        pass
-
-    def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 25, last_id: str = None) -> tuple[
-        requests.models.Response, lock.PageinatedLockHistory]:
-        pass
-
-    def set_as_test_lock(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def get_lock_extension_information(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, lock.ExtensionInformation]:
-        pass
-
-    def trigger_extension_action(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
-        pass
-
-    """
-    Triggers
-    """
-
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id='') -> tuple[
-        requests.models.Response, int]:
-        pass
-
-    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
-        pass
-
-    def get_share_link_vote_info(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.ShareLinkInfoResponse]:
-        pass
-
-    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str,
-                                duration: int) -> requests.models.Response:
-        pass
-
-    def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.PilloryVotes]:
-        pass
-
-    def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
-        pass
-
-    def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.DiceRollResult]:
-        pass
-
-    def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.WheelOfFortuneResult]:
-        pass
-
-    def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
-        pass
-
-    def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
-        pass
-
-    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task) -> requests.models.Response:
-        pass
-
-    def mark_task_done(self, lock_id: str, extension_id: str, complete: bool) -> requests.models.Response:
-        pass
-
-    def trigger_new_verification(self, lock_id: str, extension_id: str) -> requests.models.Response:
-        pass
-
-    def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.GuessTheTimerResponse]:
-        pass
-
-    """
-    Lock Creation
-    """
-
-    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, str]:
-        pass
-
-    def edit_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
-        pass
-
-    def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
-        requests.models.Response, str]:
-        pass
-
-    """
-    Profile
-    """
-
-    def get_user_public_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
-        pass
-
-    def get_profile(self, user_id: str) -> tuple[requests.models.Response, user.User]:
-        pass
-
-    def find_profile(self, username: str) -> tuple[requests.models.Response, user.User]:
-        pass
-
-    def find_profile_detailed(self, username: str) -> tuple[requests.models.Response, user.DetailedUser]:
-        pass
-
-    def get_badges(self) -> tuple[requests.models.Response, user.Badges]:
-        pass
-
-    def update_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
-        pass
-
-    def get_user_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
-        pass
-
-    """
-    Files
-    """
-
-    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, str]:
-        pass
-
-    def find_file(self, file_key) -> tuple[requests.models.Response, str]:
-        pass
-
-    """
-    Combinations
-    """
-
-    def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[
-        requests.models.Response, str]:
-        pass
-
-    def create_combination_code(self, code: str) -> tuple[requests.models.Response, str]:
-        pass
-
-    """
-    Extensions
-    """
-
-    def get_all_known_extensions(self) -> tuple[requests.models.Response, list[extensions.KnownExtension]]:
-        pass
-
-    """
-    Session Offer
-    """
-
-    def create_keyholding_offer(self, lock_id, keyholder: str) -> requests.models.Response:
-        pass
-
-    def accept_keyholding_request(self, offer_token: str) -> requests.models.Response:
-        pass
-
-    def get_sent_keyholding_offers(self, lock_id: str) -> tuple[
-        requests.models.Response, list[user.KeyholderOfferEntry]]:
-        pass
-
-    def retrieve_keyholder_request_lock_info(self, offer_token: str) -> tuple[requests.models.Response, lock.Lock]:
-        pass
-
-    def resolve_keyholding_offer(self, session_request_id: str, accept: bool) -> requests.models.Response:
-        pass
-
-    def archive_keyholding_offer(self, session_request_id: str) -> requests.models.Response:
-        pass
-
-    def get_keyholding_offers_from_wearers(self) -> tuple[requests.models.Response, list[user.KeyholderRequestEntry]]:
-        pass
-
-    """
-    Messaging
-    """
-
-    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = '') -> tuple[
-        requests.models.Response, conversation.Conversations]:
-        pass
-
-    def create_conversation(self, user_id: str, message: str) -> tuple[
-        requests.models.Response, conversation.Conversation]:
-        pass
-
-    def get_user_conversation(self, user_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
-        pass
-
-    def send_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
-        pass
-
-    def get_conversation(self, conversation_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
-        pass
-
-    def set_conversation_status(self, conversation_id: str, status: str) -> requests.models.Response:
-        pass
-
-    def set_conversation_unread(self, conversation_id: str, unread: bool) -> requests.models.Response:
-        pass
-
-    def get_conversation_messages(self, conversation_id: str, limit: int = 15, last_id: str = None) -> tuple[
-        requests.models.Response, conversation.ConversationMessages]:
-        pass
-
-    """
-    Extensions - Temporary Opening
-    """
-
-    def get_temporary_opening_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
-        pass
-
-    def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
-        pass
-
-    def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
-        requests.models.Response, user.LockCombination]:
-        pass
-
-    """
-    Community Events
-    """
-
-    def get_community_event_categories(self) -> tuple[
-        requests.models.Response, list[user.CommunityEventCategory]]:
-        pass
-
-    def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
-        requests.models.Response, user.CommunityEventDetails]:
-        pass
-
-    """
-    Partner Extensions
-    """
-    # Not doing for now. Access will be needed
-
-    """
-    Settings
-    """
-
-    def get_app_settings(self) -> tuple[requests.models.Response, user.AppSettings]:
-        pass
-
-    """
-    Users
-    """
-
-    def search_for_users(self, search: str) -> tuple[requests.models.Response, list[user.User]]:
-        pass
-
-    def search_for_users_by_discord(self, discord_id: str) -> tuple[requests.models.Response, user.User]:
-        pass
-
-    """
-    Keyholder
-    """
-
-    def post_keyholder_locks_search(self, page: int = 0, status: str = 'locked', limit: int = 15, criteria: dict = {},
-                                    search: str = None) -> tuple[requests.models.Response, lock.LockedUsers]:
-        pass
-
-    """
-    Reports
-    """
-
-    """
-    Partner Configurations
-    """
-
-    """
-    Public Locks
-    """
-
-    def find_public_shared_lock(self, shared_lock_id: str) -> tuple[
-        requests.models.Response, lock.PublicSharedLockInfo]:
-        pass
-
-    def generate_public_shared_lock_flyer(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def search_for_public_locks(self, params: lock.SearchPublicLock) -> \
-            tuple[requests.models.Response, lock.PageinatedSharedLockList]:
-        pass
-
-    def find_explore_page_locks(self) -> tuple[requests.models.Response, list[lock.ExplorePageLock]]:
-        pass
-
-    """
-    Extensions - Verification Picture
-    """
-
-    def submit_verification(self, lock_id: str, uri, enable_verification_code: bool = True) -> requests.models.Response:
-        pass
-
-    def get_verification_history(self, lock_id: str) -> tuple[
-        requests.models.Response, list[lock.VerificationPhotoHistory]]:
-        pass
-
-
-class ChasterAPI(_ChasterApi):
+class ChasterAPI:
 
     def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/'):
         """
@@ -415,7 +39,6 @@ class ChasterAPI(_ChasterApi):
                         backoff_factor=0.1,
                         status_forcelist=[500, 502, 503, 504],
                         respect_retry_after_header=True)
-        retries.backoff_jitter = 0.01  # TODO: why is backoff_jitter not present in Retry?
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
@@ -519,7 +142,6 @@ class ChasterAPI(_ChasterApi):
         :return: the newly created lock id
         """
 
-        create.validate()
         response = self._post('/locks/shared-locks', create.dump())
         data = None
         if response.status_code == 201:
@@ -549,7 +171,6 @@ class ChasterAPI(_ChasterApi):
         :param update:
         :return:
         """
-        update.validate()
         return self._put(f'/locks/shared-locks/{shared_lock_id}', update.dump())
 
     def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
@@ -701,7 +322,6 @@ class ChasterAPI(_ChasterApi):
             "hideTimeLogs": hide_time_logs
         })
 
-    # TODO: would you ever set bot max_limit_date and disable_max_time_limit
     def set_max_limit_date(self, lock_id: str, max_limit_date: datetime.datetime,
                            disable_max_time_limit: bool) -> requests.models.Response:
         """
@@ -771,7 +391,6 @@ class ChasterAPI(_ChasterApi):
         """
         return self._put(f'locks/{lock_id}/is-test-lock', data={})
 
-    # TODO: The reason for this API is unclear. Does it send more data than what is already present in the lock?
     def get_lock_extension_information(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, lock.ExtensionInformation]:
         """
@@ -940,7 +559,6 @@ class ChasterAPI(_ChasterApi):
         data = {"action": "submit", "payload": {"requestVote": True, "voteDuration": vote_duration}}
         return self.trigger_extension_action(lock_id, extension_id, data)
 
-    # TODO: validate this has no special return value
     def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
@@ -1089,17 +707,21 @@ class ChasterAPI(_ChasterApi):
     Files
     """
 
-    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, str]:
+    def upload_file(self, file_uri, file_name, file_type, usage: str = 'messaging') -> tuple[
+        requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Files/StorageController_uploadFiles>`_
-        :param uri:
-        :param usage: 'messaging' or 'community_event_challenge'
+
+        :param file_uri: the uri to the file to upload
+        :param file_name: what to name the file
+        :param file_type: the MIME type for the file
+        :param usage:
         :return: the file token
         """
-        fmf = generate_multipart_form_from_uri(uri)
-        with open(fmf.uri, 'rb') as f:
+
+        with open(file_uri, 'rb') as f:
             content = f.read()
-            files = {'files': (fmf.name, content, fmf.type),
+            files = {'files': (file_name, content, file_type),
                      'type': (None, usage)}
 
         response = self._post_form('/files/upload', files)
@@ -1128,17 +750,20 @@ class ChasterAPI(_ChasterApi):
     Combinations
     """
 
-    def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[requests.models.Response, str]:
+    def upload_combination_image(self, file_uri, file_name, file_type, manual_check: bool = False) -> tuple[
+        requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Combinations/CombinationController_uploadImage>`_
-        :param uri:
+        :param file_uri: the uri to the file to upload
+        :param file_name: what to name the file
+        :param file_type: the MIME type for the file
         :param manual_check:
         :return: combination id
         """
-        fmf = generate_multipart_form_from_uri(uri)
-        with open(fmf.uri, 'rb') as f:
+
+        with open(file_uri, 'rb') as f:
             content = f.read()
-            files = {'file': (fmf.name, content, fmf.type),
+            files = {'file': (file_name, content, file_type),
                      'enableManualCheck': (None, str(manual_check).lower())}
         response = self._post_form('combinations/image', files)
         data = None
@@ -1239,14 +864,13 @@ class ChasterAPI(_ChasterApi):
     Messaging
     """
 
-    # TODO: Flushout offset
     def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None) -> tuple[
         requests.models.Response, conversation.Conversations]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_getConversations>`_
         :param limit:
         :param status: 'approved', 'pending', 'ignored', or None for all conversations.
-        :param offset:
+        :param offset: date of the last message, use the field lastMessageAt for pagination
         :return:
         """
 
@@ -1261,19 +885,28 @@ class ChasterAPI(_ChasterApi):
             path += f'offset={offset}&'
         return self._tester_get_wrapper(path, conversation.Conversations().update)
 
-    # TODO: Input object? Are there multiple types?
-    def create_conversation(self, user_id: str, message: str) -> tuple[
-        requests.models.Response, conversation.Conversation]:
+    def create_conversation(self, user_id: str, message: str, message_type: str = 'private', attachments: str = None,
+                            nonce: str = None) -> \
+            tuple[
+                requests.models.Response, conversation.Conversation]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_createConversation>`_
+
         :param user_id:
         :param message:
+        :param message_type:
+        :param attachments:
+        :param nonce:
         :return:
         """
-        response = self._post('conversations',
-                              {'users': [user_id],
-                               'type': "private",
-                               "message": message})
+        data = {'users': [user_id],
+                'type': message_type,
+                "message": message}
+        if attachments is not None:
+            data['attachments'] = attachments
+        if nonce is not None:
+            data['nonce'] = nonce
+        response = self._post('conversations', data)
 
         return self._tester_post_request_helper(response, conversation.Conversation().update)
 
@@ -1285,20 +918,20 @@ class ChasterAPI(_ChasterApi):
         """
         return self._tester_get_wrapper(f'conversations/by-user/{user_id}', conversation.Conversation().update)
 
-    # TODO: flushout attachments, what is nonce?
-    """
-    {"message":"here","attachments":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlcyI6WyI2NWE4OGU2OWE4NTIwMDAxYzc2MTc2OTkiXSwidHlwZSI6Im1lc3NhZ2luZyIsInVzZXIiOiI2NGU1YjQ4MWI1MzNhNWNjZmU2MTU2N2YiLCJpYXQiOjE3MDU1NDUzMjEsImV4cCI6MTcwNTYzMTcyMX0.u2HPOjyhmqAB-2aTd4Uq_HF-b-Z6V8-T8soPZytLj9w","nonce":"HhH_YHrj8TAAhkyDFfEYs"}
-    """
-
-    def send_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
+    def send_message(self, conversation_id: str, message: str, attachments: str = None,
+                     nonce: str = None) -> tuple[requests.models.Response, conversation.Message]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_sendMessage>`_
         :param conversation_id:
         :param message:
         :return:
         """
-        response = self._post(f'conversations/{conversation_id}',
-                              {"message": message})
+        data = {"message": message}
+        if attachments is not None:
+            data['attachments'] = attachments
+        if nonce is not None:
+            data['nonce'] = nonce
+        response = self._post(f'conversations/{conversation_id}', data)
 
         return self._tester_post_request_helper(response, conversation.Message().update)
 
@@ -1310,8 +943,6 @@ class ChasterAPI(_ChasterApi):
         """
         return self._tester_get_wrapper(f'conversations/{conversation_id}', conversation.Conversation().update)
 
-    # TODO: What options for status are there?
-    # TODO: Confirm the listed statuses are the correct ones
     def set_conversation_status(self, conversation_id: str, status: str) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_setConversationStatus>`_
@@ -1407,7 +1038,6 @@ class ChasterAPI(_ChasterApi):
     """
     Partner Extensions
     """
-    # TODO: Gain access
 
     """
     Settings
@@ -1445,26 +1075,36 @@ class ChasterAPI(_ChasterApi):
     Keyholder
     """
 
-    # TODO: Flush out this function.
-    def post_keyholder_locks_search(self, page: int = 0, status: str = 'locked', limit: int = 15, criteria: dict = {},
-                                    search: str = None) -> tuple[requests.models.Response, lock.LockedUsers]:
+    def find_locked_users(self, page: int = 0, status: str = 'locked', limit: int = 15,
+                          search: str = None, includeKeyholderLocks: bool = False, sharedLockIds: list[str] = None) -> \
+            tuple[requests.models.Response, lock.LockedUsers]:
         """
         `endpoint <https://api.chaster.app/api#/Keyholder/KeyholderController_searchLocks>`_
         :param page:
         :param status: 'locked', 'unlocked', 'archived', 'deserted'
         :param limit:
-        :param criteria:
         :param search:
+        :param includeKeyholderLocks:
+        :param sharedLockIds:
         :return:
         """
+
         data = {
             'page': page,
             'status': status,
             'limit': limit,
-            'criteria': criteria
+            'criteria': {}
         }
         if search is not None:
             data['search'] = search
+        if includeKeyholderLocks:
+            if 'sharedLocks' not in data['criteria']:
+                data['criteria']['sharedLocks'] = {}
+            data['criteria']['sharedLocks']['includeKeyholderLocks'] = includeKeyholderLocks
+        if sharedLockIds is not None:
+            if 'sharedLocks' not in data['criteria']:
+                data['criteria']['sharedLocks'] = {}
+            data['criteria']['sharedLocks']['sharedLockIds'] = sharedLockIds
 
         response = self._post('keyholder/locks/search', data)
         return self._tester_post_request_helper(response, lock.LockedUsers().update)
@@ -1476,7 +1116,6 @@ class ChasterAPI(_ChasterApi):
     """
     Partner Configurations
     """
-    # TODO: Gain access
 
     """
     Public Locks
@@ -1491,14 +1130,17 @@ class ChasterAPI(_ChasterApi):
         """
         return self._tester_get_wrapper(f'/public-locks/{shared_lock_id}', lock.PublicSharedLockInfo().update)
 
-    # TODO: Need to handle file with other file apis
-    def generate_public_shared_lock_flyer(self, shared_lock_id: str) -> requests.models.Response:
+    def generate_public_shared_lock_flyer(self, shared_lock_id: str, uri: str) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Public%20Locks/PublicLockController_getSharedLockImage>`_
         :param shared_lock_id:
+        :param uri: output file
         :return:
         """
-        response = self._get(f'/public-locks/images/{shared_lock_id}')
+        response = self._get(f'/public-locks/images/{shared_lock_id}', )
+        if response.content is not None:
+            with open(uri, 'wb') as f:
+                f.write(response.content)
         return response
 
     def search_for_public_locks(self, params: lock.SearchPublicLock) -> \
@@ -1527,19 +1169,20 @@ class ChasterAPI(_ChasterApi):
     Extensions - Verification Picture
     """
 
-    # TODO: enableVerificationCode False does what?
-    def submit_verification(self, lock_id: str, uri, enable_verification_code: bool = True) -> requests.models.Response:
+    def submit_verification(self, lock_id: str, file_uri, file_name, file_type,
+                            enable_verification_code: bool = True) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Extensions%20-%20Verification%20Picture/VerificationPictureController_submitPicture>`_
         :param lock_id:
-        :param uri:
+        :param file_uri: the uri to the file to upload
+        :param file_name: what to name the file
+        :param file_type: the MIME type for the file
         :param enable_verification_code:
         :return:
         """
-        fmf = generate_multipart_form_from_uri(uri)
-        with open(fmf.uri, 'rb') as f:
+        with open(file_uri, 'rb') as f:
             content = f.read()
-            files = {'file': (fmf.name, content, fmf.type),
+            files = {'file': (file_name, content, file_type),
                      'enableVerificationCode': (None, enable_verification_code)}
         return self._post_form(f'/extensions/verification-picture/{lock_id}/submit', files)
 
@@ -1552,382 +1195,3 @@ class ChasterAPI(_ChasterApi):
         """
         return self._tester_get_wrapper(f'/locks/{lock_id}/verification-pictures',
                                         lock.VerificationPhotoHistory.generate_array)
-
-
-class _MockChasterData:
-    user_locks = {}
-    user_shared_locks: dict[str, dict[str, lock.SharedLock]] = {}
-
-    def __init__(self):
-        """
-        in progress
-        """
-        pass
-
-
-class _MockChasterAPI(_ChasterApi):
-    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/'):
-        """
-        in progress
-        :param mock_chaster_data:
-        :param user_id:
-        """
-        super().__init__()
-        self.bearer = bearer
-        self.mock_chaster_data = _MockChasterData()
-
-    """
-    Shared Locks
-    """
-
-    def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
-        pass
-
-    def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[requests.models.Response, str]:
-        pass
-
-    def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
-        requests.models.Response, lock.SharedLock]:
-        pass
-
-    def update_shared_lock(self, shared_lock_id: str, update: lock.CreateSharedLock) -> requests.models.Response:
-        pass
-
-    def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def check_if_favorited(self, shared_lock_id: str) -> tuple[requests.models.Response, bool]:
-        pass
-
-    def favorite(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def remove_favorite(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def get_favorite_shared_locks(self, limit: int = 15, last_id: str = None) -> tuple[
-        requests.models.Response, lock.PageinatedSharedLockList]:
-        pass
-
-    """
-    Locks
-    """
-
-    def get_user_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.Lock]]:
-        pass
-
-    def get_lock_details(self, lock_id: str) -> tuple[requests.models.Response, lock.Lock]:
-        pass
-
-    def archive_lock(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def archive_lock_as_keyholder(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def update_lock_duration(self, lock_id: str, time: int) -> requests.models.Response:
-        pass
-
-    def set_freeze(self, lock_id: str, freeze: bool) -> requests.models.Response:
-        pass
-
-    def unlock(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def update_lock_settings(self, lock_id: str, display_remaining_time: bool,
-                             hide_time_logs: bool) -> requests.models.Response:
-        pass
-
-    def set_max_limit_date(self, lock_id: str, max_limit_date: datetime.datetime,
-                           disable_max_time_limit: bool) -> requests.models.Response:
-        pass
-
-    def trust_keyholder(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def get_lock_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
-        pass
-
-    def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 25, last_id: str = None) -> tuple[
-        requests.models.Response, lock.PageinatedLockHistory]:
-        pass
-
-    def set_as_test_lock(self, lock_id: str) -> requests.models.Response:
-        pass
-
-    def get_lock_extension_information(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, lock.ExtensionInformation]:
-        pass
-
-    def trigger_extension_action(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
-        pass
-
-    """
-    Triggers
-    """
-
-    def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id='') -> tuple[
-        requests.models.Response, int]:
-        pass
-
-    def get_share_link_vote_url(self, lock_id: str, extension_id: str) -> tuple[requests.models.Response, str]:
-        pass
-
-    def get_share_link_vote_info(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.ShareLinkInfoResponse]:
-        pass
-
-    def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str,
-                                duration: int) -> requests.models.Response:
-        pass
-
-    def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.PilloryVotes]:
-        pass
-
-    def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
-        pass
-
-    def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.DiceRollResult]:
-        pass
-
-    def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.WheelOfFortuneResult]:
-        pass
-
-    def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
-        pass
-
-    def community_vote_next_task(self, lock_id: str, extension_id: str, vote_duration: int) -> requests.models.Response:
-        pass
-
-    def assign_task(self, lock_id: str, extension_id: str, task: extensions.Task) -> requests.models.Response:
-        pass
-
-    def mark_task_done(self, lock_id: str, extension_id: str, complete: bool) -> requests.models.Response:
-        pass
-
-    def trigger_new_verification(self, lock_id: str, extension_id: str) -> requests.models.Response:
-        pass
-
-    def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
-        requests.models.Response, triggers.GuessTheTimerResponse]:
-        pass
-
-    """
-    Lock Creation
-    """
-
-    def create_personal_lock(self, self_lock: lock.CreateLock) -> tuple[requests.models.Response, str]:
-        pass
-
-    def edit_extensions(self, lock_id: str, ext: extensions.Extensions) -> requests.models.Response:
-        pass
-
-    def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
-        requests.models.Response, str]:
-        pass
-
-    """
-    Profile
-    """
-
-    def get_user_public_locks(self, user_id: str) -> tuple[requests.models.Response, list[lock.Lock]]:
-        pass
-
-    def get_profile(self, user_id: str) -> tuple[requests.models.Response, user.User]:
-        pass
-
-    def find_profile(self, username: str) -> tuple[requests.models.Response, user.User]:
-        pass
-
-    def find_profile_detailed(self, username: str) -> tuple[requests.models.Response, user.DetailedUser]:
-        pass
-
-    def get_badges(self) -> tuple[requests.models.Response, user.Badges]:
-        pass
-
-    def update_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
-        pass
-
-    def get_user_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
-        pass
-
-    """
-    Files
-    """
-
-    def upload_file(self, uri, usage: str = 'messaging') -> tuple[requests.models.Response, str]:
-        pass
-
-    def find_file(self, file_key) -> tuple[requests.models.Response, str]:
-        pass
-
-    """
-    Combinations
-    """
-
-    def upload_combination_image(self, uri, manual_check: bool = False) -> tuple[
-        requests.models.Response, str]:
-        pass
-
-    def create_combination_code(self, code: str) -> tuple[requests.models.Response, str]:
-        pass
-
-    """
-    Extensions
-    """
-
-    def get_all_known_extensions(self) -> tuple[requests.models.Response, list[extensions.KnownExtension]]:
-        pass
-
-    """
-    Session Offer
-    """
-
-    def create_keyholding_offer(self, lock_id, keyholder: str) -> requests.models.Response:
-        pass
-
-    def accept_keyholding_request(self, offer_token: str) -> requests.models.Response:
-        pass
-
-    def get_sent_keyholding_offers(self, lock_id: str) -> tuple[
-        requests.models.Response, list[user.KeyholderOfferEntry]]:
-        pass
-
-    def retrieve_keyholder_request_lock_info(self, offer_token: str) -> tuple[requests.models.Response, lock.Lock]:
-        pass
-
-    def resolve_keyholding_offer(self, session_request_id: str, accept: bool) -> requests.models.Response:
-        pass
-
-    def archive_keyholding_offer(self, session_request_id: str) -> requests.models.Response:
-        pass
-
-    def get_keyholding_offers_from_wearers(self) -> tuple[requests.models.Response, list[user.KeyholderRequestEntry]]:
-        pass
-
-    """
-    Messaging
-    """
-
-    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = '') -> tuple[
-        requests.models.Response, conversation.Conversations]:
-        pass
-
-    def create_conversation(self, user_id: str, message: str) -> tuple[
-        requests.models.Response, conversation.Conversation]:
-        pass
-
-    def get_user_conversation(self, user_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
-        pass
-
-    def send_message(self, conversation_id: str, message: str) -> tuple[requests.models.Response, conversation.Message]:
-        pass
-
-    def get_conversation(self, conversation_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
-        pass
-
-    def set_conversation_status(self, conversation_id: str, status: str) -> requests.models.Response:
-        pass
-
-    def set_conversation_unread(self, conversation_id: str, unread: bool) -> requests.models.Response:
-        pass
-
-    def get_conversation_messages(self, conversation_id: str, limit: int = 15, last_id: str = None) -> tuple[
-        requests.models.Response, conversation.ConversationMessages]:
-        pass
-
-    """
-    Extensions - Temporary Opening
-    """
-
-    def get_temporary_opening_combination(self, lock_id: str) -> tuple[requests.models.Response, user.LockCombination]:
-        pass
-
-    def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
-        pass
-
-    def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
-        requests.models.Response, user.LockCombination]:
-        pass
-
-    """
-    Community Events
-    """
-
-    def get_community_event_categories(self) -> tuple[
-        requests.models.Response, list[user.CommunityEventCategory]]:
-        pass
-
-    def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
-        requests.models.Response, user.CommunityEventDetails]:
-        pass
-
-    """
-    Partner Extensions
-    """
-    # TODO: Gain access
-
-    """
-    Settings
-    """
-
-    def get_app_settings(self) -> tuple[requests.models.Response, user.AppSettings]:
-        pass
-
-    """
-    Users
-    """
-
-    def search_for_users(self, search: str) -> tuple[requests.models.Response, list[user.User]]:
-        pass
-
-    def search_for_users_by_discord(self, discord_id: str) -> tuple[requests.models.Response, user.User]:
-        pass
-
-    """
-    Keyholder
-    """
-
-    def post_keyholder_locks_search(self, page: int = 0, status: str = 'locked', limit: int = 15, criteria: dict = {},
-                                    search: str = None) -> tuple[requests.models.Response, lock.LockedUsers]:
-        pass
-
-    """
-    Reports
-    """
-
-    """
-    Partner Configurations
-    """
-
-    """
-    Public Locks
-    """
-
-    def find_public_shared_lock(self, shared_lock_id: str) -> tuple[
-        requests.models.Response, lock.PublicSharedLockInfo]:
-        pass
-
-    def generate_public_shared_lock_flyer(self, shared_lock_id: str) -> requests.models.Response:
-        pass
-
-    def search_for_public_locks(self, params: lock.SearchPublicLock) -> \
-            tuple[requests.models.Response, lock.PageinatedSharedLockList]:
-        pass
-
-    def find_explore_page_locks(self) -> tuple[requests.models.Response, list[lock.ExplorePageLock]]:
-        pass
-
-    """
-    Extensions - Verification Picture
-    """
-
-    def submit_verification(self, lock_id: str, uri, enable_verification_code: bool = True) -> requests.models.Response:
-        pass
-
-    def get_verification_history(self, lock_id: str) -> tuple[
-        requests.models.Response, list[lock.VerificationPhotoHistory]]:
-        pass

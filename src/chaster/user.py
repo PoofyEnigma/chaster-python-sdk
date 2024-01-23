@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 import dateutil.parser
 from . import lock, util
@@ -18,7 +17,7 @@ class User:
         self.isFindom: bool = False
         self.avatarUrl: str = ''
         self.online: bool = True
-        self.lastSeen = None  # TODO type
+        self.lastSeen: int = None
         self.isAdmin: bool = False
         self.isModerator: bool = False
         self.metadata: Metadata = None
@@ -28,7 +27,7 @@ class User:
         self.isDisabled: bool = False
         self.isSuspended: bool = False
         self.features = [],
-        self.joinedAt = None  # TODO type
+        self.joinedAt: str = None
         self.isNewMember: bool = True
         self.isSuspendedOrDisabled: bool = False
 

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chaster-sdk"
-version = "0.1.0"
+version = "0.1.1.a1"
 authors = [
     { name = "Poofy", email = "poofy.enigma@gmail.com" },
 ]
@@ -16,6 +16,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+    "python-dateutil",
+    "requests"
 ]
 
 [project.urls]
