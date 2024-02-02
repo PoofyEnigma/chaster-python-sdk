@@ -41,7 +41,7 @@ class ChasterAPI:
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
-    def _request_logger(self, response: requests.models.Response, *args, **kwargs):
+    def _request_logger(self, response: requests.models.Response, _, __):
         chaster_transaction_id = ''
         if 'x-chaster-transaction-id' in response.headers:
             chaster_transaction_id = response.headers['x-chaster-transaction-id']
@@ -56,7 +56,7 @@ class ChasterAPI:
         self.logger.error(
             f'{response.status_code} {response.request.method} {response.request.url}  chaster_transaction_id:{chaster_transaction_id} {response.content}')
 
-    def _post_request_handler(self, response: requests.models.Response, *args, **kwargs):
+    def _post_request_handler(self, _: requests.models.Response, __, ___):
         time.sleep(self.delay)
 
     def _get(self, path: str) -> requests.models.Response:
@@ -281,14 +281,14 @@ class ChasterAPI:
         """
         return self._post(f'/locks/{lock_id}/archive/keyholder', {})
 
-    def update_lock_duration(self, lock_id: str, time: int) -> requests.models.Response:
+    def update_lock_duration(self, lock_id: str, duration: int) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockController_updateTime>`_
         :param lock_id:
-        :param time: time length in seconds
+        :param duration: duration length in seconds
         :return:
         """
-        return self._post(f'locks/{lock_id}/update-time', {'duration': time})
+        return self._post(f'locks/{lock_id}/update-time', {'duration': duration})
 
     def set_freeze(self, lock_id: str, freeze: bool) -> requests.models.Response:
         """
@@ -1075,7 +1075,8 @@ class ChasterAPI:
     """
 
     def find_locked_users(self, page: int = 0, status: str = 'locked', limit: int = 15,
-                          search: str = None, includeKeyholderLocks: bool = False, sharedLockIds: list[str] = None) -> \
+                          search: str = None, include_keyholder_locks: bool = False,
+                          shared_lock_ids: list[str] = None) -> \
             tuple[requests.models.Response, lock.LockedUsers]:
         """
         `endpoint <https://api.chaster.app/api#/Keyholder/KeyholderController_searchLocks>`_
@@ -1083,8 +1084,8 @@ class ChasterAPI:
         :param status: 'locked', 'unlocked', 'archived', 'deserted'
         :param limit:
         :param search:
-        :param includeKeyholderLocks:
-        :param sharedLockIds:
+        :param include_keyholder_locks:
+        :param shared_lock_ids:
         :return:
         """
 
@@ -1096,14 +1097,14 @@ class ChasterAPI:
         }
         if search is not None:
             data['search'] = search
-        if includeKeyholderLocks:
+        if include_keyholder_locks:
             if 'sharedLocks' not in data['criteria']:
                 data['criteria']['sharedLocks'] = {}
-            data['criteria']['sharedLocks']['includeKeyholderLocks'] = includeKeyholderLocks
-        if sharedLockIds is not None:
+            data['criteria']['sharedLocks']['includeKeyholderLocks'] = include_keyholder_locks
+        if shared_lock_ids is not None:
             if 'sharedLocks' not in data['criteria']:
                 data['criteria']['sharedLocks'] = {}
-            data['criteria']['sharedLocks']['sharedLockIds'] = sharedLockIds
+            data['criteria']['sharedLocks']['sharedLockIds'] = shared_lock_ids
 
         response = self._post('keyholder/locks/search', data)
         return self._tester_post_request_helper(response, lock.LockedUsers().update)

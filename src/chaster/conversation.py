@@ -21,9 +21,9 @@ class Conversation:
         self._id: str = ''
         self.users: list[user.User] = []
         self.type: str = ''
-        self.lastMessage: LastMessage = None
-        self.lastMessageAt: datetime.datetime = None
-        self.createdAt: datetime.datetime = None
+        self.lastMessage: LastMessage | None = None
+        self.lastMessageAt: datetime.datetime | None = None
+        self.createdAt: datetime.datetime | None = None
         self.unread: bool = False
         self.status: str = 'approved'
         self.isSenderBanned: bool = False
@@ -59,8 +59,8 @@ class Message:
         self._id: str = ''
         self.type: str = ''
         self.message: str = ''
-        self.createdAt: datetime.datetime = None
-        self.updatedAt: datetime.datetime = None
+        self.createdAt: datetime.datetime | None = None
+        self.updatedAt: datetime.datetime | None = None
         self.conversation: str = ''
         self.user: str = ''
         self.attachments = []

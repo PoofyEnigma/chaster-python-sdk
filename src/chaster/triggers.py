@@ -56,7 +56,7 @@ class Vote:
         self.voteEndsAt: int = 0
         self.canVote: bool = True
         self.reason: str = ''
-        self.createdAt: datetime.datetime = None
+        self.createdAt: datetime.datetime | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -124,7 +124,7 @@ class DiceRollResult:
 
 class WheelOfFortuneAction:
     def __init__(self):
-        self.segment: extensions.WheelOfFortuneSegment = None
+        self.segment: extensions.WheelOfFortuneSegment | None = None
 
     def update(self, obj):
         self.segment = extensions.WheelOfFortuneSegment().update(obj.segment)
@@ -139,7 +139,7 @@ class WheelOfFortuneAction:
 class WheelOfFortuneResult:
     def __init__(self):
         self.index: int = 0
-        self.action: WheelOfFortuneAction = None
+        self.action: WheelOfFortuneAction | None = None
         self.text: str = ''
 
     def update(self, obj):

@@ -34,18 +34,18 @@ class Lock:
         self.endDate: str = ''
         self.minDate: str = ''
         self.maxDate: str = ''
-        self.maxLimitDate: datetime.datetime = None
+        self.maxLimitDate: datetime.datetime | None = None
         self.displayRemainingTime: bool = True
         self.limitLockTime: bool = False
         self.status: str = ''
         self.combination: str = ''
-        self.sharedLock: SharedLock = None
+        self.sharedLock: SharedLock | None = None
         self.createdAt: str = ''
         self.updatedAt: str = ''
-        self.unlockedAt: datetime.datetime = None
-        self.archivedAt: datetime.datetime = None
+        self.unlockedAt: datetime.datetime | None = None
+        self.archivedAt: datetime.datetime | None = None
         self.frozenAt: str = ''
-        self.keyholderArchivedAt: datetime.datetime = None
+        self.keyholderArchivedAt: datetime.datetime | None = None
         self.totalDuration: int = 235422887
         self.allowSessionOffer: bool = False
         self.isTestLock: bool = False
@@ -65,7 +65,7 @@ class Lock:
         self.availableHomeActions: list[AvailableHomeAction] = []
         self.reasonsPreventingUnlocking = []
         self.extensionsAllowUnlocking: bool = True
-        self.deletedAt: datetime.datetime = None
+        self.deletedAt: datetime.datetime | None = None
 
     def dump(self):
         obj = self.__dict__.copy()
@@ -193,10 +193,10 @@ class ActionLog:
         self.title: str = ''
         self.description: str = ''
         self.color: str = ''
-        self.createdAt: datetime.datetime = None
+        self.createdAt: datetime.datetime | None = None
         self.icon: str = ''
         self.prefix: str = ''
-        self.user: user.User = None
+        self.user: user.User | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -240,7 +240,7 @@ class PaginatedLockHistory:
 
 class ExtensionInformation:
     def __init__(self):
-        self.lock: Lock = None
+        self.lock: Lock | None = None
         self.extension = None
 
     def update(self, obj):
@@ -259,7 +259,7 @@ class ExtensionInformation:
 
 class LockInfo:
     def __init__(self):
-        self.password: str = None
+        self.password: str | None = None
         self.combinationId: str = ''
         self.isTestLock: bool = False
 
@@ -290,13 +290,13 @@ class CreateSharedLock:
     def __init__(self):
         self.minDuration: int = 3600
         self.maxDuration: int = 7200
-        self.maxLimitDuration: int = None
-        self.minDate: datetime = None
-        self.maxDate: datetime = None
-        self.maxLimitDate: datetime = None
+        self.maxLimitDuration: int | None = None
+        self.minDate: datetime.datetime | None = None
+        self.maxDate: datetime.datetime | None = None
+        self.maxLimitDate: datetime.datetime | None = None
         self.displayRemainingTime: bool = True
         self.limitLockTime: bool = False
-        self.maxLockedUsers: int = None
+        self.maxLockedUsers: int | None = None
         self.isPublic: bool = True
         self.password = None
         self.requireContact: bool = False
@@ -333,28 +333,28 @@ class SharedLock:
         self._id: str = ''
         self.minDuration: int = 86400
         self.maxDuration: int = 90000
-        self.maxLimitDuration: int = None
-        self.minDate: datetime = None
-        self.maxDate: datetime = None
-        self.maxLimitDate: datetime = None
+        self.maxLimitDuration: int | None = None
+        self.minDate: datetime.datetime | None = None
+        self.maxDate: datetime.datetime | None = None
+        self.maxLimitDate: datetime.datetime | None = None
         self.displayRemainingTime: bool = True
         self.limitLockTime: bool = False
-        self.maxLockedUsers: int = None
+        self.maxLockedUsers: int | None = None
         self.isPublic: bool = True
         self.requireContact: bool = False
         self.name: str = ''
-        self.password: str = None
+        self.password: str | None = None
         self.description: str = ''
         self.unsplashPhoto: UnsplashPhoto = UnsplashPhoto()
         self.hideTimeLogs: bool = False
-        self.lastSavedAt: datetime = None
+        self.lastSavedAt: datetime.datetime | None = None
         self.requirePassword: bool = False
-        self.user: user.User = None
+        self.user: user.User | None = None
         self.durationMode: str = ''
         self.isFindom: bool = False
-        self.calculatedMaxLimitDuration: int = None
+        self.calculatedMaxLimitDuration: int | None = None
         self.extensions = []
-        self.joinRules: JoinRules = None  # Not present when getting the user's shared lock
+        self.joinRules: JoinRules | None = None  # Not present when getting the user's shared lock
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -439,35 +439,35 @@ class JoinRules:
 
 class PublicSharedLockInfo:
     def __init__(self):
-        self.joinRules: JoinRules = None
+        self.joinRules: JoinRules | None = None
         self.locks: list[Lock] = []
         self._id: str = ''
         self.minDuration: int = 86400
         self.maxDuration: int = 90000
-        self.maxLimitDuration: int = None
-        self.minDate: datetime = None
-        self.maxDate: datetime = None
-        self.maxLimitDate: datetime = None
+        self.maxLimitDuration: int | None = None
+        self.minDate: datetime.datetime | None = None
+        self.maxDate: datetime.datetime | None = None
+        self.maxLimitDate: datetime.datetime | None = None
         self.displayRemainingTime: bool = True
         self.limitLockTime: bool = False
-        self.maxLockedUsers: int = None
+        self.maxLockedUsers: int | None = None
         self.isPublic: bool = True
         self.requireContact: bool = False
         self.name: str = ''
         self.description: str = ''
         self.unsplashPhoto: UnsplashPhoto = UnsplashPhoto()
         self.hideTimeLogs: bool = False
-        self.lastSavedAt: datetime = None
+        self.lastSavedAt: datetime.datetime | None = None
         self.requirePassword: bool = False
         self.user: user.User = user.User()
         self.durationMode: str = ''
         self.isFindom: bool = False
-        self.calculatedMaxLimitDuration: int = None
+        self.calculatedMaxLimitDuration: int | None = None
         self.extensions = []
-        self.createdAt: datetime.datetime = None
-        self.updatedAt: datetime.datetime = None
-        self.unlockedAt: datetime.datetime = None
-        self.deletedAt: datetime.datetime = None
+        self.createdAt: datetime.datetime | None = None
+        self.updatedAt: datetime.datetime | None = None
+        self.unlockedAt: datetime.datetime | None = None
+        self.deletedAt: datetime.datetime | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__
@@ -586,9 +586,9 @@ class SearchPublicLockCriteriaFindom:
 
 class SearchPublicLockCriteria:
     def __init__(self):
-        self.extensions: SearchPublicLockCriteriaExtensions = None
-        self.isFindom: SearchPublicLockCriteriaFindom = None
-        self.duration: SearchPublicLockCriteriaDuration = None
+        self.extensions: SearchPublicLockCriteriaExtensions | None = None
+        self.isFindom: SearchPublicLockCriteriaFindom | None = None
+        self.duration: SearchPublicLockCriteriaDuration | None = None
 
     def dump(self):
         obj = {}
@@ -615,8 +615,8 @@ class SearchPublicLockCriteria:
 class SearchPublicLock:
     def __init__(self):
         self.limit: int = 15
-        self.lastId: str = None
-        self.criteria: SearchPublicLockCriteria = None
+        self.lastId: str | None = None
+        self.criteria: SearchPublicLockCriteria | None = None
 
     def dump(self):
         obj = self.__dict__.copy()
@@ -651,8 +651,8 @@ class VerificationPhotoHistory:
         self.verificationCode: str = ''
         self.peerVerificationId: str = ''
         self.imageKey: str = ''
-        self.submittedAt: datetime.datetime = None
-        self.votes: VerificationPhotoHistoryVotes = None
+        self.submittedAt: datetime.datetime | None = None
+        self.votes: VerificationPhotoHistoryVotes | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()

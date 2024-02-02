@@ -10,16 +10,46 @@ class Extension:
     def __init__(self):
         self._id: str = ''  # Lock only
         self.textConfig: str = ''
-        self.name: str = None  # Shared lock only
-        self.displayName: str = None  # Lock only
-        self.createdAt: datetime.datetime = None  # Lock only
-        self.updatedAt: datetime.datetime = None  # Lock only
-        self.isPartner: bool = None  # Lock only
-        self.nbActionsRemaining: int = None  # Lock only
-        self.userData = None  # Lock only
-        self.summary: str = None  # Lock only
-        self.subtitle: str = None  # Lock only
-        self.icon: str = None  # Lock only
+        self.name: str | None = None  # Shared lock only
+        """
+        populated only when coming from an API that returns a shared lock
+        """
+        self.displayName: str | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.createdAt: datetime.datetime | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.updatedAt: datetime.datetime | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.isPartner: bool | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.nbActionsRemaining: int | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.userData = None  # Lock only # TODO data type
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.summary: str | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.subtitle: str | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
+        self.icon: str | None = None  # Lock only
+        """
+        populated only when coming from an API that returns a lock
+        """
 
     def get_name(self):
         if self.displayName is not None:
@@ -74,27 +104,31 @@ class ExtensionsHandler:
         self.random_events: list[RandomEvents] = []
         self.guess_timers: list[GuessTheTimer] = []
 
-    def add_defined(self, extension):
-        if extension.slug == 'link':
-            self.share_links.append(extension)
-        if extension.slug == 'pillory':
-            self.pillories.append(extension)
-        if extension.slug == 'temporary-opening':
-            self.hygiene_openings.append(extension)
-        if extension.slug == 'dice':
-            self.dice.append(extension)
-        if extension.slug == 'wheel-of-fortune':
-            self.wheel_of_fortunes.append(extension)
-        if extension.slug == 'tasks':
-            self.tasks.append(extension)
-        if extension.slug == 'penalty':
-            self.penalties.append(extension)
-        if extension.slug == 'verification-picture':
-            self.verification_pictures.append(extension)
-        if extension.slug == 'random-events':
-            self.random_events.append(extension)
-        if extension.slug == 'guess-timer':
-            self.guess_timers.append(extension)
+    def add_defined(self, extension) -> bool:
+        match extension.slug:
+            case 'link':
+                self.share_links.append(extension)
+            case 'pillory':
+                self.pillories.append(extension)
+            case 'temporary-opening':
+                self.hygiene_openings.append(extension)
+            case 'dice':
+                self.dice.append(extension)
+            case 'wheel-of-fortune':
+                self.wheel_of_fortunes.append(extension)
+            case 'tasks':
+                self.tasks.append(extension)
+            case 'penalty':
+                self.penalties.append(extension)
+            case 'verification-picture':
+                self.verification_pictures.append(extension)
+            case 'random-events':
+                self.random_events.append(extension)
+            case 'guess-timer':
+                self.guess_timers.append(extension)
+            case _:
+                return False
+        return True
 
     def load_defined(self, extensions):
         for extension in extensions:
@@ -107,26 +141,30 @@ class ExtensionsHandler:
         return self
 
     def add(self, extension):
-        if extension.slug == 'link':
-            self.share_links.append(ShareLinks().update(extension))
-        if extension.slug == 'pillory':
-            self.pillories.append(Pillory().update(extension))
-        if extension.slug == 'temporary-opening':
-            self.hygiene_openings.append(HygieneOpening().update(extension))
-        if extension.slug == 'dice':
-            self.dice.append(Dice().update(extension))
-        if extension.slug == 'wheel-of-fortune':
-            self.wheel_of_fortunes.append(WheelOfFortune().update(extension))
-        if extension.slug == 'tasks':
-            self.tasks.append(Tasks().update(extension))
-        if extension.slug == 'penalty':
-            self.penalties.append(Penalties().update(extension))
-        if extension.slug == 'verification-picture':
-            self.verification_pictures.append(VerificationPicture().update(extension))
-        if extension.slug == 'random-events':
-            self.random_events.append(RandomEvents().update(extension))
-        if extension.slug == 'guess-timer':
-            self.guess_timers.append(GuessTheTimer().update(extension))
+        match extension.slug:
+            case 'link':
+                self.share_links.append(ShareLinks().update(extension))
+            case 'pillory':
+                self.pillories.append(Pillory().update(extension))
+            case 'temporary-opening':
+                self.hygiene_openings.append(HygieneOpening().update(extension))
+            case 'dice':
+                self.dice.append(Dice().update(extension))
+            case 'wheel-of-fortune':
+                self.wheel_of_fortunes.append(WheelOfFortune().update(extension))
+            case 'tasks':
+                self.tasks.append(Tasks().update(extension))
+            case 'penalty':
+                self.penalties.append(Penalties().update(extension))
+            case 'verification-picture':
+                self.verification_pictures.append(VerificationPicture().update(extension))
+            case 'random-events':
+                self.random_events.append(RandomEvents().update(extension))
+            case 'guess-timer':
+                self.guess_timers.append(GuessTheTimer().update(extension))
+            case _:
+                return False
+        return True
 
     def generate_array(self):
         extensions = []
@@ -261,11 +299,7 @@ class ShareLinks(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 
@@ -299,11 +333,7 @@ class Pillory(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 
@@ -338,11 +368,7 @@ class HygieneOpening(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 
@@ -372,11 +398,7 @@ class Dice(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['config'] = self.config.dump()
-        obj['regularity'] = self.regularity
+        obj = {'slug': self.slug, 'mode': self.mode, 'config': self.config.dump(), 'regularity': self.regularity}
         return obj
 
 
@@ -396,14 +418,6 @@ class WheelOfFortuneSegment:
         """
         self.text: str = ''
         self.duration: int = 0
-
-    def set_type(self, type):
-        """
-
-        :param type: can be one of the following:
-        :return:
-        """
-        self.type = type
 
     def dump(self):
         return self.__dict__.copy()
@@ -451,11 +465,7 @@ class WheelOfFortune(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 
@@ -524,11 +534,7 @@ class Tasks(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 
@@ -599,11 +605,7 @@ class Penalties(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 
@@ -660,11 +662,7 @@ class VerificationPicture(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['regularity'] = self.regularity
-        obj['mode'] = self.mode
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'regularity': self.regularity, 'mode': self.mode, 'config': self.config.dump()}
         return obj
 
 
@@ -695,11 +693,7 @@ class RandomEvents(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['slug'] = self.slug
-        obj['config'] = self.config.dump()
+        obj = {'mode': self.mode, 'regularity': self.regularity, 'slug': self.slug, 'config': self.config.dump()}
         return obj
 
 
@@ -728,11 +722,7 @@ class GuessTheTimer(Extension):
         return self
 
     def dump(self):
-        obj = {}
-        obj['slug'] = self.slug
-        obj['mode'] = self.mode
-        obj['regularity'] = self.regularity
-        obj['config'] = self.config.dump()
+        obj = {'slug': self.slug, 'mode': self.mode, 'regularity': self.regularity, 'config': self.config.dump()}
         return obj
 
 

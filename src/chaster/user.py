@@ -12,22 +12,22 @@ class User:
         self.description: str = ''
         self.location: str = ''
         self.gender: str = ''
-        self.age: int = None
+        self.age: int | None = None
         self.role: str = ''
         self.isFindom: bool = False
         self.avatarUrl: str = ''
         self.online: bool = True
-        self.lastSeen: int = None
+        self.lastSeen: int | None = None
         self.isAdmin: bool = False
         self.isModerator: bool = False
-        self.metadata: Metadata = None
+        self.metadata: Metadata | None = None
         self.fullLocation: str = ''
-        self.discordId: str = None
-        self.discordUsername: str = None
+        self.discordId: str | None = None
+        self.discordUsername: str | None = None
         self.isDisabled: bool = False
         self.isSuspended: bool = False
         self.features = [],
-        self.joinedAt: str = None
+        self.joinedAt: str | None = None
         self.isNewMember: bool = True
         self.isSuspendedOrDisabled: bool = False
 
@@ -77,8 +77,8 @@ class LockCombination:
         self.type: str = ''
         self.code: str = ''
         self.imageFullUrl: str = ''
-        self.createdAt: datetime.datetime = None
-        self.updatedAt: datetime.datetime = None
+        self.createdAt: datetime.datetime | None = None
+        self.updatedAt: datetime.datetime | None = None
         self.enableManualCheck: bool = True
 
     def update(self, obj):
@@ -162,11 +162,11 @@ class Achievement:
 
 class DetailedUser:
     def __init__(self):
-        self.user: User = None
-        self.stats: Stats = None
+        self.user: User | None = None
+        self.stats: Stats | None = None
         self.achievements: list[Achievement] = []
         self.sharedLocks: list[lock.SharedLock] = []
-        self.chastikeyStats: ChastikeyStats = None
+        self.chastikeyStats: ChastikeyStats | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -299,13 +299,13 @@ class AuthProfile:
         self.email: str = ''
         self.keycloakId: str = ''
         self.username: str = ''
-        self.subscriptionEnd: datetime.datetime = None
-        self.customSubscriptionEnd: datetime.datetime = None
+        self.subscriptionEnd: datetime.datetime | None = None
+        self.customSubscriptionEnd: datetime.datetime | None = None
         self.hasPastDueSubscription: bool = True
         self.description: str = ''
         self.location: str = ''
         self.gender: str = ''
-        self.birthDate: datetime.datetime = None
+        self.birthDate: datetime.datetime | None = None
         self.role: str = ''
         self.emailVerified: bool = True
         self.isDeveloper: bool = True
@@ -320,11 +320,11 @@ class AuthProfile:
         self.avatarUrl: str = ''
         self.isPremium: bool = True
         self.needsDiscordMigration: bool = True
-        self.settings: AuthProfileSettings = None
-        self.metadata: AuthProfileMetadata = None
-        self.country: AuthProfileCountry = None
-        self.region: AuthProfileRegion = None
-        self.privateMetadata: AuthProfilePrivateMetadata = None
+        self.settings: AuthProfileSettings | None = None
+        self.metadata: AuthProfileMetadata | None = None
+        self.country: AuthProfileCountry | None = None
+        self.region: AuthProfileRegion | None = None
+        self.privateMetadata: AuthProfilePrivateMetadata | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -357,13 +357,13 @@ class AuthProfile:
 class KeyholderOfferEntry:
     def __init__(self):
         self._id: str = ''
-        self.keyholder: User = None
+        self.keyholder: User | None = None
         self.lock: str = ''
         self.status: str = ''
-        self.validatedAt: datetime.datetime = None
-        self.archivedAt: datetime.datetime = None
-        self.createdAt: datetime.datetime = None
-        self.updatedAt: datetime.datetime = None
+        self.validatedAt: datetime.datetime | None = None
+        self.archivedAt: datetime.datetime | None = None
+        self.createdAt: datetime.datetime | None = None
+        self.updatedAt: datetime.datetime | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -396,12 +396,12 @@ class KeyholderRequestEntry:
     def __init__(self):
         self._id: str = ''
         self.keyholder: str = ''
-        self.lock: lock.Lock = None
+        self.lock: lock.Lock | None = None
         self.status: str = ''
-        self.validatedAt: datetime.datetime = None
-        self.archivedAt: datetime.datetime = None
-        self.createdAt: datetime.datetime = None
-        self.updatedAt: datetime.datetime = None
+        self.validatedAt: datetime.datetime | None = None
+        self.archivedAt: datetime.datetime | None = None
+        self.createdAt: datetime.datetime | None = None
+        self.updatedAt: datetime.datetime | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -475,8 +475,8 @@ class CommunityEventDetails:
     def __init__(self):
         self.categories: dict[str, int] = {}
         self.actions: dict[str, int] = {}
-        self.start: datetime.datetime = None
-        self.end: datetime.datetime = None
+        self.start: datetime.datetime | None = None
+        self.end: datetime.datetime | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -542,9 +542,9 @@ class AppSettings:
         self.maxAttachments: int = 0
         self.registerRequiresAccessKey: bool = True
         self.recaptchaClientKey: str = ''
-        self.time: datetime.datetime = None
+        self.time: datetime.datetime | None = None
         self.version: str = ''
-        self.communityEvent: CommunityEvent = None
+        self.communityEvent: CommunityEvent | None = None
         self.stripePublicKey: str = ''
 
     def update(self, obj):
