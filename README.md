@@ -17,4 +17,4 @@ You want to? Nice! Hmu on Discord, username PupHimbo
 
 # Credits
 
-Repository started with by using a https://github.com/AlexanderWillner/python-boilerplate
+Repository started by copying [this python boilerplate](https://github.com/AlexanderWillner/python-boilerplate)
