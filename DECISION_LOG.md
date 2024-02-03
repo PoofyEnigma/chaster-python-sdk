@@ -105,3 +105,8 @@ of researching and would add many additional code block indents. Decided not to 
 https://github.com/pydantic/pydantic could be very useful and would maybe remove the internal dump/update calls used by
 the API if it works. Chaster APIs responses have some inconsistent quirks that may make that library not as usefull compare
 to the dump/update pattern.
+
+# Rate Limit Handling
+Confirmed w/ developers that 429 will be sent when rate limit is hit. 
+Python's Retry object will honor the retry after header on a 429 response according to the
+documentation.

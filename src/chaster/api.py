@@ -11,7 +11,7 @@ from urllib.parse import urlparse, urljoin
 
 class ChasterAPI:
 
-    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/'):
+    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', root_api='https://api.chaster.app/'):
         """
         Not thread safe. Will need a ChasterAPI object per thread.
         :param bearer: bearer token for authentication
@@ -23,7 +23,7 @@ class ChasterAPI:
         super().__init__()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.root_api = urlparse(root_api)
-        self.delay = delay
+
         self.session = requests.Session()  # generally not multithread safe https://github.com/psf/requests/issues/1871
         self.session.headers = {
             'Authorization': f'Bearer {bearer}',
@@ -33,11 +33,13 @@ class ChasterAPI:
             'Connection': 'keep-alive'
         }
 
-        # The retries are left here as a good measure but is not a proven necessary component of the class.
+        # Handles 429, will honor the retry after header when is occurs
+        # An exception will be raised after retries are exhausted
         retries = Retry(total=3,
-                        backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504],
-                        respect_retry_after_header=True)
+                        backoff_factor=0.25,
+                        status_forcelist=[429, 500, 502, 503, 504],
+                        respect_retry_after_header=True,
+                        backoff_jitter=0.1)
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
@@ -56,24 +58,24 @@ class ChasterAPI:
         self.logger.error(
             f'{response.status_code} {response.request.method} {response.request.url}  chaster_transaction_id:{chaster_transaction_id} {response.content}')
 
-    def _post_request_handler(self, _: requests.models.Response, __, ___):
-        time.sleep(self.delay)
+    def _post_request_handler(self, response: requests.models.Response, _, __):
+        pass
 
     def _get(self, path: str) -> requests.models.Response:
         response = self.session.get(urljoin(self.root_api.geturl(), path),
-                                    hooks={'response': [self._post_request_handler, self._request_logger]})
+                                    hooks={'response': [self._request_logger, self._post_request_handler]})
         return response
 
     def _post(self, path: str, data) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      data=json.dumps(data),
-                                     hooks={'response': [self._post_request_handler, self._request_logger]},
+                                     hooks={'response': [self._request_logger, self._post_request_handler]},
                                      headers={'Content-Type': 'application/json'})
         return response
 
     def _post_form(self, path: str, form) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
-                                     hooks={'response': [self._post_request_handler, self._request_logger]},
+                                     hooks={'response': [self._request_logger, self._post_request_handler]},
                                      files=form)
         return response
 
@@ -85,7 +87,7 @@ class ChasterAPI:
 
     def _delete(self, path: str):
         response = self.session.delete(urljoin(self.root_api.geturl(), path),
-                                       hooks={'response': self._post_request_handler})
+                                       hooks={'response': [self._request_logger, self._post_request_handler]})
         return response
 
     def _tester_get_wrapper(self, path, func):
