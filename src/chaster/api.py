@@ -4,7 +4,6 @@ import json
 import logging
 import requests
 from requests.adapters import HTTPAdapter, Retry
-import time
 from types import SimpleNamespace
 from urllib.parse import urlparse, urljoin
 
@@ -43,7 +42,7 @@ class ChasterAPI:
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
-    def _request_logger(self, response: requests.models.Response, _, __):
+    def _request_logger(self, response: requests.models.Response, *args, **kwargs):
         chaster_transaction_id = ''
         if 'x-chaster-transaction-id' in response.headers:
             chaster_transaction_id = response.headers['x-chaster-transaction-id']
@@ -58,39 +57,36 @@ class ChasterAPI:
         self.logger.error(
             f'{response.status_code} {response.request.method} {response.request.url}  chaster_transaction_id:{chaster_transaction_id} {response.content}')
 
-    def _post_request_handler(self, response: requests.models.Response, _, __):
-        pass
-
     def _get(self, path: str) -> requests.models.Response:
         response = self.session.get(urljoin(self.root_api.geturl(), path),
-                                    hooks={'response': [self._request_logger, self._post_request_handler]})
+                                    hooks={'response': [self._request_logger]})
         return response
 
     def _post(self, path: str, data) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      data=json.dumps(data),
-                                     hooks={'response': [self._request_logger, self._post_request_handler]},
+                                     hooks={'response': [self._request_logger]},
                                      headers={'Content-Type': 'application/json'})
         return response
 
     def _post_form(self, path: str, form) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
-                                     hooks={'response': [self._request_logger, self._post_request_handler]},
+                                     hooks={'response': [self._request_logger]},
                                      files=form)
         return response
 
     def _put(self, path: str, data) -> requests.models.Response:
         response = self.session.put(urljoin(self.root_api.geturl(), path),
-                                    data=json.dumps(data), hooks={'response': self._post_request_handler},
+                                    data=json.dumps(data), hooks={'response': self._request_logger},
                                     headers={'Content-Type': 'application/json'})
         return response
 
     def _delete(self, path: str):
         response = self.session.delete(urljoin(self.root_api.geturl(), path),
-                                       hooks={'response': [self._request_logger, self._post_request_handler]})
+                                       hooks={'response': [self._request_logger, self._request_logger]})
         return response
 
-    def _tester_get_wrapper(self, path, func):
+    def _get_wrapper(self, path, func):
         response = self._get(path)
         data = None
         if response.status_code == 200:
@@ -98,7 +94,7 @@ class ChasterAPI:
             data = func(data)
         return response, data
 
-    def _tester_post_request_helper(self, response, update):
+    def _request_helper(self, response, update):
         data = None
         if response.status_code == 201 or response.status_code == 200:
             data = response.json(object_hook=lambda d: SimpleNamespace(**d))
@@ -400,8 +396,8 @@ class ChasterAPI:
         :param extension_id:
         :return:
         """
-        return self._tester_get_wrapper(f'locks/{lock_id}/extensions/{extension_id}',
-                                        lock.ExtensionInformation().update)
+        return self._get_wrapper(f'locks/{lock_id}/extensions/{extension_id}',
+                                 lock.ExtensionInformation().update)
 
     def trigger_extension_action(self, lock_id: str, extension_id: str, data: any) -> requests.models.Response:
         """
@@ -469,7 +465,7 @@ class ChasterAPI:
         """
         data = triggers.generic_trigger('getInfo')
         response = self.trigger_extension_action(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.ShareLinkInfoResponse().update)
+        return self._request_helper(response, triggers.ShareLinkInfoResponse().update)
 
     def place_user_into_pillory(self, lock_id: str, extension_id: str, reason: str,
                                 duration: int) -> requests.models.Response:
@@ -500,7 +496,7 @@ class ChasterAPI:
         """
         data = triggers.generic_trigger('getStatus')
         response = self.trigger_extension_action(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.PilloryVotes().update)
+        return self._request_helper(response, triggers.PilloryVotes().update)
 
     def unlock_for_hygiene(self, lock_id: str, extension_id: str, is_you: bool) -> requests.models.Response:
         """
@@ -525,7 +521,7 @@ class ChasterAPI:
         """
         data = triggers.generic_trigger('submit')
         response = self.trigger_extension_action(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
+        return self._request_helper(response, triggers.DiceRollResult().update)
 
     def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
         requests.models.Response, triggers.WheelOfFortuneResult]:
@@ -537,7 +533,7 @@ class ChasterAPI:
         """
         data = triggers.generic_trigger('submit')
         response = self.trigger_extension_action(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.WheelOfFortuneResult().update)
+        return self._request_helper(response, triggers.WheelOfFortuneResult().update)
 
     def request_a_random_task(self, lock_id: str, extension_id: str) -> requests.models.Response:
         """
@@ -602,7 +598,7 @@ class ChasterAPI:
         """
         data = {"action": "submit", "payload": {}}
         response = self.trigger_extension_action(lock_id, extension_id, data)
-        return self._tester_post_request_helper(response, triggers.GuessTheTimerResponse().update)
+        return self._request_helper(response, triggers.GuessTheTimerResponse().update)
 
     """
     Lock Creation
@@ -657,7 +653,7 @@ class ChasterAPI:
         :param user_id:
         :return:
         """
-        return self._tester_get_wrapper(f'locks/user/{user_id}', lock.Lock.generate_array)
+        return self._get_wrapper(f'locks/user/{user_id}', lock.Lock.generate_array)
 
     def get_profile(self, user_id: str) -> tuple[requests.models.Response, user.User]:
         """
@@ -665,7 +661,7 @@ class ChasterAPI:
         :param user_id:
         :return:
         """
-        return self._tester_get_wrapper(f'users/profile/by-id/{user_id}', user.User().update)
+        return self._get_wrapper(f'users/profile/by-id/{user_id}', user.User().update)
 
     def find_profile(self, username: str) -> tuple[requests.models.Response, user.User]:
         """
@@ -673,7 +669,7 @@ class ChasterAPI:
         :param username:
         :return:
         """
-        return self._tester_get_wrapper(f'users/profile/{username}', user.User().update)
+        return self._get_wrapper(f'users/profile/{username}', user.User().update)
 
     def find_profile_detailed(self, username: str) -> tuple[requests.models.Response, user.DetailedUser]:
         """
@@ -681,28 +677,28 @@ class ChasterAPI:
         :param username:
         :return:
         """
-        return self._tester_get_wrapper(f'users/profile/{username}/details', user.DetailedUser().update)
+        return self._get_wrapper(f'users/profile/{username}/details', user.DetailedUser().update)
 
     def get_badges(self) -> tuple[requests.models.Response, user.Badges]:
         """
         `endpoint <https://api.chaster.app/api#/Profile/UserBadgeController_getUserBadgeCount>`_
         :return:
         """
-        return self._tester_get_wrapper('users/badge/count', user.Badges().update)
+        return self._get_wrapper('users/badge/count', user.Badges().update)
 
     def update_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
         """
         `endpoint <https://api.chaster.app/api#/Profile/AuthMeController_meEdit>`_
         :return:
         """
-        return self._tester_get_wrapper('auth/profile/update', user.AuthProfile().update)
+        return self._get_wrapper('auth/profile/update', user.AuthProfile().update)
 
     def get_user_profile(self) -> tuple[requests.models.Response, user.AuthProfile]:
         """
         `endpoint <https://api.chaster.app/api#/Profile/AuthMeController_me>`_
         :return:
         """
-        return self._tester_get_wrapper('auth/profile', user.AuthProfile().update)
+        return self._get_wrapper('auth/profile', user.AuthProfile().update)
 
     """
     Files
@@ -795,7 +791,7 @@ class ChasterAPI:
         `endpoint <https://api.chaster.app/api#/Extensions/ExtensionListController_getExtensions>`_
         :return:
         """
-        return self._tester_get_wrapper('extensions', extensions.KnownExtension.generate_array)
+        return self._get_wrapper('extensions', extensions.KnownExtension.generate_array)
 
     """
     Session Offer
@@ -827,7 +823,7 @@ class ChasterAPI:
         :param lock_id:
         :return:
         """
-        return self._tester_get_wrapper(f'session-offer/lock/{lock_id}/status', user.KeyholderOfferEntry.generate_array)
+        return self._get_wrapper(f'session-offer/lock/{lock_id}/status', user.KeyholderOfferEntry.generate_array)
 
     def retrieve_keyholder_request_lock_info(self, offer_token: str) -> tuple[requests.models.Response, lock.Lock]:
         """
@@ -835,7 +831,7 @@ class ChasterAPI:
         :param offer_token:
         :return:
         """
-        return self._tester_get_wrapper(f'session-offer/token/{offer_token}', lock.Lock().update)
+        return self._get_wrapper(f'session-offer/token/{offer_token}', lock.Lock().update)
 
     def resolve_keyholding_offer(self, session_request_id: str, accept: bool) -> requests.models.Response:
         """
@@ -859,7 +855,7 @@ class ChasterAPI:
         `endpoint <https://api.chaster.app/api#/Session%20Offer/SessionOfferController_getKeyholderRequests>`_
         :return:
         """
-        return self._tester_get_wrapper('session-offer/requests', user.KeyholderRequestEntry.generate_array)
+        return self._get_wrapper('session-offer/requests', user.KeyholderRequestEntry.generate_array)
 
     """
     Messaging
@@ -884,7 +880,7 @@ class ChasterAPI:
             path += f'status={status}&'
         if offset is not None:
             path += f'offset={offset}&'
-        return self._tester_get_wrapper(path, conversation.Conversations().update)
+        return self._get_wrapper(path, conversation.Conversations().update)
 
     def create_conversation(self, user_id: str, message: str, message_type: str = 'private', attachments: str = None,
                             nonce: str = None) -> \
@@ -909,7 +905,7 @@ class ChasterAPI:
             data['nonce'] = nonce
         response = self._post('conversations', data)
 
-        return self._tester_post_request_helper(response, conversation.Conversation().update)
+        return self._request_helper(response, conversation.Conversation().update)
 
     def get_user_conversation(self, user_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
         """
@@ -917,7 +913,7 @@ class ChasterAPI:
         :param user_id:
         :return:
         """
-        return self._tester_get_wrapper(f'conversations/by-user/{user_id}', conversation.Conversation().update)
+        return self._get_wrapper(f'conversations/by-user/{user_id}', conversation.Conversation().update)
 
     def send_message(self, conversation_id: str, message: str, attachments: str = None,
                      nonce: str = None) -> tuple[requests.models.Response, conversation.Message]:
@@ -934,7 +930,7 @@ class ChasterAPI:
             data['nonce'] = nonce
         response = self._post(f'conversations/{conversation_id}', data)
 
-        return self._tester_post_request_helper(response, conversation.Message().update)
+        return self._request_helper(response, conversation.Message().update)
 
     def get_conversation(self, conversation_id: str) -> tuple[requests.models.Response, conversation.Conversation]:
         """
@@ -942,7 +938,7 @@ class ChasterAPI:
         :param conversation_id:
         :return:
         """
-        return self._tester_get_wrapper(f'conversations/{conversation_id}', conversation.Conversation().update)
+        return self._get_wrapper(f'conversations/{conversation_id}', conversation.Conversation().update)
 
     def set_conversation_status(self, conversation_id: str, status: str) -> requests.models.Response:
         """
@@ -974,7 +970,7 @@ class ChasterAPI:
         path = f'conversations/{conversation_id}/messages?limit={limit}'
         if last_id is not None:
             path += f'&lastId={last_id}'
-        return self._tester_get_wrapper(path, conversation.ConversationMessages().update)
+        return self._get_wrapper(path, conversation.ConversationMessages().update)
 
     """
     Extensions - Temporary Opening
@@ -986,8 +982,8 @@ class ChasterAPI:
         :param lock_id:
         :return:
         """
-        return self._tester_get_wrapper(f'/extensions/temporary-opening/{lock_id}/combination',
-                                        user.LockCombination().update)
+        return self._get_wrapper(f'/extensions/temporary-opening/{lock_id}/combination',
+                                 user.LockCombination().update)
 
     def set_temporary_opening_new_combination(self, lock_id: str, combination_id: str) -> requests.models.Response:
         """
@@ -1006,7 +1002,7 @@ class ChasterAPI:
         :param lock_id:
         :return:
         """
-        return self._tester_get_wrapper(
+        return self._get_wrapper(
             f'/extensions/temporary-opening/{lock_id}/action-log/{action_log_id}/combination',
             user.LockCombination().update)
 
@@ -1020,7 +1016,7 @@ class ChasterAPI:
         `endpoint <https://api.chaster.app/api#/Community%20Events/CommunityEventController_getCategories>`_
         :return:
         """
-        return self._tester_get_wrapper('/community-event/categories', user.CommunityEventCategory.generate_array)
+        return self._get_wrapper('/community-event/categories', user.CommunityEventCategory.generate_array)
 
     def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
         requests.models.Response, user.CommunityEventDetails]:
@@ -1049,7 +1045,7 @@ class ChasterAPI:
         `endpoint <https://api.chaster.app/api#/Settings/SettingsController_getAppSettings>`_
         :return:
         """
-        return self._tester_get_wrapper('/settings', user.AppSettings().update)
+        return self._get_wrapper('/settings', user.AppSettings().update)
 
     """
     Users
@@ -1062,7 +1058,7 @@ class ChasterAPI:
         :return:
         """
         response = self._post('users/search/by-username', {'search': search})
-        return self._tester_post_request_helper(response, user.User.generate_array)
+        return self._request_helper(response, user.User.generate_array)
 
     def search_for_users_by_discord(self, discord_id: str) -> tuple[requests.models.Response, user.User]:
         """
@@ -1070,7 +1066,7 @@ class ChasterAPI:
         :param discord_id:
         :return:
         """
-        return self._tester_get_wrapper(f'users/search/by-discord-id/{discord_id}', user.User().update)
+        return self._get_wrapper(f'users/search/by-discord-id/{discord_id}', user.User().update)
 
     """
     Keyholder
@@ -1109,7 +1105,7 @@ class ChasterAPI:
             data['criteria']['sharedLocks']['sharedLockIds'] = shared_lock_ids
 
         response = self._post('keyholder/locks/search', data)
-        return self._tester_post_request_helper(response, lock.LockedUsers().update)
+        return self._request_helper(response, lock.LockedUsers().update)
 
     """
     Reports
@@ -1130,7 +1126,7 @@ class ChasterAPI:
         :param shared_lock_id:
         :return:
         """
-        return self._tester_get_wrapper(f'/public-locks/{shared_lock_id}', lock.PublicSharedLockInfo().update)
+        return self._get_wrapper(f'/public-locks/{shared_lock_id}', lock.PublicSharedLockInfo().update)
 
     def generate_public_shared_lock_flyer(self, shared_lock_id: str, uri: str) -> requests.models.Response:
         """
@@ -1165,7 +1161,7 @@ class ChasterAPI:
         `endpoint <https://api.chaster.app/api#/Public%20Locks/PublicLockExploreController_findAll>`_
         :return:
         """
-        return self._tester_get_wrapper('/explore/categories', lock.ExplorePageLock.generate_array)
+        return self._get_wrapper('/explore/categories', lock.ExplorePageLock.generate_array)
 
     """
     Extensions - Verification Picture
@@ -1195,5 +1191,5 @@ class ChasterAPI:
         :param lock_id:
         :return:
         """
-        return self._tester_get_wrapper(f'/locks/{lock_id}/verification-pictures',
-                                        lock.VerificationPhotoHistory.generate_array)
+        return self._get_wrapper(f'/locks/{lock_id}/verification-pictures',
+                                 lock.VerificationPhotoHistory.generate_array)

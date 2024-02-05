@@ -24,7 +24,6 @@ while True:
             logger.warning('could not find the shared lock')
             continue
 
-        # could also use the search function, but post_keyholder_locks_search needs revamped
         resp, locked_users_page = chaster_api.find_locked_users()
         locked_users = locked_users_page.locks
         for page in range(2, locked_users_page.pages):
