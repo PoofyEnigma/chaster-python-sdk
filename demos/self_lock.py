@@ -45,7 +45,7 @@ wof.config.segments.append(s5)
 # Create Verification Requirement extension
 verification = extensions.VerificationPicture()
 verification.config = extensions.VerificationPictureConfig()
-verification.regularity = 3600
+verification.regularity = int(datetime.timedelta(days=1).total_seconds())
 verification.config.visibility = 'all'
 verification.config.peerVerification = extensions.PeerVerification()
 verification.config.peerVerification.enabled = True
