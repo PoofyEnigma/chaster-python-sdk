@@ -56,8 +56,16 @@ class ApiTestCases(unittest.TestCase):
         csl.hideTimeLogs = False
         csl.isFindom = False
         response, lock_id = chaster_api.create_shared_lock(csl)
+
+        ho = extensions.ShareLinks()
+        ho.config.limitToLoggedUsers = False
+        ext = extensions.Extensions()
+        ext.extensions.append(ho)
+        response = chaster_api.put_shared_lock_extensions(lock_id, ext)
+        self.assertEqual(response.status_code, 200)
         response, data = chaster_api.get_shared_lock_details(lock_id)
         self.assertFalse(data.hideTimeLogs)
+        self.assertEqual(1, len(data.extensions))
         csl.hideTimeLogs = True
         _ = chaster_api.update_shared_lock(lock_id, csl)
         response, data = chaster_api.get_shared_lock_details(lock_id)
@@ -414,8 +422,8 @@ class ApiTestCases(unittest.TestCase):
     @unittest.SkipTest
     def test_add_extensions(self):
         response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png',
-                                                          'test.png',
-                                                          'image/png')
+                                                                            'test.png',
+                                                                            'image/png')
         self.assertIsNotNone(combination)
         self.assertNotEqual(combination, '')
 
@@ -461,8 +469,8 @@ class ApiTestCases(unittest.TestCase):
     @unittest.SkipTest
     def test_create_lock_from_shared_lock(self):
         response, combination = chaster_api_lockee.upload_combination_image('./tests/test.png',
-                                                          'test.png',
-                                                          'image/png')
+                                                                            'test.png',
+                                                                            'image/png')
         self.assertIsNotNone(combination)
         self.assertNotEqual(combination, '')
 
@@ -526,10 +534,9 @@ class ApiTestCases(unittest.TestCase):
     @unittest.SkipTest
     def test_upload_and_find_file(self):
         response, file_info = chaster_api.upload_file('./tests/test.png',
-                                                          'test.png',
-                                                          'image/png')
+                                                      'test.png',
+                                                      'image/png')
         self.assertIsNotNone(file_info)
-
 
     """
     Combinations

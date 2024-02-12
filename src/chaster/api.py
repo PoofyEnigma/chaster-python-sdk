@@ -172,6 +172,15 @@ class ChasterAPI:
         """
         return self._put(f'/locks/shared-locks/{shared_lock_id}', update.dump())
 
+    def put_shared_lock_extensions(self, shared_lock_id, exts: extensions.Extensions):
+        """
+        missing swagger spec. waiting for devs to define one.
+        :param shared_lock_id:
+        :param exts:
+        :return:
+        """
+        return self._put(f'/locks/shared-locks/{shared_lock_id}/extensions', exts.dump())
+
     def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_archive>`_
