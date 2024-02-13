@@ -1,3 +1,5 @@
+*.env
+
 sofurry/data/
 sofurry/test.txt
 sofurry/train.txt

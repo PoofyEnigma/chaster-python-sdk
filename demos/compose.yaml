@@ -1,0 +1,6 @@
+services:
+  trap-bot:
+    build:
+      dockerfile: ./TrapBotDockerfile
+    env_file:
+      - ./trap_bot.env
