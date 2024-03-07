@@ -196,13 +196,13 @@ class ActionLog:
         self.createdAt: datetime.datetime = None
         self.icon: str = ''
         self.prefix: str = ''
-        self.user: user.User = None
+        self.user: user.User | None = None
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         if obj.createdAt is not None:
             self.createdAt = dateutil.parser.isoparse(obj.createdAt)
-        self.user = user.User().update(obj.user)
+        util.safe_update_parameter(obj, 'user', self, user.User().update)
         return self
 
     def dump(self):
