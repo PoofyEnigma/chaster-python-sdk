@@ -41,8 +41,8 @@ class Conversation:
         obj = self.__dict__.copy()
         obj['users'] = user.User.dump_array(self.users)
         util.safe_dump_parameter(self, 'lastMessage', obj)
-        util.dump_time(self, 'lastMessageAt', obj)
-        util.dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'lastMessageAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
         return obj
 
     @staticmethod
@@ -73,8 +73,8 @@ class Message:
 
     def dump(self):
         obj = self.__dict__.copy()
-        util.dump_time(self, 'createdAt', obj)
-        util.dump_time(self, 'updatedAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'updatedAt', obj)
         return obj
 
     @staticmethod

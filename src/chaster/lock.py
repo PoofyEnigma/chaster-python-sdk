@@ -30,21 +30,21 @@ class CreateLock:
 class Lock:
     def __init__(self):
         self._id: str = ''
-        self.startDate: str = ''
-        self.endDate: str = ''
-        self.minDate: str = ''
-        self.maxDate: str = ''
-        self.maxLimitDate: datetime.datetime = None
+        self.startDate: datetime.datetime = None
+        self.endDate: datetime.datetime = None
+        self.minDate: datetime.datetime = None
+        self.maxDate: datetime.datetime = None
+        self.maxLimitDate: datetime.datetime | None = None
         self.displayRemainingTime: bool = True
         self.limitLockTime: bool = False
         self.status: str = ''
         self.combination: str = ''
-        self.sharedLock: SharedLock = None
-        self.createdAt: str = ''
-        self.updatedAt: str = ''
-        self.unlockedAt: datetime.datetime = None
-        self.archivedAt: datetime.datetime = None
-        self.frozenAt: str = ''
+        self.sharedLock: SharedLock | None = None
+        self.createdAt: datetime.datetime = None
+        self.updatedAt: datetime.datetime = None
+        self.unlockedAt: datetime.datetime | None = None
+        self.archivedAt: datetime.datetime | None = None
+        self.frozenAt: datetime.datetime | None = None
         self.keyholderArchivedAt: datetime.datetime = None
         self.totalDuration: int = 235422887
         self.allowSessionOffer: bool = False
@@ -52,8 +52,8 @@ class Lock:
         self.offerToken: str = ''
         self.hideTimeLogs: bool = True
         self.trusted: bool = False
-        self.user = user.User()
-        self.keyholder = None
+        self.user: user.User = None
+        self.keyholder: user.User = None
         self.isAllowedToViewTime: bool = True
         self.canBeUnlocked: bool = False
         self.canBeUnlockedByMaxLimitDate: bool = False
@@ -61,7 +61,7 @@ class Lock:
         self.extensions = []
         self.role: str = ''
         self.title: str = ''
-        self.lastVerificationPicture = None
+        self.lastVerificationPicture: LastVerificationPicture = None
         self.availableHomeActions: list[AvailableHomeAction] = []
         self.reasonsPreventingUnlocking = []
         self.extensionsAllowUnlocking: bool = True
@@ -83,11 +83,23 @@ class Lock:
         if self.sharedLock is not None:
             obj['sharedLock'] = self.sharedLock.dump()
 
-        util.dump_time(self, 'maxLimitDate', obj)
-        util.dump_time(self, 'unlockedAt', obj)
-        util.dump_time(self, 'archivedAt', obj)
-        util.dump_time(self, 'keyholderArchivedAt', obj)
-        util.dump_time(self, 'deletedAt', obj)
+        times = [
+            'startDate',
+            'endDate',
+            'minDate',
+            'maxDate',
+            'maxLimitDate',
+            'createdAt',
+            'updatedAt',
+            'unlockedAt',
+            'archivedAt',
+            'frozenAt',
+            'keyholderArchivedAt',
+            'deletedAt'
+        ]
+
+        for time in times:
+            util.safe_dump_time(self, time, obj)
         return obj
 
     def update(self, obj):
@@ -103,16 +115,24 @@ class Lock:
             self.lastVerificationPicture = LastVerificationPicture().update(obj.lastVerificationPicture)
         if 'sharedLock' in obj.__dict__ and obj.sharedLock is not None:
             self.sharedLock = SharedLock().update(obj.sharedLock)
-        if 'maxLimitDate' in obj.__dict__ and obj.maxLimitDate is not None:
-            self.maxLimitDate = isoparse(obj.maxLimitDate)
-        if 'unlockedAt' in obj.__dict__ and obj.unlockedAt is not None:
-            self.unlockedAt = isoparse(obj.unlockedAt)
-        if 'archivedAt' in obj.__dict__ and obj.archivedAt is not None:
-            self.archivedAt = isoparse(obj.archivedAt)
-        if 'keyholderArchivedAt' in obj.__dict__ and obj.keyholderArchivedAt is not None:
-            self.keyholderArchivedAt = isoparse(obj.keyholderArchivedAt)
-        if 'deletedAt' in obj.__dict__ and obj.deletedAt is not None:
-            self.deletedAt = isoparse(obj.deletedAt)
+
+        times = [
+            'startDate',
+            'endDate',
+            'minDate',
+            'maxDate',
+            'maxLimitDate',
+            'createdAt',
+            'updatedAt',
+            'unlockedAt',
+            'archivedAt',
+            'frozenAt',
+            'keyholderArchivedAt',
+            'deletedAt'
+        ]
+
+        for time in times:
+            util.safe_update_time(obj, time, self)
         return self
 
     @staticmethod
@@ -208,7 +228,7 @@ class ActionLog:
     def dump(self):
         obj = self.__dict__.copy()
         obj['user'] = self.user.dump()
-        util.dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
         obj['payload'] = self.payload.__dict__.copy()
         return obj
 
@@ -308,9 +328,9 @@ class CreateSharedLock:
 
     def dump(self):
         dictionary = self.__dict__.copy()
-        util.dump_time(self, 'maxDate', dictionary)
-        util.dump_time(self, 'minDate', dictionary)
-        util.dump_time(self, 'maxLimitDate', dictionary)
+        util.safe_dump_time(self, 'maxDate', dictionary)
+        util.safe_dump_time(self, 'minDate', dictionary)
+        util.safe_dump_time(self, 'maxLimitDate', dictionary)
         return dictionary
 
     def update(self, obj):
@@ -387,10 +407,10 @@ class SharedLock:
         util.safe_dump_parameter(self, 'user', obj)
         if 'joinRules' in self.__dict__ and self.joinRules is not None:
             obj['joinRules'] = self.joinRules.dump()
-        util.dump_time(self, 'maxDate', obj)
-        util.dump_time(self, 'minDate', obj)
-        util.dump_time(self, 'maxLimitDate', obj)
-        util.dump_time(self, 'lastSavedAt', obj)
+        util.safe_dump_time(self, 'maxDate', obj)
+        util.safe_dump_time(self, 'minDate', obj)
+        util.safe_dump_time(self, 'maxLimitDate', obj)
+        util.safe_dump_time(self, 'lastSavedAt', obj)
         return obj
 
     @staticmethod
@@ -506,14 +526,14 @@ class PublicSharedLockInfo:
         obj['extensions'] = eh.dump()
         if 'locks' in self.__dict__:
             obj['locks'] = Lock.dump_array(self.locks)
-        util.dump_time(self, 'maxDate', obj)
-        util.dump_time(self, 'minDate', obj)
-        util.dump_time(self, 'maxLimitDate', obj)
-        util.dump_time(self, 'lastSavedAt', obj)
-        util.dump_time(self, 'createdAt', obj)
-        util.dump_time(self, 'updatedAt', obj)
-        util.dump_time(self, 'unlockedAt', obj)
-        util.dump_time(self, 'deletedAt', obj)
+        util.safe_dump_time(self, 'maxDate', obj)
+        util.safe_dump_time(self, 'minDate', obj)
+        util.safe_dump_time(self, 'maxLimitDate', obj)
+        util.safe_dump_time(self, 'lastSavedAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'updatedAt', obj)
+        util.safe_dump_time(self, 'unlockedAt', obj)
+        util.safe_dump_time(self, 'deletedAt', obj)
         return obj
 
 
@@ -663,7 +683,7 @@ class VerificationPhotoHistory:
 
     def dump(self):
         obj = self.__dict__.copy()
-        util.dump_time(self, 'submittedAt', obj)
+        util.safe_dump_time(self, 'submittedAt', obj)
         obj['votes'] = self.votes.dump()
         return obj
 
