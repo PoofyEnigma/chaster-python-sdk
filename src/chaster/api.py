@@ -11,7 +11,7 @@ from urllib.parse import urlparse, urljoin
 
 class ChasterAPI:
 
-    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=5, root_api='https://api.chaster.app/'):
+    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=0, root_api='https://api.chaster.app/'):
         """
         Not thread safe. Will need a ChasterAPI object per thread.
         :param bearer: bearer token for authentication
