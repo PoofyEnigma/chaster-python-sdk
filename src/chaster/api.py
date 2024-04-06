@@ -11,13 +11,18 @@ from urllib.parse import urlparse, urljoin
 
 class ChasterAPI:
 
-    def __init__(self, bearer, user_agent='ChasterPythonSDK/1.0', delay=0, root_api='https://api.chaster.app/'):
+    def __init__(self, bearer,
+                 user_agent='ChasterPythonSDK/1.0',
+                 delay=0,
+                 root_api='https://api.chaster.app/',
+                 request_hook=None):
         """
         Not thread safe. Will need a ChasterAPI object per thread.
         :param bearer: bearer token for authentication
         :param user_agent: the value assigned to the User-Agent http header
         :param delay: the amount of seconds to wait after a request
         :param root_api: the url to the api endpoint
+        :param request_hook: a function or list of functions with params (response: requests.models.Response, *args, **kwargs) that is called after every chaster api request.
         """
 
         super().__init__()
@@ -40,6 +45,12 @@ class ChasterAPI:
                         respect_retry_after_header=True)
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
         self.session.mount('https://', HTTPAdapter(max_retries=retries))
+        self._hooks = [self._request_logger, self._post_request_handler]
+        if request_hook is not None:
+            if type(request_hook) is list:
+                self._hooks.extend(request_hook)
+            else:
+                self._hooks.append(request_hook)
 
     def _request_logger(self, response: requests.models.Response, *args, **kwargs):
         chaster_transaction_id = ''
@@ -61,31 +72,31 @@ class ChasterAPI:
 
     def _get(self, path: str) -> requests.models.Response:
         response = self.session.get(urljoin(self.root_api.geturl(), path),
-                                    hooks={'response': [self._post_request_handler, self._request_logger]})
+                                    hooks={'response': self._hooks})
         return response
 
     def _post(self, path: str, data) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      data=json.dumps(data),
-                                     hooks={'response': [self._post_request_handler, self._request_logger]},
+                                     hooks={'response': self._hooks},
                                      headers={'Content-Type': 'application/json'})
         return response
 
     def _post_form(self, path: str, form) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
-                                     hooks={'response': [self._post_request_handler, self._request_logger]},
+                                     hooks={'response': self._hooks},
                                      files=form)
         return response
 
     def _put(self, path: str, data) -> requests.models.Response:
         response = self.session.put(urljoin(self.root_api.geturl(), path),
-                                    data=json.dumps(data), hooks={'response': self._post_request_handler},
+                                    data=json.dumps(data), hooks={'response': self._hooks},
                                     headers={'Content-Type': 'application/json'})
         return response
 
     def _delete(self, path: str):
         response = self.session.delete(urljoin(self.root_api.geturl(), path),
-                                       hooks={'response': self._post_request_handler})
+                                       hooks={'response': self._hooks})
         return response
 
     def _tester_get_wrapper(self, path, func):

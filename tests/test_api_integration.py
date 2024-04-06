@@ -1,6 +1,8 @@
 import datetime
 import time
 
+import requests
+
 import src.chaster.api as api
 import src.chaster.lock as lock
 import src.chaster.extensions as extensions
@@ -18,6 +20,32 @@ class ApiTestCases(unittest.TestCase):
 
     def out_test(self, response, data):
         time.sleep(0)
+
+    @unittest.SkipTest
+    def test_request_hook(self):
+        count = 0
+
+        def func_count(response: requests.models.Response, *args, **kwargs):
+            nonlocal count
+            count += 1
+
+        chaster_api_temp = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'),
+                                          user_agent='PythonSDKDeveloplment/1.0', request_hook=func_count)
+        chaster_api_temp.get_user_shared_locks()
+        self.assertEqual(count, 1)
+
+    @unittest.SkipTest
+    def test_request_hooks(self):
+        count = 0
+
+        def func_count(response: requests.models.Response, *args, **kwargs):
+            nonlocal count
+            count += 1
+
+        chaster_api_temp = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'),
+                                          user_agent='PythonSDKDeveloplment/1.0', request_hook=[func_count, func_count])
+        chaster_api_temp.get_user_shared_locks()
+        self.assertEqual(count, 2)
 
     """
     Shared Locks
