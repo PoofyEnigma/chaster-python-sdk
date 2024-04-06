@@ -1,14 +1,5 @@
 *.env
 
-sofurry/data/
-sofurry/test.txt
-sofurry/train.txt
-sofurry/valid.txt
-
-to_delete/aNN/data/
-aNN/*.pt
-to_delete/aNN/generated.txt
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
