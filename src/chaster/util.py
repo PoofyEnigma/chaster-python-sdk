@@ -8,7 +8,7 @@ def datetime_to_chaster_format(d: datetime.datetime) -> str:
     return d.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-len('000')] + 'Z'
 
 
-def dump_time(src, key, out):
+def safe_dump_time(src, key, out):
     if key in src.__dict__ and src.__dict__[key] is not None:
         out[key] = datetime_to_chaster_format(src.__dict__[key])
 

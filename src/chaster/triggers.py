@@ -66,7 +66,7 @@ class Vote:
 
     def dump(self):
         obj = self.__dict__.copy()
-        util.dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
         return obj
 
     @staticmethod

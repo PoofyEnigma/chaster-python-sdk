@@ -91,8 +91,8 @@ class LockCombination:
 
     def dump(self):
         obj = self.__dict__.copy()
-        util.dump_time(self, 'createdAt', obj)
-        util.dump_time(self, 'updatedAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'updatedAt', obj)
         return obj
 
 
@@ -348,9 +348,9 @@ class AuthProfile:
         obj['country'] = self.country.dump()
         obj['region'] = self.region.dump()
         obj['privateMetadata'] = self.privateMetadata.dump()
-        util.dump_time(self, 'subscriptionEnd', obj)
-        util.dump_time(self, 'customSubscriptionEnd', obj)
-        util.dump_time(self, 'birthDate', obj)
+        util.safe_dump_time(self, 'subscriptionEnd', obj)
+        util.safe_dump_time(self, 'customSubscriptionEnd', obj)
+        util.safe_dump_time(self, 'birthDate', obj)
         return obj
 
 
@@ -381,10 +381,10 @@ class KeyholderOfferEntry:
     def dump(self):
         obj = self.__dict__.copy()
         obj['keyholder'] = self.keyholder.dump()
-        util.dump_time(self, 'validatedAt', obj)
-        util.dump_time(self, 'archivedAt', obj)
-        util.dump_time(self, 'createdAt', obj)
-        util.dump_time(self, 'updatedAt', obj)
+        util.safe_dump_time(self, 'validatedAt', obj)
+        util.safe_dump_time(self, 'archivedAt', obj)
+        util.safe_dump_time(self, 'createdAt', obj)
+        util.safe_dump_time(self, 'updatedAt', obj)
         return obj
 
     @staticmethod
@@ -486,8 +486,8 @@ class CommunityEventDetails:
 
     def dump(self):
         obj = self.__dict__.copy()
-        util.dump_time(self, 'start', obj)
-        util.dump_time(self, 'end', obj)
+        util.safe_dump_time(self, 'start', obj)
+        util.safe_dump_time(self, 'end', obj)
         return obj
 
 
@@ -558,5 +558,5 @@ class AppSettings:
         obj = self.__dict__.copy()
         if self.communityEvent is not None:
             obj['communityEvent'] = self.communityEvent.dump()
-        util.dump_time(self, 'time', obj)
+        util.safe_dump_time(self, 'time', obj)
         return obj
