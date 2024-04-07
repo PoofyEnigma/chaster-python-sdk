@@ -545,6 +545,9 @@ class Penalty:
     def __init__(self):
         self.prefix: str = 'default'
         self.name: str = 'tasks'
+        """
+        options: tasks, tasks_do_task, verification_picture_verify, dice_roll, wheel_of_fortune_turns, temporary_opening_open, temporary_opening_time_limit
+        """
         self.params: PenaltyParams = PenaltyParams()
         self.punishments: list[Punishment] = []
 
