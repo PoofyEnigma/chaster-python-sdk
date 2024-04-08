@@ -687,3 +687,19 @@ class VerificationPhotoHistory:
     @staticmethod
     def generate_array(obj_list):
         return [VerificationPhotoHistory().update(account) for account in obj_list]
+
+
+class Tag:
+    def __init__(self):
+        self.name: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
+    @staticmethod
+    def generate_array(obj_list):
+        return [Tag().update(tag) for tag in obj_list]

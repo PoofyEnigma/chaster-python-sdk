@@ -41,6 +41,11 @@ class DTOsTest(unittest.TestCase):
         cmp = lock.PaginatedSharedLockList()
         self.compare_obj_params(cmp, base)
 
+    def test_shared_lock_tags_params(self):
+        base = json.loads(response_examples.shared_lock_tags)[0]
+        cmp = lock.Tag()
+        self.compare_obj_params(cmp, base)
+
     """
     Locks
     """

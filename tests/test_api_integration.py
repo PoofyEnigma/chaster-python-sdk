@@ -127,6 +127,19 @@ class ApiTestCases(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertTrue(len(data.results) > 0)
 
+    @unittest.SkipTest
+    def test_get_shared_lock_tags(self):
+        response, data = chaster_api.get_shared_lock_tags()
+        self.assertEqual(response.status_code, 200)
+        self.assertGreater(len(data), 0)
+
+    @unittest.SkipTest
+    def test_get_suggested_shared_lock_tags(self):
+        response, data = chaster_api.get_suggested_shared_lock_tags(
+            'Bot trap checks periodically and sleeps for long periods occasionally. Those caught will be pilloried. Lock up and have fun!')
+        self.assertEqual(response.status_code, 201)
+        self.assertGreater(len(data), 0)
+
     """
     Locks
     """

@@ -155,6 +155,30 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(data.results), 3)
 
+    def test_get_shared_lock_tags(self):
+        api = ChasterAPI('')
+        response = Response()
+        response.status_code = 200
+        response.json = MagicMock(
+            return_value=json.loads(response_examples.shared_lock_tags,
+                                    object_hook=lambda d: SimpleNamespace(**d)))
+        api._get = MagicMock(return_value=response)
+        response, data = api.get_shared_lock_tags()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data), 42)
+
+    def test_get_suggested_shared_lock_tags(self):
+        api = ChasterAPI('')
+        response = Response()
+        response.status_code = 201
+        response.json = MagicMock(
+            return_value=json.loads(response_examples.shared_lock_tags,
+                                    object_hook=lambda d: SimpleNamespace(**d)))
+        api._post = MagicMock(return_value=response)
+        response, data = api.get_suggested_shared_lock_tags('some text')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(data), 42)
+
     """
     Locks
     """
