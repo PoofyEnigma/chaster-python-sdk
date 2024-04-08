@@ -325,6 +325,7 @@ class CreateSharedLock:
         self.photoId: str = ''
         self.hideTimeLogs: bool = False
         self.isFindom: bool = False
+        self.tags: list[str] = []
 
     def dump(self):
         dictionary = self.__dict__.copy()
@@ -341,6 +342,7 @@ class CreateSharedLock:
             self.minDate = isoparse(obj.minDate)
         if obj.maxLimitDate is not None:
             self.maxLimitDate = isoparse(obj.maxLimitDate)
+
         return self
 
 
@@ -375,6 +377,7 @@ class SharedLock:
         self.calculatedMaxLimitDuration: int = None
         self.extensions = []
         self.joinRules: JoinRules = None  # Not present when getting the user's shared lock
+        self.tags: list[str] = []
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -386,14 +389,8 @@ class SharedLock:
             self.joinRules = JoinRules().update(obj.joinRules)
         if 'extensions' in obj.__dict__:
             self.extensions = extensions.Extension.generate_array(obj.extensions)
-        if obj.maxDate is not None:
-            self.maxDate = isoparse(obj.maxDate)
-        if obj.minDate is not None:
-            self.minDate = isoparse(obj.minDate)
-        if obj.maxLimitDate is not None:
-            self.maxLimitDate = isoparse(obj.maxLimitDate)
-        if obj.lastSavedAt is not None:
-            self.lastSavedAt = isoparse(obj.lastSavedAt)
+        for time in ['maxDate', 'minDate', 'maxLimitDate', 'lastSavedAt']:
+            util.safe_update_time(obj, time, self)
         return self
 
     def dump(self):

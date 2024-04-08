@@ -2066,6 +2066,7 @@ locked_users = """
       "status": "locked",
       "combination": "659eeed2a51c385bea8a407f",
       "sharedLock": {
+        "tags":	[ "Trap" ],
         "_id": "6583af7cb03643ca3e788e7f",
         "minDuration": 3600,
         "maxDuration": 7200,
@@ -2307,7 +2308,6 @@ community_event_details = """
 }
 """
 
-
 community_event_category_list = """
 [
   {
@@ -2469,7 +2469,6 @@ lock_combination = """
 }
 """
 
-
 conversation_messasge = """
 {
       "_id": "659ee03d9e46da74718cbec0",
@@ -2573,7 +2572,7 @@ conversation = """
 }
 """
 
-conversations_list ="""
+conversations_list = """
 {
   "count": 77,
   "hasMore": true,
@@ -5098,7 +5097,6 @@ wearer_offers = """
   }
 ]
 """
-
 
 all_known_extensions = """
 [
@@ -9782,8 +9780,6 @@ lock_history = """
 }
 """
 
-
-
 lock_combination = """
 {
   "_id": "string",
@@ -9947,6 +9943,7 @@ list_of_user_locks = """
 
 create_shared_lock = """
 {
+  "tags" : [],
   "minDuration": 1,
   "maxDuration": 0,
   "maxLimitDuration": 0,
@@ -9969,6 +9966,7 @@ create_shared_lock = """
 
 shared_lock = """
 {
+    "tags":	["Trap"],
 	"_id": "65872d75d061f19e4e4a0a55",
 	"minDuration": 345600,
 	"maxDuration": 345600,
