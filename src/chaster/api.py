@@ -246,6 +246,21 @@ class ChasterAPI:
             data = lock.PaginatedSharedLockList().update(x)
         return response, data
 
+    def get_shared_lock_tags(self) -> tuple[requests.models.Response, list[lock.Tag]]:
+        """
+        `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockTagController_findAllTags>`_
+        :return:
+        """
+        return self._tester_get_wrapper('/shared-lock-tags', lock.Tag.generate_array)
+
+    def get_suggested_shared_lock_tags(self, text: str):
+        """
+        `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockTagController_findSuggestedTags>`_
+        :return:
+        """
+        response = self._post('shared-lock-tags/suggested', {'text': text})
+        return self._tester_post_request_helper(response, lock.Tag.generate_array)
+
     """
     Locks
     """

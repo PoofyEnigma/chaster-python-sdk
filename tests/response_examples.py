@@ -1,3 +1,7 @@
+shared_lock_tags = """
+[{"name":"Anal"},{"name":"Bondage"},{"name":"Bra"},{"name":"Chastity Month"},{"name":"Chore"},{"name":"Clothes"},{"name":"Collar"},{"name":"Contract"},{"name":"Control"},{"name":"Cuff"},{"name":"Denial"},{"name":"Dress"},{"name":"Edging"},{"name":"Femboy"},{"name":"Feminization"},{"name":"Fitness"},{"name":"Gag"},{"name":"Gamble"},{"name":"Game"},{"name":"Gift"},{"name":"Heels"},{"name":"Humiliation"},{"name":"Locktober"},{"name":"Luck"},{"name":"Nipple"},{"name":"No Nut November"},{"name":"Orgasm"},{"name":"Plug"},{"name":"Prison"},{"name":"Punishment"},{"name":"Puppy"},{"name":"Rope"},{"name":"Roulette"},{"name":"Sissy"},{"name":"Slave"},{"name":"Sport"},{"name":"Task"},{"name":"Tease"},{"name":"Toy"},{"name":"Training"},{"name":"Trap"},{"name":"Weekend"}]
+"""
+
 combination_id_response = """
 {
   "combinationId": "65a189721c64b78e78e1f8a3"
