@@ -1,9 +1,8 @@
-import datetime
 import json
 import unittest
+from types import SimpleNamespace
 from src.chaster import conversation, extensions, lock, triggers, user
 from . import response_examples
-from types import SimpleNamespace
 
 
 class DTOsTest(unittest.TestCase):
@@ -13,12 +12,15 @@ class DTOsTest(unittest.TestCase):
         for entry in obj.__dict__:
             if entry in known_additional_obj_params:
                 continue
-            self.assertTrue(entry in dictionary, msg=f'{entry} is not present in source dictionary')
+            self.assertTrue(entry in dictionary,
+                            msg=f'{entry} is not present in source dictionary')
         for entry in dictionary:
             if entry in known_additional_dict_params:
                 continue
-            self.assertTrue(entry in obj.__dict__, msg=f'{entry} is not present in dto')
-        obj.update(json.loads(json.dumps(dictionary), object_hook=lambda d: SimpleNamespace(**d)))
+            self.assertTrue(entry in obj.__dict__,
+                            msg=f'{entry} is not present in dto')
+        obj.update(json.loads(json.dumps(dictionary),
+                   object_hook=lambda d: SimpleNamespace(**d)))
         self.maxDiff = None
         self.assertEqual(obj.dump(), dictionary)
 
@@ -29,7 +31,8 @@ class DTOsTest(unittest.TestCase):
     def test_shared_lock_params(self):
         base = json.loads(response_examples.shared_lock)
         cmp = lock.SharedLock()
-        self.compare_obj_params(cmp, base, known_additional_obj_params={'joinRules'})
+        self.compare_obj_params(
+            cmp, base, known_additional_obj_params={'joinRules'})
 
     def test_create_shared_lock_params(self):
         base = json.loads(response_examples.create_shared_lock)
@@ -107,6 +110,7 @@ class DTOsTest(unittest.TestCase):
     """
     Lock Creation
     """
+
     def test_Extensions_params(self):
         base = json.loads(response_examples.extensions_input)
         cmp = extensions.Extensions()

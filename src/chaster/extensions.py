@@ -122,7 +122,8 @@ class ExtensionsHandler:
         if extension.slug == 'penalty':
             self.penalties.append(Penalties().update(extension))
         if extension.slug == 'verification-picture':
-            self.verification_pictures.append(VerificationPicture().update(extension))
+            self.verification_pictures.append(
+                VerificationPicture().update(extension))
         if extension.slug == 'random-events':
             self.random_events.append(RandomEvents().update(extension))
         if extension.slug == 'guess-timer':
@@ -191,7 +192,8 @@ class PunishmentPillory(Punishment):
         :param pillory_duration: in seconds
         """
         super().__init__('pillory')
-        self.params: PunishmentPilloryParams = PunishmentPilloryParams(pillory_duration)
+        self.params: PunishmentPilloryParams = PunishmentPilloryParams(
+            pillory_duration)
 
     def get_time(self):
         return self.params.duration
@@ -492,7 +494,8 @@ class TasksConfig:
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
-        self.actionsOnAbandonedTask = Punishment.generate_array(obj.actionsOnAbandonedTask)
+        self.actionsOnAbandonedTask = Punishment.generate_array(
+            obj.actionsOnAbandonedTask)
         self.tasks = Task.generate_array(obj.tasks)
         return self
 

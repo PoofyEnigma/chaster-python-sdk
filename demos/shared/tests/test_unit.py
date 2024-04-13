@@ -12,30 +12,37 @@ class Unit(unittest.TestCase):
         chaster_api = Mock()
         response = Mock()
         response.status_code = 201
-        chaster_api.create_shared_lock = MagicMock(return_value=(response, 'shared_lock_id'))
+        chaster_api.create_shared_lock = MagicMock(
+            return_value=(response, 'shared_lock_id'))
         response2 = Mock()
         response2.status_code = 200
-        chaster_api.put_shared_lock_extensions = MagicMock(return_value=response2)
+        chaster_api.put_shared_lock_extensions = MagicMock(
+            return_value=response2)
         sl = Mock()
         sl._id = 'shared_lock_id'
-        chaster_api.get_shared_lock_details = MagicMock(return_value=(response2, sl))
+        chaster_api.get_shared_lock_details = MagicMock(
+            return_value=(response2, sl))
 
         csl = lock.CreateSharedLock()
         ext = extensions.Extensions()
         out = shared.publish_shared_lock(chaster_api, csl, ext)
         self.assertEqual(out._id, sl._id)
         chaster_api.create_shared_lock.assert_called_with(csl)
-        chaster_api.put_shared_lock_extensions.assert_called_with('shared_lock_id', ext)
-        chaster_api.get_shared_lock_details.assert_called_with('shared_lock_id')
+        chaster_api.put_shared_lock_extensions.assert_called_with(
+            'shared_lock_id', ext)
+        chaster_api.get_shared_lock_details.assert_called_with(
+            'shared_lock_id')
 
     def test_publish_shared_lock_rollback(self):
         chaster_api = Mock()
         response = Mock()
         response.status_code = 201
-        chaster_api.create_shared_lock = MagicMock(return_value=(response, 'shared_lock_id'))
+        chaster_api.create_shared_lock = MagicMock(
+            return_value=(response, 'shared_lock_id'))
         response2 = Mock()
         response2.status_code = 500
-        chaster_api.put_shared_lock_extensions = MagicMock(return_value=response2)
+        chaster_api.put_shared_lock_extensions = MagicMock(
+            return_value=response2)
         chaster_api.archive_shared_lock = MagicMock(return_value=response)
 
         csl = lock.CreateSharedLock()
@@ -43,7 +50,8 @@ class Unit(unittest.TestCase):
         out = shared.publish_shared_lock(chaster_api, csl, ext)
         self.assertIsNone(out)
         chaster_api.create_shared_lock.assert_called_with(csl)
-        chaster_api.put_shared_lock_extensions.assert_called_with('shared_lock_id', ext)
+        chaster_api.put_shared_lock_extensions.assert_called_with(
+            'shared_lock_id', ext)
         chaster_api.archive_shared_lock.assert_called_with('shared_lock_id')
 
     def test_resolve_shared_lock_success(self):
@@ -55,7 +63,8 @@ class Unit(unittest.TestCase):
         # no shared locks present
         response = Mock()
         response.status_code = 200
-        chaster_api.get_user_shared_locks = MagicMock(return_value=(response, []))
+        chaster_api.get_user_shared_locks = MagicMock(
+            return_value=(response, []))
         sl = lock.SharedLock()
         sl.name = 'Bot Trap'
         sl.lastSavedAt = datetime.datetime.now().astimezone()
@@ -71,7 +80,8 @@ class Unit(unittest.TestCase):
         response.status_code = 200
         nsl = lock.SharedLock()
         nsl.name = 'size lock'
-        chaster_api.get_user_shared_locks = MagicMock(return_value=(response, [nsl]))
+        chaster_api.get_user_shared_locks = MagicMock(
+            return_value=(response, [nsl]))
         sl = lock.SharedLock()
         sl.name = 'Bot Trap'
         sl.lastSavedAt = datetime.datetime.now().astimezone()
@@ -91,7 +101,8 @@ class Unit(unittest.TestCase):
         sl.name = 'Bot Trap'
         sl.lastSavedAt = datetime.datetime.now().astimezone()
         shared.publish_shared_lock = MagicMock(return_value=sl)
-        chaster_api.get_user_shared_locks = MagicMock(return_value=(response, [nsl, sl]))
+        chaster_api.get_user_shared_locks = MagicMock(
+            return_value=(response, [nsl, sl]))
 
         rsl = shared.resolve_shared_lock(chaster_api, csl, ext, 'Bot Trap')
         self.assertEqual(sl.name, rsl.name)
@@ -112,9 +123,11 @@ class Unit(unittest.TestCase):
         sl = lock.SharedLock()
         sl._id = 'sl_id'
         sl.name = 'Bot Trap'
-        sl.lastSavedAt = datetime.datetime.now().astimezone() - datetime.timedelta(days=8)
+        sl.lastSavedAt = datetime.datetime.now().astimezone() - \
+            datetime.timedelta(days=8)
 
-        chaster_api.get_user_shared_locks = MagicMock(return_value=(response, [nsl, sl]))
+        chaster_api.get_user_shared_locks = MagicMock(
+            return_value=(response, [nsl, sl]))
         response2 = Mock()
         response2.status_code = 201
         chaster_api.archive_shared_lock = MagicMock(return_value=response2)

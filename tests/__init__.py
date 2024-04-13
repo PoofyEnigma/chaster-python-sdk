@@ -1,3 +1,4 @@
+"""chaster python tests"""
 import logging
 
 logging.basicConfig()

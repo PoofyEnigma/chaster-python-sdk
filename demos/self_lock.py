@@ -9,7 +9,8 @@ logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='self_lock_creator/1.0')
+chaster_api = api.ChasterAPI(os.environ.get(
+    'CHASTER_BEARER_TOKEN'), user_agent='self_lock_creator/1.0')
 
 # Create a combination
 _, combination = chaster_api.create_combination_code('1234')
@@ -49,7 +50,8 @@ verification.regularity = int(datetime.timedelta(days=1).total_seconds())
 verification.config.visibility = 'all'
 verification.config.peerVerification = extensions.PeerVerification()
 verification.config.peerVerification.enabled = True
-pillory_punishment = extensions.PunishmentPillory(datetime.timedelta(hours=1).total_seconds())
+pillory_punishment = extensions.PunishmentPillory(
+    datetime.timedelta(hours=1).total_seconds())
 verification.config.peerVerification.punishments.append(pillory_punishment)
 
 # Create Dice Extension
@@ -62,8 +64,10 @@ dice.config.multiplier = datetime.timedelta(hours=1).total_seconds()
 hygiene_opening = extensions.HygieneOpening()
 hygiene_opening.config = extensions.HygieneOpeningConfig()
 hygiene_opening.regularity = datetime.timedelta(days=3).total_seconds()
-hygiene_opening.config.openingTime = datetime.timedelta(minutes=15).total_seconds()
-hygiene_opening.config.penaltyTime = datetime.timedelta(days=12).total_seconds()
+hygiene_opening.config.openingTime = datetime.timedelta(
+    minutes=15).total_seconds()
+hygiene_opening.config.penaltyTime = datetime.timedelta(
+    days=12).total_seconds()
 hygiene_opening.config.allowOnlyKeyholderToOpen = False
 
 # Create Pillory Extension

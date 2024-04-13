@@ -29,3 +29,9 @@ build: ## build project
 
 upload:
 	$(PYTHON) -m twine upload dist/*
+
+lint:
+	pylint ./
+
+autoformat:
+	autopep8 --in-place --recursive ./

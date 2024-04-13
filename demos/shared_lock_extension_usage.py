@@ -7,7 +7,8 @@ logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='your_user_agent/1.0')
+chaster_api = api.ChasterAPI(os.environ.get(
+    'CHASTER_BEARER_TOKEN'), user_agent='your_user_agent/1.0')
 
 response, your_shared_locks = chaster_api.get_user_shared_locks()
 

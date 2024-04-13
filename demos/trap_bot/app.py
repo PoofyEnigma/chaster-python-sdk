@@ -32,7 +32,8 @@ verification.regularity = int(datetime.timedelta(days=1).total_seconds())
 verification.config.visibility = 'all'
 verification.config.peerVerification = extensions.PeerVerification()
 verification.config.peerVerification.enabled = True
-pillory_punishment = extensions.PunishmentPillory(datetime.timedelta(hours=1).total_seconds())
+pillory_punishment = extensions.PunishmentPillory(
+    datetime.timedelta(hours=1).total_seconds())
 verification.config.peerVerification.punishments.append(pillory_punishment)
 
 e = extensions.Extensions()
@@ -62,7 +63,8 @@ def run(chaster_api: api.ChasterAPI):
 
 
 if __name__ == "__main__":
-    chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='puphimbo/1.0')
+    chaster_api = api.ChasterAPI(os.environ.get(
+        'CHASTER_BEARER_TOKEN'), user_agent='puphimbo/1.0')
     while True:
         try:
             run(chaster_api)
