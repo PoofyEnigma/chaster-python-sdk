@@ -12,8 +12,10 @@ import logging
 import os
 from dateutil.tz import tzutc
 
-chaster_api = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN'), user_agent='PythonSDKDeveloplment/1.0')
-chaster_api_lockee = api.ChasterAPI(os.environ.get('CHASTER_BEARER_TOKEN_II'), user_agent='PythonSDKDeveloplment/1.0')
+chaster_api = api.ChasterAPI(os.environ.get(
+    'CHASTER_BEARER_TOKEN'), user_agent='PythonSDKDeveloplment/1.0')
+chaster_api_lockee = api.ChasterAPI(os.environ.get(
+    'CHASTER_BEARER_TOKEN_II'), user_agent='PythonSDKDeveloplment/1.0')
 
 
 class ApiTestCases(unittest.TestCase):
@@ -158,13 +160,15 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_update_lock_time(self):
-        response, combination = chaster_api_lockee.create_combination_code('1234')
+        response, combination = chaster_api_lockee.create_combination_code(
+            '1234')
 
         l = lock.LockInfo()
         l.isTestLock = True
         l.combinationId = combination
         l.password = 'puppy'
-        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock('64e69feb2f626eb789dafd6e', l)
+        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock(
+            '64e69feb2f626eb789dafd6e', l)
 
         response, locks = chaster_api_lockee.get_user_locks()
         lock_before = locks[0]
@@ -189,13 +193,15 @@ class ApiTestCases(unittest.TestCase):
         l.isTestLock = False
         l.combinationId = combination
         l.password = 'puppy'
-        _, lock_id = chaster_api_lockee.create_lock_from_shared_lock('64e69feb2f626eb789dafd6e', l)
+        _, lock_id = chaster_api_lockee.create_lock_from_shared_lock(
+            '64e69feb2f626eb789dafd6e', l)
 
         response = chaster_api.update_lock_settings(lock_id, False, True)
         self.assertEqual(response.status_code, 204)
         response = chaster_api_lockee.trust_keyholder(lock_id)
         self.assertEqual(response.status_code, 204)
-        max_limit_date = datetime.datetime.now(tz=tzutc()) + datetime.timedelta(days=30)
+        max_limit_date = datetime.datetime.now(
+            tz=tzutc()) + datetime.timedelta(days=30)
         response = chaster_api_lockee.set_max_limit_date(lock_id,
                                                          max_limit_date, False)
         self.assertEqual(response.status_code, 204)
@@ -209,8 +215,10 @@ class ApiTestCases(unittest.TestCase):
         self.assertFalse(lock_before.displayRemainingTime)
         self.assertTrue(lock_before.hideTimeLogs)
 
-        max_limit_date = datetime.datetime.now(tz=tzutc()) + datetime.timedelta(days=40)
-        response = chaster_api_lockee.set_max_limit_date(lock_id, max_limit_date, True)
+        max_limit_date = datetime.datetime.now(
+            tz=tzutc()) + datetime.timedelta(days=40)
+        response = chaster_api_lockee.set_max_limit_date(
+            lock_id, max_limit_date, True)
         self.assertEqual(response.status_code, 204)
 
         response, locked_users = chaster_api.find_locked_users()
@@ -237,7 +245,8 @@ class ApiTestCases(unittest.TestCase):
         l.combinationId = combination
         _, lock_data = chaster_api_lockee.create_personal_lock(l)
         response, user = chaster_api.get_user_profile()
-        response = chaster_api_lockee.create_keyholding_offer(lock_data, user.username)
+        response = chaster_api_lockee.create_keyholding_offer(
+            lock_data, user.username)
         response, offers = chaster_api.get_keyholding_offers_from_wearers()
         response = chaster_api.resolve_keyholding_offer(offers[0]._id, True)
         response = chaster_api_lockee.trust_keyholder(lock_data)
@@ -258,14 +267,16 @@ class ApiTestCases(unittest.TestCase):
 
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
-        _, url = chaster_api.get_share_link_vote_url(lock_id, locks[0].extensions[0]._id)
+        _, url = chaster_api.get_share_link_vote_url(
+            lock_id, locks[0].extensions[0]._id)
         self.assertIsNotNone(url)
 
         _, slvr = chaster_api.vote_in_share_links(lock_id, locks[0].extensions[0]._id, 'add',
                                                   url[len('https://chaster.app/sessions/'):])
         self.assertIsNotNone(slvr)
 
-        _, info = chaster_api_lockee.get_share_link_vote_info(lock_id, locks[0].extensions[0]._id)
+        _, info = chaster_api_lockee.get_share_link_vote_info(
+            lock_id, locks[0].extensions[0]._id)
         self.assertIsNotNone(info)
 
         _ = chaster_api.unlock(lock_id)
@@ -281,10 +292,12 @@ class ApiTestCases(unittest.TestCase):
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
-        response = chaster_api.place_user_into_pillory(lock_id, locks[0].extensions[0]._id, 'getting caught', 3600)
+        response = chaster_api.place_user_into_pillory(
+            lock_id, locks[0].extensions[0]._id, 'getting caught', 3600)
         self.assertEqual(response.status_code, 201)
 
-        _, info = chaster_api.get_current_pillory_info(lock_id, locks[0].extensions[0]._id)
+        _, info = chaster_api.get_current_pillory_info(
+            lock_id, locks[0].extensions[0]._id)
         self.assertIsNotNone(info)
 
         _ = chaster_api.unlock(lock_id)
@@ -320,10 +333,12 @@ class ApiTestCases(unittest.TestCase):
         _, drr = chaster_api_lockee.roll_dice(lock_id, eh.dice[0]._id)
         self.assertIsNotNone(drr)
 
-        _, wofr = chaster_api_lockee.spin_wheel_of_fortune(lock_id, eh.wheel_of_fortunes[0]._id)
+        _, wofr = chaster_api_lockee.spin_wheel_of_fortune(
+            lock_id, eh.wheel_of_fortunes[0]._id)
         self.assertIsNotNone(wofr)
 
-        _, gttr = chaster_api_lockee.trigger_guess_the_timer(lock_id, eh.guess_timers[0]._id)
+        _, gttr = chaster_api_lockee.trigger_guess_the_timer(
+            lock_id, eh.guess_timers[0]._id)
         self.assertIsNotNone(gttr)
 
         _ = chaster_api.unlock(lock_id)
@@ -351,20 +366,24 @@ class ApiTestCases(unittest.TestCase):
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
-        response = chaster_api_lockee.request_a_random_task(lock_id, locks[0].extensions[0]._id)
+        response = chaster_api_lockee.request_a_random_task(
+            lock_id, locks[0].extensions[0]._id)
         self.assertEqual(response.status_code, 201)
 
-        response = chaster_api_lockee.mark_task_done(lock_id, locks[0].extensions[0]._id, True)
+        response = chaster_api_lockee.mark_task_done(
+            lock_id, locks[0].extensions[0]._id, True)
         self.assertEqual(response.status_code, 201)
 
         response = chaster_api_lockee.assign_task(lock_id, locks[0].extensions[0]._id,
                                                   locks[0].extensions[0].config.tasks[1])
         self.assertEqual(response.status_code, 201)
 
-        response = chaster_api_lockee.mark_task_done(lock_id, locks[0].extensions[0]._id, True)
+        response = chaster_api_lockee.mark_task_done(
+            lock_id, locks[0].extensions[0]._id, True)
         self.assertEqual(response.status_code, 201)
 
-        response = chaster_api_lockee.community_vote_next_task(lock_id, locks[0].extensions[0]._id, 3600)
+        response = chaster_api_lockee.community_vote_next_task(
+            lock_id, locks[0].extensions[0]._id, 3600)
         self.assertEqual(response.status_code, 201)
 
         _ = chaster_api.unlock(lock_id)
@@ -382,21 +401,25 @@ class ApiTestCases(unittest.TestCase):
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
-        response = chaster_api_lockee.unlock_for_hygiene(lock_id, locks[0].extensions[0]._id, True)
+        response = chaster_api_lockee.unlock_for_hygiene(
+            lock_id, locks[0].extensions[0]._id, True)
         self.assertEqual(response.status_code, 201)
 
-        _, lock_combo = chaster_api_lockee.get_temporary_opening_combination(lock_id)
+        _, lock_combo = chaster_api_lockee.get_temporary_opening_combination(
+            lock_id)
         self.assertIsNotNone(lock_combo)
 
         _, combination = chaster_api_lockee.create_combination_code('1234')
 
-        response = chaster_api_lockee.set_temporary_opening_new_combination(lock_id, combination)
+        response = chaster_api_lockee.set_temporary_opening_new_combination(
+            lock_id, combination)
         self.assertEqual(response.status_code, 201)
 
         _, history = chaster_api_lockee.get_lock_history(lock_id)
         print(history)
 
-        _, combo = chaster_api_lockee.get_temporary_opening_combination_from_action_log(history.results[1]._id, lock_id)
+        _, combo = chaster_api_lockee.get_temporary_opening_combination_from_action_log(
+            history.results[1]._id, lock_id)
         self.assertIsNotNone(combo)
 
         _ = chaster_api.unlock(lock_id)
@@ -416,7 +439,8 @@ class ApiTestCases(unittest.TestCase):
         locks = self.prep_lock(e)
         lock_id = locks[0]._id
 
-        response = chaster_api.trigger_new_verification(lock_id, locks[0].extensions[0]._id)
+        response = chaster_api.trigger_new_verification(
+            lock_id, locks[0].extensions[0]._id)
         self.assertEqual(response.status_code, 201)
 
         response = chaster_api_lockee.submit_verification(lock_id, './tests/test.png',
@@ -436,7 +460,8 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_create_personal_lock(self):
-        response, combination = chaster_api_lockee.create_combination_code('1234')
+        response, combination = chaster_api_lockee.create_combination_code(
+            '1234')
         self.assertIsNotNone(combination)
         self.assertNotEqual(combination, '')
 
@@ -472,7 +497,8 @@ class ApiTestCases(unittest.TestCase):
         l.isTestLock = True
         l.combinationId = combination
         l.password = 'puppy'
-        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock('64e69feb2f626eb789dafd6e', l)
+        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock(
+            '64e69feb2f626eb789dafd6e', l)
         self.assertIsNotNone(lock_id)
         self.assertNotEqual(lock_id, '')
 
@@ -519,7 +545,8 @@ class ApiTestCases(unittest.TestCase):
         l.isTestLock = True
         l.combinationId = combination
         l.password = 'puppy'
-        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock('64e69feb2f626eb789dafd6e', l)
+        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock(
+            '64e69feb2f626eb789dafd6e', l)
         self.assertIsNotNone(lock_id)
         self.assertNotEqual(lock_id, '')
 
@@ -609,10 +636,12 @@ class ApiTestCases(unittest.TestCase):
 
         response, user = chaster_api.get_user_profile()
 
-        response = chaster_api_lockee.create_keyholding_offer(lock_data, user.username)
+        response = chaster_api_lockee.create_keyholding_offer(
+            lock_data, user.username)
         self.assertEqual(response.status_code, 201)
 
-        response, user_offers = chaster_api_lockee.get_sent_keyholding_offers(lock_data)
+        response, user_offers = chaster_api_lockee.get_sent_keyholding_offers(
+            lock_data)
         self.assertIsNotNone(user_offers)
         self.assertGreaterEqual(len(user_offers), 1)
 
@@ -639,16 +668,19 @@ class ApiTestCases(unittest.TestCase):
 
         response, user = chaster_api.get_user_profile()
 
-        response = chaster_api_lockee.create_keyholding_offer(lock_data, user.username)
+        response = chaster_api_lockee.create_keyholding_offer(
+            lock_data, user.username)
         self.assertEqual(response.status_code, 201)
 
-        response, user_offers = chaster_api_lockee.get_sent_keyholding_offers(lock_data)
+        response, user_offers = chaster_api_lockee.get_sent_keyholding_offers(
+            lock_data)
         self.assertIsNotNone(user_offers)
         self.assertGreaterEqual(len(user_offers), 1)
 
         _, locks = chaster_api_lockee.get_user_locks()
 
-        response, user_lock = chaster_api.retrieve_keyholder_request_lock_info(locks[0].offerToken)
+        response, user_lock = chaster_api.retrieve_keyholder_request_lock_info(
+            locks[0].offerToken)
         self.assertIsNotNone(user_lock)
 
         response = chaster_api.accept_keyholding_request(locks[0].offerToken)
@@ -670,12 +702,15 @@ class ApiTestCases(unittest.TestCase):
 
         response, user = chaster_api.get_user_profile()
 
-        response = chaster_api_lockee.create_keyholding_offer(lock_data, user.username)
+        response = chaster_api_lockee.create_keyholding_offer(
+            lock_data, user.username)
         self.assertEqual(response.status_code, 201)
 
-        response, user_offers = chaster_api_lockee.get_sent_keyholding_offers(lock_data)
+        response, user_offers = chaster_api_lockee.get_sent_keyholding_offers(
+            lock_data)
 
-        response = chaster_api_lockee.archive_keyholding_offer(user_offers[0]._id)
+        response = chaster_api_lockee.archive_keyholding_offer(
+            user_offers[0]._id)
         self.assertEqual(response.status_code, 200)
 
         _ = chaster_api_lockee.unlock(lock_data)
@@ -690,10 +725,12 @@ class ApiTestCases(unittest.TestCase):
         response, conversations = chaster_api.get_conversations()
         self.assertIsNotNone(conversations)
 
-        response, conversation = chaster_api.get_conversation(conversations.results[0]._id)
+        response, conversation = chaster_api.get_conversation(
+            conversations.results[0]._id)
         self.assertIsNotNone(conversation)
 
-        response, messages = chaster_api.get_conversation_messages(conversations.results[0]._id)
+        response, messages = chaster_api.get_conversation_messages(
+            conversations.results[0]._id)
         self.assertIsNotNone(messages)
 
     @unittest.SkipTest
@@ -705,10 +742,12 @@ class ApiTestCases(unittest.TestCase):
         response, message = chaster_api.send_message(conversation._id, 'hello')
         self.assertIsNotNone(message)
 
-        _, conversation = chaster_api.create_conversation(profile._id, 'create')
+        _, conversation = chaster_api.create_conversation(
+            profile._id, 'create')
         self.assertIsNotNone(conversation)
 
-        response = chaster_api.set_conversation_status(conversation._id, 'approved')
+        response = chaster_api.set_conversation_status(
+            conversation._id, 'approved')
         self.assertEqual(response.status_code, 200)
 
         response = chaster_api.set_conversation_unread(conversation._id, True)
@@ -747,7 +786,8 @@ class ApiTestCases(unittest.TestCase):
         _, users = chaster_api.search_for_users('pup')
         self.assertIsNotNone(users)
 
-        _, user = chaster_api.search_for_users_by_discord('1153172669559214141')
+        _, user = chaster_api.search_for_users_by_discord(
+            '1153172669559214141')
         self.assertIsNotNone(users)
 
     """
@@ -756,10 +796,12 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_public_locks(self):
-        _, details = chaster_api.find_public_shared_lock('64e69feb2f626eb789dafd6e')
+        _, details = chaster_api.find_public_shared_lock(
+            '64e69feb2f626eb789dafd6e')
         self.assertIsNotNone(details)
 
-        response = chaster_api.generate_public_shared_lock_flyer('64e69feb2f626eb789dafd6e', './here.png')
+        response = chaster_api.generate_public_shared_lock_flyer(
+            '64e69feb2f626eb789dafd6e', './here.png')
         self.assertEqual(response.status_code, 200)
 
         _, page = chaster_api.search_for_public_locks(lock.SearchPublicLock())

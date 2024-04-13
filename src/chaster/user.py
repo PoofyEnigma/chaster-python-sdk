@@ -330,13 +330,18 @@ class AuthProfile:
         self.__dict__ = obj.__dict__.copy()
         self.settings = AuthProfileSettings().update(obj.settings)
         self.metadata = AuthProfileMetadata().update(obj.metadata)
-        util.safe_update_parameter(obj, 'country', self, AuthProfileCountry().update)
-        util.safe_update_parameter(obj, 'region', self, AuthProfileRegion().update)
-        util.safe_update_parameter(obj, 'privateMetadata', self, AuthProfilePrivateMetadata().update)
+        util.safe_update_parameter(
+            obj, 'country', self, AuthProfileCountry().update)
+        util.safe_update_parameter(
+            obj, 'region', self, AuthProfileRegion().update)
+        util.safe_update_parameter(
+            obj, 'privateMetadata', self, AuthProfilePrivateMetadata().update)
         if obj.subscriptionEnd is not None:
-            self.subscriptionEnd = dateutil.parser.isoparse(obj.subscriptionEnd)
+            self.subscriptionEnd = dateutil.parser.isoparse(
+                obj.subscriptionEnd)
         if obj.customSubscriptionEnd is not None:
-            self.customSubscriptionEnd = dateutil.parser.isoparse(obj.customSubscriptionEnd)
+            self.customSubscriptionEnd = dateutil.parser.isoparse(
+                obj.customSubscriptionEnd)
         if obj.birthDate is not None:
             self.birthDate = dateutil.parser.isoparse(obj.birthDate)
         return self

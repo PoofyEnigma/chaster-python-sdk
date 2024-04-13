@@ -24,7 +24,8 @@ class MyTestCase(unittest.TestCase):
             with self.subTest(i=i):
                 api = ChasterAPI('')
                 response = Response()
-                response.json = MagicMock(return_value=json.loads(test[0], object_hook=lambda d: SimpleNamespace(**d)))
+                response.json = MagicMock(return_value=json.loads(
+                    test[0], object_hook=lambda d: SimpleNamespace(**d)))
                 response.status_code = 200
                 api._get = MagicMock(return_value=response)
                 response, data = api.get_user_shared_locks()
@@ -40,7 +41,8 @@ class MyTestCase(unittest.TestCase):
             with self.subTest(i=i):
                 api = ChasterAPI('')
                 response = Response()
-                response.json = MagicMock(return_value=json.loads(test[0], object_hook=lambda d: SimpleNamespace(**d)))
+                response.json = MagicMock(return_value=json.loads(
+                    test[0], object_hook=lambda d: SimpleNamespace(**d)))
                 response.status_code = 200
                 api._get = MagicMock(return_value=response)
                 response, data = api.get_user_shared_locks(status=test[1])
@@ -284,19 +286,22 @@ class MyTestCase(unittest.TestCase):
 
     def test_vote_in_share_links(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.share_link_vote_ack, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.share_link_vote_ack, raw_json=True)
         response, data = api.vote_in_share_links('', '', 'remove', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_share_link_url_to_vote(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.share_link_url_response, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.share_link_url_response, raw_json=True)
         response, data = api.get_share_link_vote_url('', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_share_link_info(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.share_link_info_response)
+        api = self.response_factory(
+            status_code, response_examples.share_link_info_response)
         response, data = api.get_share_link_vote_info('', '')
         self.assertEqual(response.status_code, status_code)
 
@@ -308,7 +313,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_current_pillory_info(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.pillory_info)
+        api = self.response_factory(
+            status_code, response_examples.pillory_info)
         response, data = api.get_current_pillory_info('', '')
         self.assertEqual(response.status_code, status_code)
 
@@ -320,13 +326,15 @@ class MyTestCase(unittest.TestCase):
 
     def test_roll_dice(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.dice_roll_result)
+        api = self.response_factory(
+            status_code, response_examples.dice_roll_result)
         response, data = api.roll_dice('', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_spin_wheel_of_fortune(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.wheel_of_fortune_result)
+        api = self.response_factory(
+            status_code, response_examples.wheel_of_fortune_result)
         response, data = api.spin_wheel_of_fortune('', '')
         self.assertEqual(response.status_code, status_code)
 
@@ -356,7 +364,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_trigger_guess_the_timer(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.guess_the_timer_result)
+        api = self.response_factory(
+            status_code, response_examples.guess_the_timer_result)
         response, data = api.trigger_guess_the_timer('', '')
         self.assertEqual(response.status_code, status_code)
 
@@ -366,7 +375,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_create_personal_lock(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.lock_id_response, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.lock_id_response, raw_json=True)
         response, data = api.create_personal_lock(lock.CreateLock())
         self.assertEqual(response.status_code, status_code)
 
@@ -378,7 +388,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_create_lock_from_shared_lock(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.lock_id_response, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.lock_id_response, raw_json=True)
         response, data = api.create_lock_from_shared_lock('', lock.LockInfo())
         self.assertEqual(response.status_code, status_code)
 
@@ -388,25 +399,29 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_user_locks(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.list_of_user_locks)
+        api = self.response_factory(
+            status_code, response_examples.list_of_user_locks)
         response, data = api.get_user_public_locks('')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_profile(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.user_profile)
+        api = self.response_factory(
+            status_code, response_examples.user_profile)
         response, data = api.get_profile('')
         self.assertEqual(response.status_code, status_code)
 
     def test_find_profile(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.user_profile)
+        api = self.response_factory(
+            status_code, response_examples.user_profile)
         response, data = api.find_profile('')
         self.assertEqual(response.status_code, status_code)
 
     def test_find_profile_detailed(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.detailed_user_profile)
+        api = self.response_factory(
+            status_code, response_examples.detailed_user_profile)
         response, data = api.find_profile_detailed('')
         self.assertEqual(response.status_code, status_code)
 
@@ -418,13 +433,15 @@ class MyTestCase(unittest.TestCase):
 
     def test_update_profile(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.user_auth_profile)
+        api = self.response_factory(
+            status_code, response_examples.user_auth_profile)
         response, data = api.update_profile()
         self.assertEqual(response.status_code, status_code)
 
     def test_get_your_profile(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.user_auth_profile)
+        api = self.response_factory(
+            status_code, response_examples.user_auth_profile)
         response, data = api.get_user_profile()
         self.assertEqual(response.status_code, status_code)
 
@@ -435,7 +452,8 @@ class MyTestCase(unittest.TestCase):
     # def upload_file(self) -> tuple[requests.models.Response, user.FileToken]:
     def test_upload_file(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.file_token, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.file_token, raw_json=True)
         response, data = api.upload_file('./tests/test_api_mock_chaster.py',
                                          'test.png',
                                          'image/png')
@@ -444,7 +462,8 @@ class MyTestCase(unittest.TestCase):
     # def find_file(self, file_key) -> tuple[requests.models.Response, user.FileUrl]:
     def test_find_file(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.file_url, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.file_url, raw_json=True)
         response, data = api.find_file('')
         self.assertEqual(response.status_code, status_code)
 
@@ -455,7 +474,8 @@ class MyTestCase(unittest.TestCase):
     # def upload_combination_image(self) -> tuple[requests.models.Response, lock.Combination]:
     def test_upload_combination_image(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.combination_id_response, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.combination_id_response, raw_json=True)
         response, data = api.upload_combination_image('./tests/test_api_mock_chaster.py',
                                                       'test.png',
                                                       'image/png')
@@ -464,7 +484,8 @@ class MyTestCase(unittest.TestCase):
     # def create_combination_code(self, code: str) -> tuple[requests.models.Response, lock.Combination]:
     def test_create_combination_code(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.combination_id_response, raw_json=True)
+        api = self.response_factory(
+            status_code, response_examples.combination_id_response, raw_json=True)
         response, data = api.create_combination_code('')
         self.assertEqual(response.status_code, status_code)
 
@@ -475,7 +496,8 @@ class MyTestCase(unittest.TestCase):
     # def get_all_known_extensions(self) -> tuple[requests.models.Response, list[extensions.KnownExtension]]:
     def test_get_all_known_extensions(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.all_known_extensions)
+        api = self.response_factory(
+            status_code, response_examples.all_known_extensions)
         response, data = api.get_all_known_extensions()
         self.assertEqual(response.status_code, status_code)
 
@@ -497,7 +519,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_keyholding_offers(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.keyholder_offers)
+        api = self.response_factory(
+            status_code, response_examples.keyholder_offers)
         response, data = api.get_sent_keyholding_offers('')
         self.assertEqual(response.status_code, status_code)
 
@@ -521,7 +544,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_keyholding_offers_from_wearers(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.wearer_offers)
+        api = self.response_factory(
+            status_code, response_examples.wearer_offers)
         response, data = api.get_keyholding_offers_from_wearers()
         self.assertEqual(response.status_code, status_code)
 
@@ -531,31 +555,36 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_conversations(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.conversations_list)
+        api = self.response_factory(
+            status_code, response_examples.conversations_list)
         response, data = api.get_conversations()
         self.assertEqual(response.status_code, status_code)
 
     def test_create_conversation(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.conversation)
+        api = self.response_factory(
+            status_code, response_examples.conversation)
         response, data = api.create_conversation('', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_user_conversation(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.conversation)
+        api = self.response_factory(
+            status_code, response_examples.conversation)
         response, data = api.get_user_conversation('')
         self.assertEqual(response.status_code, status_code)
 
     def test_post_message(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.conversation_messasge)
+        api = self.response_factory(
+            status_code, response_examples.conversation_messasge)
         response, data = api.send_message('', '')
         self.assertEqual(response.status_code, status_code)
 
     def test_get_conversation(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.conversation)
+        api = self.response_factory(
+            status_code, response_examples.conversation)
         response, data = api.get_conversation('')
         self.assertEqual(response.status_code, status_code)
 
@@ -573,7 +602,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_conversation_messages(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.conversation_messages)
+        api = self.response_factory(
+            status_code, response_examples.conversation_messages)
         response, data = api.get_conversation_messages('')
         self.assertEqual(response.status_code, status_code)
 
@@ -583,7 +613,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_temporary_opening_combination(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.lock_combination)
+        api = self.response_factory(
+            status_code, response_examples.lock_combination)
         response, data = api.get_temporary_opening_combination('')
         self.assertEqual(response.status_code, status_code)
 
@@ -595,8 +626,10 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_temporary_opening_combination_from_action_log(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.lock_combination)
-        response, data = api.get_temporary_opening_combination_from_action_log('', '')
+        api = self.response_factory(
+            status_code, response_examples.lock_combination)
+        response, data = api.get_temporary_opening_combination_from_action_log(
+            '', '')
         self.assertEqual(response.status_code, status_code)
 
     """
@@ -605,13 +638,15 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_community_event_categories(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.community_event_category_list)
+        api = self.response_factory(
+            status_code, response_examples.community_event_category_list)
         response, data = api.get_community_event_categories()
         self.assertEqual(response.status_code, status_code)
 
     def test_get_community_event_details(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.community_event_details)
+        api = self.response_factory(
+            status_code, response_examples.community_event_details)
         response, data = api.get_community_event_details()
         self.assertEqual(response.status_code, status_code)
 
@@ -625,7 +660,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_app_settings(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.app_settings)
+        api = self.response_factory(
+            status_code, response_examples.app_settings)
         response, data = api.get_app_settings()
         self.assertEqual(response.status_code, status_code)
 
@@ -636,14 +672,16 @@ class MyTestCase(unittest.TestCase):
     # def search_for_users(self, search: str) -> tuple[requests.models.Response, list[user.User]]:
     def test_search_for_users(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.list_of_users)
+        api = self.response_factory(
+            status_code, response_examples.list_of_users)
         response, data = api.search_for_users('')
         self.assertEqual(response.status_code, status_code)
 
     # def search_for_users_by_discord(self, discord_id: str) -> tuple[requests.models.Response, user.User]:
     def test_search_for_users_by_discord(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.user_profile)
+        api = self.response_factory(
+            status_code, response_examples.user_profile)
         response, data = api.search_for_users_by_discord('')
         self.assertEqual(response.status_code, status_code)
 
@@ -653,7 +691,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_post_keyholder_locks_search(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.locked_users)
+        api = self.response_factory(
+            status_code, response_examples.locked_users)
         response, data = api.find_locked_users()
         self.assertEqual(response.status_code, status_code)
 
@@ -671,7 +710,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_find_public_shared_lock(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.public_shared_lock)
+        api = self.response_factory(
+            status_code, response_examples.public_shared_lock)
         response, data = api.find_public_shared_lock('')
         self.assertEqual(response.status_code, status_code)
 
@@ -683,14 +723,16 @@ class MyTestCase(unittest.TestCase):
 
     def test_search_for_public_locks(self):
         status_code = 201
-        api = self.response_factory(status_code, response_examples.search_public_locks)
+        api = self.response_factory(
+            status_code, response_examples.search_public_locks)
         spl = lock.SearchPublicLock()
         response, data = api.search_for_public_locks(spl)
         self.assertEqual(response.status_code, status_code)
 
     def test_find_explore_page_locks(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.explore_page_locks)
+        api = self.response_factory(
+            status_code, response_examples.explore_page_locks)
         response, data = api.find_explore_page_locks()
         self.assertEqual(response.status_code, status_code)
 
@@ -710,7 +752,8 @@ class MyTestCase(unittest.TestCase):
     # def get_verification_history(self, lock_id: str) -> tuple
     def test_get_verification_history(self):
         status_code = 200
-        api = self.response_factory(status_code, response_examples.verification_history)
+        api = self.response_factory(
+            status_code, response_examples.verification_history)
         response, data = api.get_verification_history('')
         self.assertEqual(response.status_code, status_code)
 

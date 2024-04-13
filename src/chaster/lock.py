@@ -75,7 +75,8 @@ class Lock:
             eh.load_defined(self.extensions)
             obj['extensions'] = eh.dump()
         if 'availableHomeActions' in self.__dict__ and self.availableHomeActions is not None:
-            obj['availableHomeActions'] = AvailableHomeAction.dump_array(self.availableHomeActions)
+            obj['availableHomeActions'] = AvailableHomeAction.dump_array(
+                self.availableHomeActions)
         if self.keyholder is not None:
             obj['keyholder'] = self.keyholder.dump()
         if self.lastVerificationPicture is not None:
@@ -106,13 +107,16 @@ class Lock:
         self.__dict__ = obj.__dict__.copy()
         self.user = user.User().update(obj.user)
         if 'extensions' in obj.__dict__:
-            self.extensions = extensions.Extension.generate_array(obj.extensions)
+            self.extensions = extensions.Extension.generate_array(
+                obj.extensions)
         if 'availableHomeActions' in obj.__dict__:
-            self.availableHomeActions = AvailableHomeAction.generate_array(obj.availableHomeActions)
+            self.availableHomeActions = AvailableHomeAction.generate_array(
+                obj.availableHomeActions)
         if 'keyholder' in obj.__dict__ and obj.keyholder is not None:
             self.keyholder = user.User().update(obj.keyholder)
         if 'lastVerificationPicture' in obj.__dict__ and obj.lastVerificationPicture is not None:
-            self.lastVerificationPicture = LastVerificationPicture().update(obj.lastVerificationPicture)
+            self.lastVerificationPicture = LastVerificationPicture().update(
+                obj.lastVerificationPicture)
         if 'sharedLock' in obj.__dict__ and obj.sharedLock is not None:
             self.sharedLock = SharedLock().update(obj.sharedLock)
 
@@ -388,7 +392,8 @@ class SharedLock:
         if 'joinRules' in obj.__dict__:
             self.joinRules = JoinRules().update(obj.joinRules)
         if 'extensions' in obj.__dict__:
-            self.extensions = extensions.Extension.generate_array(obj.extensions)
+            self.extensions = extensions.Extension.generate_array(
+                obj.extensions)
         for time in ['maxDate', 'minDate', 'maxLimitDate', 'lastSavedAt']:
             util.safe_update_time(obj, time, self)
         return self

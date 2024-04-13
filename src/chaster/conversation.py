@@ -32,7 +32,8 @@ class Conversation:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.users = user.User.generate_array(obj.users)
-        util.safe_update_parameter(obj, 'lastMessage', self, LastMessage().update)
+        util.safe_update_parameter(
+            obj, 'lastMessage', self, LastMessage().update)
         self.lastMessageAt = isoparse(obj.lastMessageAt)
         self.createdAt = isoparse(obj.createdAt)
         return self
