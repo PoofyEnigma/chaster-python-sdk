@@ -1,3 +1,7 @@
+"""
+Test Data Transfer Objects
+"""
+
 import json
 import unittest
 from types import SimpleNamespace
@@ -5,10 +9,24 @@ from src.chaster import conversation, extensions, lock, triggers, user
 from . import response_examples
 
 
-class DTOsTest(unittest.TestCase):
+# pylint: disable=pointless-string-statement, invalid-name, missing-function-docstring
+# invalid-name -> keeps tests identifiable
+# missing-function-docstring -> not necessary for tests
+# disable=pointless-string-statement -> TODO: need to find IDE headers
 
-    def compare_obj_params(self, obj, dictionary: dict, known_additional_obj_params: set[str] = set(),
-                           known_additional_dict_params: set[str] = set()):
+class DTOsTest(unittest.TestCase):
+    """
+    this test class exists to prevalidate deserializaton of known api returns rather than calling out to the api
+    """
+
+    def compare_obj_params(self, obj, dictionary: dict, known_additional_obj_params: set[str] = None,
+                           known_additional_dict_params: set[str] = None):
+        if known_additional_obj_params is None:
+            known_additional_obj_params = set()
+
+        if known_additional_dict_params is None:
+            known_additional_dict_params = set()
+
         for entry in obj.__dict__:
             if entry in known_additional_obj_params:
                 continue
@@ -20,7 +38,7 @@ class DTOsTest(unittest.TestCase):
             self.assertTrue(entry in obj.__dict__,
                             msg=f'{entry} is not present in dto')
         obj.update(json.loads(json.dumps(dictionary),
-                   object_hook=lambda d: SimpleNamespace(**d)))
+                              object_hook=lambda d: SimpleNamespace(**d)))
         self.maxDiff = None
         self.assertEqual(obj.dump(), dictionary)
 

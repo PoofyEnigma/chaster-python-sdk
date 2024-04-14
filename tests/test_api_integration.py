@@ -1,16 +1,27 @@
+"""
+Integration tests to the chaster api
+"""
+
 import datetime
 import time
-
-import requests
-
-import src.chaster.api as api
-import src.chaster.lock as lock
-import src.chaster.extensions as extensions
-import unittest
-import uuid
 import logging
 import os
+import unittest
+import uuid
+
 from dateutil.tz import tzutc
+import requests
+
+from src.chaster import api
+from src.chaster import lock
+from src.chaster import extensions
+
+# pylint: disable=missing-function-docstring, pointless-string-statement, protected-access, unused-argument
+# too-many-public-methods -> mono classes are fine
+# missing-function-docstring -> not necessary for tests
+# disable=pointless-string-statement -> TODO: need to find IDE headers
+# protected-access -> used for mock testing
+# unused-argument -> required params
 
 chaster_api = api.ChasterAPI(os.environ.get(
     'CHASTER_BEARER_TOKEN'), user_agent='PythonSDKDeveloplment/1.0')
@@ -19,6 +30,9 @@ chaster_api_lockee = api.ChasterAPI(os.environ.get(
 
 
 class ApiTestCases(unittest.TestCase):
+    """
+    Integration test wrapper
+    """
 
     def out_test(self, response, data):
         time.sleep(0)
@@ -104,22 +118,22 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_favortie_check_remove(self):
-        id = '659c6b549e2355d6c5e8dd55'
-        response, data = chaster_api.check_if_favorited(id)
+        shared_lock_id = '659c6b549e2355d6c5e8dd55'
+        response, data = chaster_api.check_if_favorited(shared_lock_id)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(data)
 
-        response = chaster_api.favorite(id)
+        response = chaster_api.favorite(shared_lock_id)
         self.assertEqual(response.status_code, 200)
 
-        response, data = chaster_api.check_if_favorited(id)
+        response, data = chaster_api.check_if_favorited(shared_lock_id)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data)
 
-        response = chaster_api.remove_favorite(id)
+        response = chaster_api.remove_favorite(shared_lock_id)
         self.assertEqual(response.status_code, 200)
 
-        response, data = chaster_api.check_if_favorited(id)
+        response, data = chaster_api.check_if_favorited(shared_lock_id)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(data)
 
@@ -155,28 +169,28 @@ class ApiTestCases(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(locks[0].user._id, profile._id)
 
-        response, lock = chaster_api.get_lock_details(locks[0]._id)
+        response, _ = chaster_api.get_lock_details(locks[0]._id)
         self.assertEqual(response.status_code, 200)
 
     @unittest.SkipTest
     def test_update_lock_time(self):
-        response, combination = chaster_api_lockee.create_combination_code(
+        _, combination = chaster_api_lockee.create_combination_code(
             '1234')
 
         l = lock.LockInfo()
         l.isTestLock = True
         l.combinationId = combination
         l.password = 'puppy'
-        response, lock_id = chaster_api_lockee.create_lock_from_shared_lock(
+        _, lock_id = chaster_api_lockee.create_lock_from_shared_lock(
             '64e69feb2f626eb789dafd6e', l)
 
-        response, locks = chaster_api_lockee.get_user_locks()
+        _, locks = chaster_api_lockee.get_user_locks()
         lock_before = locks[0]
 
         _ = chaster_api.set_freeze(lock_id, True)
         _ = chaster_api_lockee.update_lock_duration(lock_id, 10000)
 
-        response, locks = chaster_api_lockee.get_user_locks()
+        _, locks = chaster_api_lockee.get_user_locks()
         lock_after = locks[0]
         self.assertFalse(lock_before.isFrozen)
         self.assertGreater(lock_after.endDate, lock_before.endDate)
@@ -574,25 +588,25 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_get_your_profile(self):
-        response, profile = chaster_api.get_user_profile()
+        _, profile = chaster_api.get_user_profile()
         self.assertIsNotNone(profile)
 
-        response, profile = chaster_api.update_profile()
+        _, profile = chaster_api.update_profile()
         self.assertIsNotNone(profile)
 
-        response, badges = chaster_api.get_badges()
+        _, badges = chaster_api.get_badges()
         self.assertIsNotNone(badges)
 
-        response, detailed_user = chaster_api.find_profile_detailed('PupHimbo')
+        _, detailed_user = chaster_api.find_profile_detailed('PupHimbo')
         self.assertIsNotNone(detailed_user)
 
-        response, user = chaster_api.find_profile('PupHimbo')
+        _, user = chaster_api.find_profile('PupHimbo')
         self.assertIsNotNone(user)
 
-        response, profile = chaster_api.get_profile(profile._id)
+        _, profile = chaster_api.get_profile(profile._id)
         self.assertIsNotNone(profile)
 
-        response, locks = chaster_api.get_user_public_locks(profile._id)
+        _, locks = chaster_api.get_user_public_locks(profile._id)
         self.assertIsNotNone(locks)
 
     """
@@ -601,7 +615,7 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_upload_and_find_file(self):
-        response, file_info = chaster_api.upload_file('./tests/test.png',
+        _, file_info = chaster_api.upload_file('./tests/test.png',
                                                       'test.png',
                                                       'image/png')
         self.assertIsNotNone(file_info)
@@ -616,7 +630,7 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_get_all_known_extensions(self):
-        response, known_extensions = chaster_api.get_all_known_extensions()
+        _, known_extensions = chaster_api.get_all_known_extensions()
         self.assertIsNotNone(known_extensions)
 
     """
@@ -722,14 +736,14 @@ class ApiTestCases(unittest.TestCase):
 
     @unittest.SkipTest
     def test_conversations(self):
-        response, conversations = chaster_api.get_conversations()
+        _, conversations = chaster_api.get_conversations()
         self.assertIsNotNone(conversations)
 
-        response, conversation = chaster_api.get_conversation(
+        _, conversation = chaster_api.get_conversation(
             conversations.results[0]._id)
         self.assertIsNotNone(conversation)
 
-        response, messages = chaster_api.get_conversation_messages(
+        _, messages = chaster_api.get_conversation_messages(
             conversations.results[0]._id)
         self.assertIsNotNone(messages)
 
@@ -788,7 +802,7 @@ class ApiTestCases(unittest.TestCase):
 
         _, user = chaster_api.search_for_users_by_discord(
             '1153172669559214141')
-        self.assertIsNotNone(users)
+        self.assertIsNotNone(user)
 
     """
     Public Locks
