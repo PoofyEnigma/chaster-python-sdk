@@ -616,8 +616,8 @@ class ApiTestCases(unittest.TestCase):
     @unittest.SkipTest
     def test_upload_and_find_file(self):
         _, file_info = chaster_api.upload_file('./tests/test.png',
-                                                      'test.png',
-                                                      'image/png')
+                                               'test.png',
+                                               'image/png')
         self.assertIsNotNone(file_info)
 
     """

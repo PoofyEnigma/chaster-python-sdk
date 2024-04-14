@@ -26,7 +26,6 @@ dependencies = [
 Homepage = "https://github.com/PoofyEnigma/chaster-python-sdk"
 Issues = "https://github.com/PoofyEnigma/chaster-python-sdk/issues"
 
-
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 200
 disable = "R0904, C0103, R0913, E0401"
