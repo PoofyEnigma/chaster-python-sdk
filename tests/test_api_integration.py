@@ -739,6 +739,10 @@ class ApiTestCases(unittest.TestCase):
         _, conversations = chaster_api.get_conversations()
         self.assertIsNotNone(conversations)
 
+        _, conversations = chaster_api.get_conversations(
+            offset_datetime=conversations.results[-1].lastMessageAt)
+        self.assertIsNotNone(conversations)
+
         _, conversation = chaster_api.get_conversation(
             conversations.results[0]._id)
         self.assertIsNotNone(conversation)
