@@ -904,13 +904,14 @@ class ChasterAPI:
     Messaging
     """
 
-    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None) -> tuple[
+    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None, offset_datetime: datetime.datetime = None) -> tuple[
             requests.models.Response, conversation.Conversations]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_getConversations>`_
         :param limit:
         :param status: 'approved', 'pending', 'ignored', or None for all conversations.
-        :param offset: date of the last message, use the field lastMessageAt for pagination
+        :param offset: date of the last message as a string.
+        :param offset_datetime: date of the last message, use the field lastMessageAt for pagination. Takes priority over offset.
         :return:
         """
 
@@ -921,7 +922,9 @@ class ChasterAPI:
             path += f'limit={limit}&'
         if status is not None:
             path += f'status={status}&'
-        if offset is not None:
+        if offset_datetime is not None:
+            path += f'offset={util.datetime_to_chaster_format(offset_datetime)}&'
+        if offset_datetime is None and offset is not None:
             path += f'offset={offset}&'
         return self._tester_get_wrapper(path, conversation.Conversations().update)
 
