@@ -11,11 +11,13 @@ from urllib.parse import urlparse, urljoin
 
 class ChasterAPI:
 
-    def __init__(self, bearer,
-                 user_agent='ChasterPythonSDK/1.0',
-                 delay=0,
-                 root_api='https://api.chaster.app/',
-                 request_hook=None):
+    def __init__(self,
+                 bearer: str,
+                 user_agent: str = 'ChasterPythonSDK/1.0',
+                 delay: float = 0,
+                 root_api: str = 'https://api.chaster.app/',
+                 request_hook=None,
+                 timeout: float | tuple[float, float] | tuple[float, None] | None = 5):
         """
         Not thread safe. Will need a ChasterAPI object per thread.
         :param bearer: bearer token for authentication
@@ -23,6 +25,7 @@ class ChasterAPI:
         :param delay: the amount of seconds to wait after a request
         :param root_api: the url to the api endpoint
         :param request_hook: a function or list of functions with params (response: requests.models.Response, *args, **kwargs) that is called after every chaster api request.
+        :param timeout: How long to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. Unit of time is in seconds.
         """
 
         super().__init__()
@@ -52,6 +55,7 @@ class ChasterAPI:
                 self._hooks.extend(request_hook)
             else:
                 self._hooks.append(request_hook)
+        self.timeout = timeout
 
     def _request_logger(self, response: requests.models.Response, *args, **kwargs):
         chaster_transaction_id = ''
@@ -73,31 +77,37 @@ class ChasterAPI:
 
     def _get(self, path: str) -> requests.models.Response:
         response = self.session.get(urljoin(self.root_api.geturl(), path),
-                                    hooks={'response': self._hooks})
+                                    hooks={'response': self._hooks}, timeout=self.timeout)
         return response
 
     def _post(self, path: str, data) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      data=json.dumps(data),
                                      hooks={'response': self._hooks},
-                                     headers={'Content-Type': 'application/json'})
+                                     headers={
+                                         'Content-Type': 'application/json'},
+                                     timeout=self.timeout)
         return response
 
     def _post_form(self, path: str, form) -> requests.models.Response:
         response = self.session.post(urljoin(self.root_api.geturl(), path),
                                      hooks={'response': self._hooks},
-                                     files=form)
+                                     files=form,
+                                     timeout=self.timeout)
         return response
 
     def _put(self, path: str, data) -> requests.models.Response:
         response = self.session.put(urljoin(self.root_api.geturl(), path),
                                     data=json.dumps(data), hooks={'response': self._hooks},
-                                    headers={'Content-Type': 'application/json'})
+                                    headers={
+                                        'Content-Type': 'application/json'},
+                                    timeout=self.timeout)
         return response
 
     def _delete(self, path: str):
         response = self.session.delete(urljoin(self.root_api.geturl(), path),
-                                       hooks={'response': self._hooks})
+                                       hooks={'response': self._hooks},
+                                       timeout=self.timeout)
         return response
 
     def _tester_get_wrapper(self, path, func):
@@ -904,7 +914,8 @@ class ChasterAPI:
     Messaging
     """
 
-    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None, offset_datetime: datetime.datetime = None) -> tuple[
+    def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None,
+                          offset_datetime: datetime.datetime = None) -> tuple[
             requests.models.Response, conversation.Conversations]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_getConversations>`_
