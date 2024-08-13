@@ -64,7 +64,7 @@ def run(chaster_api: api.ChasterAPI):
 
 if __name__ == "__main__":
     chaster_api = api.ChasterAPI(os.environ.get(
-        'CHASTER_BEARER_TOKEN'), user_agent='puphimbo/1.0')
+        'CHASTER_BEARER_TOKEN'), user_agent='puphimbo/1.0', timeout=5)
     while True:
         try:
             run(chaster_api)
