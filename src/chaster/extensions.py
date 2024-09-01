@@ -154,6 +154,9 @@ def generate_punishment(punishment):
     if punishment.name == 'pillory':
         return PunishmentPillory(punishment.params.duration)
 
+# TODO each extension likely has a "textConfig" in the root as a string. It likely is not set on upload but it set by the server
+# TODO each exstion likely has a "name" in the root as a string.  It likely is not set on upload but it set by the server
+
 
 class PunishmentPilloryParams:
     def __init__(self, time):
@@ -543,6 +546,10 @@ class PenaltyParams:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class Penalty:
     def __init__(self):
@@ -557,6 +564,7 @@ class Penalty:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.punishments = Punishment.generate_array(obj.punishments)
+        self.params = PenaltyParams().update(obj.params)
         return self
 
     def dump(self):

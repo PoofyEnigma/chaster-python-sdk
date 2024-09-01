@@ -129,6 +129,7 @@ class ChasterAPI:
     Shared Locks
     """
 
+    # TODO: Why was this endpoint explicitly marked as deprecated?
     def get_user_shared_locks(self, status: str = 'active') -> tuple[requests.models.Response, list[lock.SharedLock]]:
         """
          `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_findAll>`_
@@ -138,10 +139,10 @@ class ChasterAPI:
         :param status: 'active', 'archived', or '' or None for both active and archived locks
         :return:
         """
-        path = 'locks/shared-locks'
+        path = '/shared-locks'
         if status != '' or None:
             if status == 'active' or status == 'archived':
-                path = f'locks/shared-locks?status={status}'
+                path = f'/shared-locks?status={status}'
             else:
                 raise ValueError(
                     'status must be one of: active, archived, or empty string')
@@ -155,6 +156,7 @@ class ChasterAPI:
 
         return response, data
 
+    # TODO: Why was this endpoint explicitly marked as deprecated?
     def create_shared_lock(self, create: lock.CreateSharedLock) -> tuple[requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_create>`_
@@ -164,13 +166,14 @@ class ChasterAPI:
         :return: the newly created lock id
         """
 
-        response = self._post('/locks/shared-locks', create.dump())
+        response = self._post('/shared-locks', create.dump())
         data = None
         if response.status_code == 201:
             x = response.json()
             data = x['id']
         return response, data
 
+    # TODO: Why was this endpoint explicitly marked as deprecated?
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
             requests.models.Response, lock.SharedLock]:
         """
@@ -179,13 +182,14 @@ class ChasterAPI:
         :return:
         """
 
-        response = self._get(f'/locks/shared-locks/{shared_lock_id}')
+        response = self._get(f'/shared-locks/{shared_lock_id}')
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
             data = lock.SharedLock().update(x)
         return response, data
 
+    # TODO: Why was this endpoint explicitly marked as deprecated?
     def update_shared_lock(self, shared_lock_id: str, update: lock.CreateSharedLock) -> requests.models.Response:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_update>`_
@@ -193,8 +197,9 @@ class ChasterAPI:
         :param update:
         :return:
         """
-        return self._put(f'/locks/shared-locks/{shared_lock_id}', update.dump())
+        return self._put(f'/shared-locks/{shared_lock_id}', update.dump())
 
+    # TODO: this moved? Or is this undocumented?
     def put_shared_lock_extensions(self, shared_lock_id, exts: extensions.Extensions):
         """
         missing swagger spec. waiting for devs to define one.
@@ -202,7 +207,7 @@ class ChasterAPI:
         :param exts:
         :return:
         """
-        return self._put(f'/locks/shared-locks/{shared_lock_id}/extensions', exts.dump())
+        return self._put(f'/shared-locks/{shared_lock_id}/extensions', exts.dump())
 
     def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
         """
@@ -210,7 +215,7 @@ class ChasterAPI:
         :param shared_lock_id:
         :return:
         """
-        return self._post(f'/locks/shared-locks/{shared_lock_id}/archive', {})
+        return self._post(f'/shared-locks/{shared_lock_id}/archive', {})
 
     def check_if_favorited(self, shared_lock_id: str) -> tuple[requests.models.Response, bool]:
         """
@@ -356,6 +361,8 @@ class ChasterAPI:
         """
         return self._post(f'/locks/{lock_id}/unlock', {})
 
+    # TODO: /locks/{lockId}/convert-to-self-lock
+
     def update_lock_settings(self, lock_id: str, display_remaining_time: bool,
                              hide_time_logs: bool) -> requests.models.Response:
         """
@@ -438,6 +445,8 @@ class ChasterAPI:
         :return:
         """
         return self._put(f'locks/{lock_id}/is-test-lock', data={})
+
+    # TODO /locks/user/{userId} - same as get_user_public_locks?
 
     def get_lock_extension_information(self, lock_id: str, extension_id: str) -> tuple[
             requests.models.Response, lock.ExtensionInformation]:
@@ -1029,6 +1038,8 @@ class ChasterAPI:
             path += f'&lastId={last_id}'
         return self._tester_get_wrapper(path, conversation.ConversationMessages().update)
 
+    # TODO: /messaging/ignored-users
+
     """
     Extensions - Temporary Opening
     """
@@ -1109,6 +1120,8 @@ class ChasterAPI:
     Users
     """
 
+    # TODO: users/search
+
     def search_for_users(self, search: str) -> tuple[requests.models.Response, list[user.User]]:
         """
         `endpoint <https://api.chaster.app/api#/Users/UserSearchController_searchByUsername>`_
@@ -1125,6 +1138,18 @@ class ChasterAPI:
         :return:
         """
         return self._tester_get_wrapper(f'users/search/by-discord-id/{discord_id}', user.User().update)
+
+    """
+    Blocks
+    """
+
+    # TODO /blocks
+
+    # TODO /blocks
+
+    # TODO /blocks/block-interaction/{targetUserId}
+
+    # TODO /blocks/unblock
 
     """
     Keyholder

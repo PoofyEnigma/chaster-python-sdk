@@ -3,11 +3,13 @@ Integration tests to the chaster api
 """
 
 import datetime
+import json
 import time
 import logging
 import os
 import unittest
 import uuid
+from types import SimpleNamespace
 
 from dateutil.tz import tzutc
 import requests
@@ -67,10 +69,37 @@ class ApiTestCases(unittest.TestCase):
     Shared Locks
     """
 
-    @unittest.SkipTest
+    def compare_obj_params(self, obj, dictionary: dict, known_additional_obj_params: set[str] = None,
+                           known_additional_dict_params: set[str] = None):
+        if known_additional_obj_params is None:
+            known_additional_obj_params = set()
+
+        if known_additional_dict_params is None:
+            known_additional_dict_params = set()
+
+        for entry in obj.__dict__:
+            if entry in known_additional_obj_params:
+                continue
+            self.assertTrue(entry in dictionary,
+                            msg=f'{entry} is not present in source dictionary')
+        for entry in dictionary:
+            if entry in known_additional_dict_params:
+                continue
+            self.assertTrue(entry in obj.__dict__,
+                            msg=f'{entry} is not present in dto')
+        obj.update(json.loads(json.dumps(dictionary),
+                              object_hook=lambda d: SimpleNamespace(**d)))
+        self.maxDiff = None
+
+        print("A")
+        print(json.dumps(obj.dump()))
+        print("B")
+        print(json.dumps(dictionary))
+
     def test_get_shared_locks_active(self):
         response, data = chaster_api.get_user_shared_locks()
         self.out_test(response, data)
+        self.compare_obj_params(data[0], response.json()[0])
         assert response.status_code == 200
 
     @unittest.SkipTest
