@@ -172,7 +172,7 @@ class ChasterAPI:
         return response, data
 
     def get_shared_lock_details(self, shared_lock_id: str) -> tuple[
-            requests.models.Response, lock.SharedLock]:
+        requests.models.Response, lock.SharedLock]:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockController_findOne>`_
         :param shared_lock_id:
@@ -241,7 +241,7 @@ class ChasterAPI:
         return self._delete(f'/shared-locks/{shared_lock_id}/favorite')
 
     def get_favorite_shared_locks(self, limit: int = 15, last_id: str = None) -> tuple[
-            requests.models.Response, lock.PaginatedSharedLockList]:
+        requests.models.Response, lock.PaginatedSharedLockList]:
         """
         `endpoint <https://api.chaster.app/api#/Shared%20Locks/SharedLockFavoritesController_getFavoriteSharedLocks>`_
         :param limit: maximum number of shared locks in the response
@@ -407,7 +407,7 @@ class ChasterAPI:
         return response, data
 
     def get_lock_history(self, lock_id: str, extension: str = None, limit: int = 25, last_id: str = None) -> tuple[
-            requests.models.Response, lock.PaginatedLockHistory]:
+        requests.models.Response, lock.PaginatedLockHistory]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockController_getLockHistory>`_
         :param lock_id:
@@ -440,7 +440,7 @@ class ChasterAPI:
         return self._put(f'locks/{lock_id}/is-test-lock', data={})
 
     def get_lock_extension_information(self, lock_id: str, extension_id: str) -> tuple[
-            requests.models.Response, lock.ExtensionInformation]:
+        requests.models.Response, lock.ExtensionInformation]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_getLockInfoFromExtension>`_
         :param lock_id:
@@ -461,12 +461,15 @@ class ChasterAPI:
         """
         return self._post(f'locks/{lock_id}/extensions/{extension_id}/action', data=data)
 
+    # https://api.chaster.app/api#/Locks/LockController_convertToSelfLock is not considered a normal function to be
+    # called by a chastity bot thus has no support
+
     """
     Triggers
     """
 
     def vote_in_share_links(self, lock_id: str, extension_id: str, action: str, session_id) -> tuple[
-            requests.models.Response, int]:
+        requests.models.Response, int]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -507,7 +510,7 @@ class ChasterAPI:
         return response, data
 
     def get_share_link_vote_info(self, lock_id: str, extension_id: str) -> tuple[
-            requests.models.Response, triggers.ShareLinkInfoResponse]:
+        requests.models.Response, triggers.ShareLinkInfoResponse]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -538,7 +541,7 @@ class ChasterAPI:
         return self.trigger_extension_action(lock_id, extension_id, data)
 
     def get_current_pillory_info(self, lock_id: str, extension_id: str) -> tuple[
-            requests.models.Response, triggers.PilloryVotes]:
+        requests.models.Response, triggers.PilloryVotes]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -563,7 +566,7 @@ class ChasterAPI:
         return self.trigger_extension_action(lock_id, extension_id, data)
 
     def roll_dice(self, lock_id: str, extension_id: str) -> tuple[
-            requests.models.Response, triggers.DiceRollResult]:
+        requests.models.Response, triggers.DiceRollResult]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -575,7 +578,7 @@ class ChasterAPI:
         return self._tester_post_request_helper(response, triggers.DiceRollResult().update)
 
     def spin_wheel_of_fortune(self, lock_id: str, extension_id: str) -> tuple[
-            requests.models.Response, triggers.WheelOfFortuneResult]:
+        requests.models.Response, triggers.WheelOfFortuneResult]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -641,7 +644,7 @@ class ChasterAPI:
         return self.trigger_extension_action(lock_id, extension_id, data)
 
     def trigger_guess_the_timer(self, lock_id: str, extension_id: str) -> tuple[
-            requests.models.Response, triggers.GuessTheTimerResponse]:
+        requests.models.Response, triggers.GuessTheTimerResponse]:
         """
         `endpoint <https://api.chaster.app/api#/Locks/LockExtensionController_triggerAction>`_
         :param lock_id:
@@ -680,7 +683,7 @@ class ChasterAPI:
         return self._post(f'locks/{lock_id}/extensions', data=ext.dump())
 
     def create_lock_from_shared_lock(self, shared_lock_id: str, lock_details: lock.LockInfo) -> tuple[
-            requests.models.Response, str]:
+        requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Lock%20Creation/LockCreationController_createLockFromSharedLock>`_
         :param shared_lock_id:
@@ -758,7 +761,7 @@ class ChasterAPI:
     """
 
     def upload_file(self, file_uri, file_name, file_type, usage: str = 'messaging') -> tuple[
-            requests.models.Response, str]:
+        requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Files/StorageController_uploadFiles>`_
 
@@ -801,7 +804,7 @@ class ChasterAPI:
     """
 
     def upload_combination_image(self, file_uri, file_name, file_type, manual_check: bool = False) -> tuple[
-            requests.models.Response, str]:
+        requests.models.Response, str]:
         """
         `endpoint <https://api.chaster.app/api#/Combinations/CombinationController_uploadImage>`_
         :param file_uri: the uri to the file to upload
@@ -870,7 +873,7 @@ class ChasterAPI:
         return self._get(f'session-offer/token/{offer_token}/accept')
 
     def get_sent_keyholding_offers(self, lock_id: str) -> tuple[
-            requests.models.Response, list[user.KeyholderOfferEntry]]:
+        requests.models.Response, list[user.KeyholderOfferEntry]]:
         """
         `endpoint <https://api.chaster.app/api#/Session%20Offer/SessionOfferController_getOfferRequestStatus>`_
         :param lock_id:
@@ -916,7 +919,7 @@ class ChasterAPI:
 
     def get_conversations(self, limit: int = 15, status: str = 'approved', offset: str = None,
                           offset_datetime: datetime.datetime = None) -> tuple[
-            requests.models.Response, conversation.Conversations]:
+        requests.models.Response, conversation.Conversations]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_getConversations>`_
         :param limit:
@@ -1016,7 +1019,7 @@ class ChasterAPI:
         return self._put(f'conversations/{conversation_id}/unread', data={'unread': unread})
 
     def get_conversation_messages(self, conversation_id: str, limit: int = 15, last_id: str = None) -> tuple[
-            requests.models.Response, conversation.ConversationMessages]:
+        requests.models.Response, conversation.ConversationMessages]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/MessagingController_getMessages>`_
         :param conversation_id:
@@ -1052,7 +1055,7 @@ class ChasterAPI:
         return self._post(f'/extensions/temporary-opening/{lock_id}/combination', {'combinationId': combination_id})
 
     def get_temporary_opening_combination_from_action_log(self, action_log_id: str, lock_id: str) -> tuple[
-            requests.models.Response, user.LockCombination]:
+        requests.models.Response, user.LockCombination]:
         """
         `endpoint <https://api.chaster.app/api#/Extensions%20-%20Temporary%20Opening/TemporaryOpeningExtensionController_getCombinationFromHistoryEntry>`_
         :param action_log_id:
@@ -1068,7 +1071,7 @@ class ChasterAPI:
     """
 
     def get_community_event_categories(self) -> tuple[
-            requests.models.Response, list[user.CommunityEventCategory]]:
+        requests.models.Response, list[user.CommunityEventCategory]]:
         """
         `endpoint <https://api.chaster.app/api#/Community%20Events/CommunityEventController_getCategories>`_
         :return:
@@ -1076,7 +1079,7 @@ class ChasterAPI:
         return self._tester_get_wrapper('/community-event/categories', user.CommunityEventCategory.generate_array)
 
     def get_community_event_details(self, date: datetime.datetime = datetime.datetime.now()) -> tuple[
-            requests.models.Response, user.CommunityEventDetails]:
+        requests.models.Response, user.CommunityEventDetails]:
         """
         `endpoint <https://api.chaster.app/api#/Community%20Events/CommunityEventController_getPeriodDetails>`_
         :param date:
@@ -1177,7 +1180,7 @@ class ChasterAPI:
     """
 
     def find_public_shared_lock(self, shared_lock_id: str) -> tuple[
-            requests.models.Response, lock.PublicSharedLockInfo]:
+        requests.models.Response, lock.PublicSharedLockInfo]:
         """
         `endpoint <https://api.chaster.app/api#/Public%20Locks/PublicLockController_findOne>`_
         :param shared_lock_id:
@@ -1242,7 +1245,7 @@ class ChasterAPI:
         return self._post_form(f'/extensions/verification-picture/{lock_id}/submit', files)
 
     def get_verification_history(self, lock_id: str) -> tuple[
-            requests.models.Response, list[lock.VerificationPhotoHistory]]:
+        requests.models.Response, list[lock.VerificationPhotoHistory]]:
         """
         `endpoint <https://api.chaster.app/api#/Extensions%20-%20Verification%20Picture/VerificationPictureController_getVerificationPictures>`_
         :param lock_id:
