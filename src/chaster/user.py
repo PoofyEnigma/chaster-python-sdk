@@ -565,3 +565,29 @@ class AppSettings:
             obj['communityEvent'] = self.communityEvent.dump()
         util.safe_dump_time(self, 'time', obj)
         return obj
+
+
+class UserSearchResult:
+    def __init__(self):
+        self.lastAccessForUserList: datetime.datetime = None
+        self.count: int = 0
+        self.hasMore: bool = False
+        self.results: list[User] = []
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.results = []
+        for user in obj.results:
+            self.results.append(User().update(user))
+        if obj.lastAccessForUserList is not None:
+            self.lastAccessForUserList = dateutil.parser.isoparse(
+                obj.lastAccessForUserList)
+        return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['results'] = []
+        for user in self.results:
+            obj['results'].append(user.dump())
+        util.safe_dump_time(self, 'lastAccessForUserList', obj)
+        return obj

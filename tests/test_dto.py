@@ -254,6 +254,11 @@ class DTOsTest(unittest.TestCase):
     Users
     """
 
+    def test_UserSearchResult_params(self):
+        base = json.loads(response_examples.parameterized_user_search)
+        cmp = user.UserSearchResult()
+        self.compare_obj_params(cmp, base)
+
     """
     Keyholder
     """
