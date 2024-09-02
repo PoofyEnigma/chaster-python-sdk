@@ -1144,6 +1144,8 @@ class ChasterAPI:
                        last_id: str = None, last_access_for_use_list: datetime.datetime = None) -> tuple[
         requests.models.Response, user.UserSearchResult]:
         """
+        `endpoint <https://api.chaster.app/api#/Users/UserSearchController_searchUsers>`_
+
         :param min_age: lower possible is 18
         :param max_age: highest possible defined max age is 64
         :param keyholder:
