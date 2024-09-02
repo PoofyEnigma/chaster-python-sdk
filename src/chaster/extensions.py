@@ -543,6 +543,10 @@ class PenaltyParams:
     def dump(self):
         return self.__dict__.copy()
 
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
 
 class Penalty:
     def __init__(self):
@@ -557,6 +561,7 @@ class Penalty:
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
         self.punishments = Punishment.generate_array(obj.punishments)
+        self.params = PenaltyParams().update(obj.params)
         return self
 
     def dump(self):
