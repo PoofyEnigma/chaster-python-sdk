@@ -216,6 +216,11 @@ class DTOsTest(unittest.TestCase):
         cmp = conversation.ConversationMessages()
         self.compare_obj_params(cmp, base)
 
+    def test_ignored_users(self):
+        base = json.loads(response_examples.ignored_users)
+        cmp = conversation.IgnoredUsers()
+        self.compare_obj_params(cmp, base)
+
     """
     Extensions - Temporary Opening
     """

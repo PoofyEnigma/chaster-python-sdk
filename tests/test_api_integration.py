@@ -771,6 +771,11 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api.set_conversation_unread(conversation._id, True)
         self.assertEqual(response.status_code, 200)
 
+    @unittest.SkipTest
+    def test_get_ignored_users(self):
+        response, _ = chaster_api.get_ignored_users()
+        self.assertEqual(response.status_code, 200)
+
     """
     Extensions - Temporary Opening
     """
