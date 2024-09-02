@@ -10479,3 +10479,81 @@ ignored_users = """
   ]
 }
 """
+
+parameterized_user_search = """
+{
+  "count": 147323,
+  "hasMore": true,
+  "results": [
+    {
+      "_id": "66d2b9788130c6a99ab0d94f",
+      "username": "Kejomek",
+      "isPremium": false,
+      "isFindom": false,
+      "isAdmin": false,
+      "isModerator": false,
+      "isTeamMember": false,
+      "metadata": {
+        "locktober2020Points": 0,
+        "locktober2021Points": 0,
+        "chastityMonth2022Points": 0,
+        "locktober2022Points": 0,
+        "locktober2023Points": 0
+      },
+      "isDisabled": false,
+      "isSuspended": false,
+      "joinedAt": "2024-08",
+      "isNewMember": true,
+      "age": 29,
+      "avatarUrl": "https://api.chaster.app/users/avatar/default_avatar.jpg",
+      "description": "",
+      "discordId": null,
+      "discordUsername": null,
+      "fullLocation": "Racibórz, Śląskie, Poland",
+      "gender": "Male",
+      "sexualOrientation": "Straight",
+      "lastSeen": null,
+      "location": "Racibórz",
+      "online": true,
+      "role": "wearer",
+      "features": [],
+      "isSuspendedOrDisabled": false
+    },
+    {
+      "_id": "60e8b7cffcb971001c178b5f",
+      "username": "Sheadey",
+      "isPremium": false,
+      "isFindom": false,
+      "isAdmin": false,
+      "isModerator": false,
+      "isTeamMember": false,
+      "metadata": {
+        "locktober2020Points": 0,
+        "locktober2021Points": 960,
+        "chastityMonth2022Points": 1310,
+        "locktober2022Points": 750,
+        "locktober2023Points": 830
+      },
+      "isDisabled": false,
+      "isSuspended": false,
+      "joinedAt": "2021-07",
+      "isNewMember": false,
+      "age": 26,
+      "avatarUrl": "https://api.chaster.app/users/avatar/default_avatar.jpg",
+      "description": "",
+      "discordId": "142323826871500801",
+      "discordUsername": "Sheadey#5563",
+      "fullLocation": "Praha, Hlavní město Praha, Czech Republic",
+      "gender": "",
+      "sexualOrientation": "Unspecified",
+      "lastSeen": null,
+      "location": "Praha",
+      "online": true,
+      "role": "wearer",
+      "features": [],
+      "isSuspendedOrDisabled": false
+    }
+  ],
+  "lastAccessForUserList": "2024-09-02T17:08:01.613Z"
+}
+"""

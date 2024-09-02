@@ -1136,6 +1136,80 @@ class ChasterAPI:
         """
         return self._tester_get_wrapper(f'users/search/by-discord-id/{discord_id}', user.User().update)
 
+    def discover_users(self, min_age: int = None, max_age: int = None,
+                       keyholder: bool = True, wearer: bool = True,
+                       genders: list[str] = None, sexual_orientations: list[str] = None,
+                       is_findom: bool = False, is_active: bool = False,
+                       country: str = None, region: str = None, limit=15,
+                       last_id: str = None, last_access_for_use_list: datetime.datetime = None) -> tuple[
+        requests.models.Response, user.UserSearchResult]:
+        """
+        :param min_age: lower possible is 18
+        :param max_age: highest possible defined max age is 64
+        :param keyholder:
+        :param wearer:
+        :param genders: Male, Female, Non-binary, Agender, Bigender, Genderfluid, Genderqueer, Pangender, Two-spirit
+        :param sexual_orientations: Straight, Gay, Lesbian, Bisexual, Pansexual, Aromantic, Androsexual, Asexual, Demisexual, Gynesexual, Polysexual, Queer, Skoliosexual
+        :param is_findom:
+        :param is_active:
+        :param country: ISO 3166-1 alpha-2 country code
+        :param region:
+        :param limit:
+        :param last_id: for pagination, last user id in the list
+        :param last_access_for_use_list: for pagination, it is received in the previous request
+        """
+
+        data = {
+            'limit': limit,
+            'criteria': {
+                'role': {
+                    'keyholder': keyholder,
+                    'wearer': wearer
+                },
+                'isFindom': is_findom,
+                'isActive': is_active
+            },
+        }
+
+        if last_access_for_use_list is not None:
+            data['lastAccessForUserList'] = util.datetime_to_chaster_format(
+                last_access_for_use_list)
+        if last_id is not None:
+            data['lastId'] = last_id
+
+        def add_age(age, key):
+            if age is not None:
+                if 'age' not in data['criteria']:
+                    data['criteria']['age'] = {}
+                data['criteria']['age'][key] = age
+
+        add_age(min_age, 'minAge')
+        add_age(max_age, 'maxAge')
+
+        def add_arr(arr, key):
+            if arr is not None:
+                data['criteria'][key] = arr
+
+        add_arr(genders, 'genders')
+        add_arr(sexual_orientations, 'sexualOrientations')
+
+        if country is not None:
+            if 'location' not in data['criteria']:
+                data['criteria']['location'] = {}
+            data['criteria']['location']['country'] = {
+                'countryShortCode': country
+            }
+
+        if region is not None:
+            if 'location' not in data['criteria']:
+                data['criteria']['location'] = {}
+            data['criteria']['location']['region'] = {
+                'name': region
+            }
+
+        response = self._post('/users/search', data)
+        return self._tester_post_request_helper(response, user.UserSearchResult().update)
+
     """
     Keyholder
     """

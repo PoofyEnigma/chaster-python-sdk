@@ -813,6 +813,46 @@ class ApiTestCases(unittest.TestCase):
             '1153172669559214141')
         self.assertIsNotNone(user)
 
+    @unittest.SkipTest
+    def test_discover_users(self):
+        # age range
+        response, users = chaster_api.discover_users(
+            limit=2, min_age=30, max_age=40, )
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
+        # genders
+        response, users = chaster_api.discover_users(
+            limit=2, genders=['Genderqueer', 'Pangender', 'Two-spirit'])
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
+        # sexual orientation
+        response, users = chaster_api.discover_users(limit=2,
+                                                     sexual_orientations=['Demisexual', 'Gynesexual', 'Polysexual',
+                                                                          'Queer', 'Skoliosexual'])
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
+        # findom & active
+        response, users = chaster_api.discover_users(
+            limit=2, is_findom=True, is_active=True)
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
+        # country & region
+        response, users = chaster_api.discover_users(
+            limit=2, country='US', region='Texas')
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
+        # pagination
+        response, users = chaster_api.discover_users(limit=2, country='US', region='Texas',
+                                                     last_id=users.results[-1]._id,
+                                                     last_access_for_use_list=users.lastAccessForUserList)
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
     """
     Public Locks
     """
