@@ -8,18 +8,30 @@ mode_unlimited = 'unlimited'
 
 class Extension:
     def __init__(self):
-        self._id: str = ''  # Lock only
+        self._id: str = ''
+        """Lock only"""
         self.textConfig: str = ''
-        self.name: str = None  # Shared lock only
-        self.displayName: str = None  # Lock only
-        self.createdAt: datetime.datetime = None  # Lock only
-        self.updatedAt: datetime.datetime = None  # Lock only
-        self.isPartner: bool = None  # Lock only
-        self.nbActionsRemaining: int = None  # Lock only
-        self.userData = None  # Lock only
-        self.summary: str = None  # Lock only
-        self.subtitle: str = None  # Lock only
-        self.icon: str = None  # Lock only
+        """Shared Lock only"""
+        self.name: str = None
+        """Shared Lock only"""
+        self.displayName: str = None
+        """Lock only"""
+        self.createdAt: datetime.datetime = None
+        """Lock only"""
+        self.updatedAt: datetime.datetime = None
+        """Lock only"""
+        self.isPartner: bool = None
+        """Lock only"""
+        self.nbActionsRemaining: int = None
+        """Lock only"""
+        self.userData = None
+        """Lock only"""
+        self.summary: str = None
+        """Lock only"""
+        self.subtitle: str = None
+        """Lock only"""
+        self.icon: str = None
+        """Lock only"""
 
     def get_name(self):
         if self.displayName is not None:
