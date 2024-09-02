@@ -1032,7 +1032,7 @@ class ChasterAPI:
             path += f'&lastId={last_id}'
         return self._tester_get_wrapper(path, conversation.ConversationMessages().update)
 
-    def get_ignored_users(self):
+    def get_ignored_users(self) -> tuple[requests.models.Response, conversation.IgnoredUsers]:
         """
         `endpoint <https://api.chaster.app/api#/Messaging/IgnoredUserController_findIgnoredUsers>`_
         :return:
