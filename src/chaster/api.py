@@ -138,10 +138,10 @@ class ChasterAPI:
         :param status: 'active', 'archived', or '' or None for both active and archived locks
         :return:
         """
-        path = 'locks/shared-locks'
+        path = '/shared-locks'
         if status != '' or None:
             if status == 'active' or status == 'archived':
-                path = f'locks/shared-locks?status={status}'
+                path = f'/shared-locks?status={status}'
             else:
                 raise ValueError(
                     'status must be one of: active, archived, or empty string')
@@ -164,7 +164,7 @@ class ChasterAPI:
         :return: the newly created lock id
         """
 
-        response = self._post('/locks/shared-locks', create.dump())
+        response = self._post('/shared-locks', create.dump())
         data = None
         if response.status_code == 201:
             x = response.json()
@@ -179,7 +179,7 @@ class ChasterAPI:
         :return:
         """
 
-        response = self._get(f'/locks/shared-locks/{shared_lock_id}')
+        response = self._get(f'/shared-locks/{shared_lock_id}')
         data = None
         if response.status_code == 200:
             x = response.json(object_hook=lambda d: SimpleNamespace(**d))
@@ -193,7 +193,7 @@ class ChasterAPI:
         :param update:
         :return:
         """
-        return self._put(f'/locks/shared-locks/{shared_lock_id}', update.dump())
+        return self._put(f'/shared-locks/{shared_lock_id}', update.dump())
 
     def put_shared_lock_extensions(self, shared_lock_id, exts: extensions.Extensions):
         """
@@ -202,7 +202,7 @@ class ChasterAPI:
         :param exts:
         :return:
         """
-        return self._put(f'/locks/shared-locks/{shared_lock_id}/extensions', exts.dump())
+        return self._put(f'/shared-locks/{shared_lock_id}/extensions', exts.dump())
 
     def archive_shared_lock(self, shared_lock_id: str) -> requests.models.Response:
         """
@@ -210,7 +210,7 @@ class ChasterAPI:
         :param shared_lock_id:
         :return:
         """
-        return self._post(f'/locks/shared-locks/{shared_lock_id}/archive', {})
+        return self._post(f'/shared-locks/{shared_lock_id}/archive', {})
 
     def check_if_favorited(self, shared_lock_id: str) -> tuple[requests.models.Response, bool]:
         """
