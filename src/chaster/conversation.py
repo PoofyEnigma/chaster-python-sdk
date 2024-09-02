@@ -119,3 +119,37 @@ class Conversations:
         obj = self.__dict__.copy()
         obj['results'] = Conversation.dump_array(self.results)
         return obj
+
+
+class IgnoredUser:
+    def __init__(self):
+        self._id: str = ''
+        self.username: str = ''
+        self.avatarUrl: str = ''
+        self.conversationId: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
+
+class IgnoredUsers:
+    def __init__(self):
+        self.results: list[IgnoredUser] = []
+
+    def update(self, obj):
+        self.results = []
+        if 'results' in obj.__dict__:
+            for item in obj.results:
+                self.results.append(IgnoredUser().update(item))
+        return self
+
+    def dump(self):
+        obj = self.__dict__.copy()
+        obj['results'] = []
+        for result in self.results:
+            obj['results'].append(result.dump())
+        return obj

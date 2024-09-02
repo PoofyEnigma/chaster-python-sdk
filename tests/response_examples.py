@@ -10430,3 +10430,52 @@ get_shared_locks = """[
     "extensions": []
   }
 ]"""
+
+ignored_users = """
+{
+  "results": [
+    {
+      "_id": "1",
+      "username": "g",
+      "avatarUrl": "lorem",
+      "conversationId": "1"
+    },
+    {
+      "_id": "2",
+      "username": "f",
+      "avatarUrl": "lorem",
+      "conversationId": "2"
+    },
+    {
+      "_id": "3",
+      "username": "e",
+      "avatarUrl": "lorem",
+      "conversationId": "3"
+    },
+    {
+      "_id": "4",
+      "username": "d",
+      "avatarUrl": "lorem",
+      "conversationId": "4"
+    },
+    {
+      "_id": "5",
+      "username": "c",
+      "avatarUrl": "lorem",
+      "conversationId": "5"
+    },
+    {
+      "_id": "6",
+      "username": "b",
+      "avatarUrl": "lorem",
+      "conversationId": "6"
+    },
+    {
+      "_id": "7",
+      "username": "a",
+      "avatarUrl": "lorem",
+      "conversationId": "7"
+    }
+  ]
+}
+"""
