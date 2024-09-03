@@ -1336,3 +1336,23 @@ class ChasterAPI:
         """
         return self._tester_get_wrapper(f'/locks/{lock_id}/verification-pictures',
                                         lock.VerificationPhotoHistory.generate_array)
+
+    """
+    Blocks
+    """
+
+    def get_blocked_users(self) -> tuple[requests.models.Response, user.BlockedUsers]:
+        return self._tester_get_wrapper('/blocks', user.BlockedUsers().update)
+
+    def block_user(self, user_id: str) -> requests.models.Response:
+        return self._post('/blocks', data={
+            'targetUserId': user_id
+        })
+
+    def get_blocked_interaction(self, user_id: str) -> tuple[requests.models.Response, user.BlockageReason]:
+        return self._tester_get_wrapper(f'/blocks/block-interaction/{user_id}', user.BlockageReason().update)
+
+    def unblock_user(self, user_id: str) -> requests.models.Response:
+        return self._post('/blocks/unblock', data={
+            'targetUserId': user_id
+        })

@@ -877,6 +877,39 @@ class ApiTestCases(unittest.TestCase):
     Extensions - Verification Picture
     """
 
+    """
+    Blocks
+    """
+
+    @unittest.SkipTest
+    def test_block(self):
+        user_to_block = '65873830075fc043537113ee'
+        response, blocked_users = chaster_api.get_blocked_users()
+        self.assertEqual(response.status_code, 200)
+        for user in blocked_users.results:
+            self.assertNotEqual(user._id, user_to_block)
+
+        time.sleep(1)
+        response = chaster_api.block_user(user_to_block)
+        self.assertEqual(response.status_code, 201)
+
+        time.sleep(1)
+        response, reason = chaster_api.get_blocked_interaction(user_to_block)
+        self.assertEqual(response, 200)
+
+        time.sleep(1)
+        response, blocked_users = chaster_api.get_blocked_users()
+        self.assertEqual(response.status_code, 200)
+        for user in blocked_users.results:
+            if user._id == user_to_block:
+                break
+        else:
+            self.fail()
+
+        time.sleep(1)
+        response = chaster_api.unblock_user(user_to_block)
+        self.assertEqual(response.status_code, 201)
+
 
 if __name__ == '__main__':
     log_format = '%(asctime)s %(name)s %(levelname)s %(message)s'

@@ -316,3 +316,17 @@ class DTOsTest(unittest.TestCase):
     """
     Extension Objects
     """
+
+    """
+    Blocks
+    """
+
+    def test_BlockedUsers_params(self):
+        base = json.loads(response_examples.blocked_accounts)
+        cmp = user.BlockedUsers()
+        self.compare_obj_params(cmp, base)
+
+    def test_BlockageReason_params(self):
+        base = json.loads(response_examples.blocked_reason)
+        cmp = user.BlockageReason()
+        self.compare_obj_params(cmp, base)
