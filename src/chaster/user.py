@@ -591,3 +591,51 @@ class UserSearchResult:
             obj['results'].append(user.dump())
         util.safe_dump_time(self, 'lastAccessForUserList', obj)
         return obj
+
+
+class BlockedUserDetails:
+    def __init__(self):
+        self._id: str = ''
+        self.username: str = ''
+        self.avatarUrl: str = ''
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()
+
+
+class BlockedUsers:
+    def __init__(self):
+        self.results: list[BlockedUserDetails] = []
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        self.results = []
+        if 'results' in obj.__dict__:
+            for user in obj.results:
+                self.results.append(BlockedUserDetails().update(user))
+        return self
+
+    def dump(self):
+        obj = {}
+        obj['results'] = []
+        for user in self.results:
+            obj['results'].append(user.dump())
+        return obj
+
+
+class BlockageReason:
+    def __init__(self):
+        self.blockedByActionUser = False
+        self.blockedByOtherUser: bool = False
+        self.canInteract: bool = False
+
+    def update(self, obj):
+        self.__dict__ = obj.__dict__.copy()
+        return self
+
+    def dump(self):
+        return self.__dict__.copy()

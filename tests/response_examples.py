@@ -10557,3 +10557,11 @@ parameterized_user_search = """
   "lastAccessForUserList": "2024-09-02T17:08:01.613Z"
 }
 """
+
+blocked_accounts = """
+{"results":[{"_id":"652bc00e468acee44a368de4","username":"VKS","avatarUrl":"https://cdn01.chaster.app/app/uploads/avatars/iKFSn99JdTAEfA1O.jpg"}]}
+"""
+
+blocked_reason = """
+{"blockedByActionUser": true, "blockedByOtherUser": false, "canInteract": false}
+"""
