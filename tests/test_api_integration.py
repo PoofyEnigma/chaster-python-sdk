@@ -846,6 +846,12 @@ class ApiTestCases(unittest.TestCase):
         self.assertIsNotNone(users)
         self.assertEqual(response.status_code, 201)
 
+        # keyholder & wearer
+        response, users = chaster_api.discover_users(
+            limit=2, keyholder=True, wearer=True)
+        self.assertIsNotNone(users)
+        self.assertEqual(response.status_code, 201)
+
         # pagination
         response, users = chaster_api.discover_users(limit=2, country='US', region='Texas',
                                                      last_id=users.results[-1]._id,
@@ -867,7 +873,33 @@ class ApiTestCases(unittest.TestCase):
             '64e69feb2f626eb789dafd6e', './here.png')
         self.assertEqual(response.status_code, 200)
 
-        _, page = chaster_api.search_for_public_locks(lock.SearchPublicLock())
+        _, page = chaster_api.search_for_public_locks()
+        self.assertIsNotNone(page)
+
+        _, page = chaster_api.search_for_public_locks(
+            search='good',
+            min_duration=60,
+            max_duration=10000,
+            min_limit_duration=60,
+            max_limit_duration=10000,
+            match_all_extensions=False,
+            extensions=['pillory'],
+            excluded_extensions=None,
+            tags=['Collar'],
+            match_all_tags=False,
+            is_findom_lock=False,
+            min_age=22,
+            max_age=49,
+            keyholder=True,
+            wearer=True,
+            genders=['Male'],
+            sexual_orientations=['Gay'],
+            is_findom=False,
+            is_active=False,
+            country='US',
+            region='Texas',
+            limit=15
+        )
         self.assertIsNotNone(page)
 
         _, data = chaster_api.find_explore_page_locks()

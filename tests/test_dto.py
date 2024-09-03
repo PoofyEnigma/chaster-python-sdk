@@ -60,7 +60,8 @@ class DTOsTest(unittest.TestCase):
     def test_pageinatedSharedLockList_params(self):
         base = json.loads(response_examples.get_favorited_share_locks)
         cmp = lock.PaginatedSharedLockList()
-        self.compare_obj_params(cmp, base)
+        self.compare_obj_params(
+            cmp, base, known_additional_obj_params={'cursor'})
 
     def test_shared_lock_tags_params(self):
         base = json.loads(response_examples.shared_lock_tags)[0]
@@ -286,18 +287,14 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.search_public_locks)
         base['lastId'] = ''
         cmp = lock.PaginatedSharedLockList()
-        self.compare_obj_params(cmp, base)
+        self.compare_obj_params(
+            cmp, base, known_additional_obj_params={'cursor'})
 
     def test_ExplorePageLock_params(self):
         base = json.loads(response_examples.explore_page_locks)
         base[0]['locks'] = []
         cmp = lock.ExplorePageLock()
         self.compare_obj_params(cmp, base[0])
-
-    def test_SearchPublicLock_params(self):
-        base = json.loads(response_examples.search_for_public_locks)
-        cmp = lock.SearchPublicLock()
-        self.compare_obj_params(cmp, base)
 
     """
     Extensions - Verification Picture
