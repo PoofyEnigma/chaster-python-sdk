@@ -942,6 +942,20 @@ class ApiTestCases(unittest.TestCase):
         response = chaster_api.unblock_user(user_to_block)
         self.assertEqual(response.status_code, 201)
 
+    """
+    Data
+    """
+
+    @unittest.SkipTest
+    def test_get_countries(self):
+        response, data = chaster_api.get_countries()
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(data)
+
+        response, data = chaster_api.get_regions('US')
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(data)
+
 
 if __name__ == '__main__':
     log_format = '%(asctime)s %(name)s %(levelname)s %(message)s'
