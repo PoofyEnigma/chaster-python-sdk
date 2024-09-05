@@ -125,6 +125,57 @@ class ChasterAPI:
             data = update(data)
         return response, data
 
+    def _append_user_filters(self, criteria: dict, min_age: int = None, max_age: int = None,
+                             keyholder: bool | None = None, wearer: bool | None = None,
+                             genders: list[str] = None, sexual_orientations: list[str] = None,
+                             is_findom: bool | None = None, is_active: bool = False,
+                             country: str = None, region: str = None):
+        if keyholder is not None:
+            if 'role' not in criteria:
+                criteria['role'] = {}
+            criteria['role']['keyholder'] = keyholder
+
+        if wearer is not None:
+            if 'role' not in criteria:
+                criteria['role'] = {}
+            criteria['role']['wearer'] = wearer
+
+        if is_findom is not None:
+            criteria['isFindom'] = is_findom
+
+        criteria['isActive'] = is_active
+
+        def add_age(age, key):
+            if age is not None:
+                if 'age' not in criteria:
+                    criteria['age'] = {}
+                criteria['age'][key] = age
+
+        add_age(min_age, 'minAge')
+        add_age(max_age, 'maxAge')
+
+        def add_arr(arr, key):
+            if arr is not None:
+                criteria[key] = arr
+
+        add_arr(genders, 'genders')
+        add_arr(sexual_orientations, 'sexualOrientations')
+
+        if country is not None:
+            if 'location' not in criteria:
+                criteria['location'] = {}
+            criteria['location']['country'] = {
+                'countryShortCode': country
+            }
+
+        if region is not None:
+            if 'location' not in criteria:
+                criteria['location'] = {}
+            criteria['location']['region'] = {
+                'name': region
+            }
+        return criteria
+
     """
     Shared Locks
     """
@@ -1137,25 +1188,25 @@ class ChasterAPI:
         return self._tester_get_wrapper(f'users/search/by-discord-id/{discord_id}', user.User().update)
 
     def discover_users(self, min_age: int = None, max_age: int = None,
-                       keyholder: bool = True, wearer: bool = True,
+                       keyholder: bool | None = None, wearer: bool | None = None,
                        genders: list[str] = None, sexual_orientations: list[str] = None,
-                       is_findom: bool = False, is_active: bool = False,
+                       is_findom: bool | None = None, is_active: bool = False,
                        country: str = None, region: str = None, limit=15,
                        last_id: str = None, last_access_for_use_list: datetime.datetime = None) -> tuple[
         requests.models.Response, user.UserSearchResult]:
         """
         `endpoint <https://api.chaster.app/api#/Users/UserSearchController_searchUsers>`_
 
-        :param min_age: lower possible is 18
+        :param min_age: lowest possible is 18
         :param max_age: highest possible defined max age is 64
         :param keyholder:
         :param wearer:
         :param genders: Male, Female, Non-binary, Agender, Bigender, Genderfluid, Genderqueer, Pangender, Two-spirit
         :param sexual_orientations: Straight, Gay, Lesbian, Bisexual, Pansexual, Aromantic, Androsexual, Asexual, Demisexual, Gynesexual, Polysexual, Queer, Skoliosexual
-        :param is_findom:
-        :param is_active:
-        :param country: ISO 3166-1 alpha-2 country code
-        :param region:
+        :param is_findom: True or False or None for both
+        :param is_active: in the last seven days
+        :param country: ISO 3166-1 alpha-2 country code, https://api.chaster.app/data/countries
+        :param region: https://api.chaster.app/data/countries/<ISO_CODE>
         :param limit:
         :param last_id: for pagination, last user id in the list
         :param last_access_for_use_list: for pagination, it is received in the previous request
@@ -1163,14 +1214,17 @@ class ChasterAPI:
 
         data = {
             'limit': limit,
-            'criteria': {
-                'role': {
-                    'keyholder': keyholder,
-                    'wearer': wearer
-                },
-                'isFindom': is_findom,
-                'isActive': is_active
-            },
+            'criteria': self._append_user_filters({},
+                                                  min_age=min_age,
+                                                  max_age=max_age,
+                                                  keyholder=keyholder,
+                                                  wearer=wearer,
+                                                  genders=genders,
+                                                  sexual_orientations=sexual_orientations,
+                                                  is_findom=is_findom,
+                                                  is_active=is_active,
+                                                  country=country,
+                                                  region=region)
         }
 
         if last_access_for_use_list is not None:
@@ -1178,36 +1232,6 @@ class ChasterAPI:
                 last_access_for_use_list)
         if last_id is not None:
             data['lastId'] = last_id
-
-        def add_age(age, key):
-            if age is not None:
-                if 'age' not in data['criteria']:
-                    data['criteria']['age'] = {}
-                data['criteria']['age'][key] = age
-
-        add_age(min_age, 'minAge')
-        add_age(max_age, 'maxAge')
-
-        def add_arr(arr, key):
-            if arr is not None:
-                data['criteria'][key] = arr
-
-        add_arr(genders, 'genders')
-        add_arr(sexual_orientations, 'sexualOrientations')
-
-        if country is not None:
-            if 'location' not in data['criteria']:
-                data['criteria']['location'] = {}
-            data['criteria']['location']['country'] = {
-                'countryShortCode': country
-            }
-
-        if region is not None:
-            if 'location' not in data['criteria']:
-                data['criteria']['location'] = {}
-            data['criteria']['location']['region'] = {
-                'name': region
-            }
 
         response = self._post('/users/search', data)
         return self._tester_post_request_helper(response, user.UserSearchResult().update)
@@ -1284,14 +1308,95 @@ class ChasterAPI:
                 f.write(response.content)
         return response
 
-    def search_for_public_locks(self, params: lock.SearchPublicLock) -> \
+    def search_for_public_locks(self, search: str = '',
+                                min_duration: int = 0, max_duration: int = 2592000,
+                                min_limit_duration: int = 0, max_limit_duration: int = 2592000,
+                                match_all_extensions: bool = False, extensions: list[str] = None,
+                                excluded_extensions: list[str] = None, tags: list[str] = None,
+                                match_all_tags: bool = False, is_findom_lock: bool | None = None,
+
+                                min_age: int = None, max_age: int = None,
+                                keyholder: bool | None = None, wearer: bool | None = None,
+                                genders: list[str] = None, sexual_orientations: list[str] = None,
+                                is_findom: bool | None = None, is_active: bool = False,
+                                country: str = None, region: str = None,
+
+                                limit: int = 30, last_id: str = None, cursor: str = None) -> \
             tuple[requests.models.Response, lock.PaginatedSharedLockList]:
         """
         `endpoint <https://api.chaster.app/api#/Public Locks/PublicLockController_search>`_
-        :param params:
-        :return:
+
+        :param search:
+        :param min_duration: in seconds
+        :param max_duration: in seconds
+        :param min_limit_duration: in seconds
+        :param max_limit_duration: in seconds
+        :param match_all_extensions:
+        :param extensions: list from /extensions endpoint dispalyName response field
+        :param excluded_extensions: list from /extensions endpoint dispalyName response field
+        :param tags: /shared-lock-tags endpoint
+        :param match_all_tags:
+        :param is_findom_lock: True or False or None for both
+
+        :param min_age: lowest possible is 18
+        :param max_age: highest possible defined max age is 64
+        :param keyholder:
+        :param wearer:
+        :param genders: Male, Female, Non-binary, Agender, Bigender, Genderfluid, Genderqueer, Pangender, Two-spirit
+        :param sexual_orientations: Straight, Gay, Lesbian, Bisexual, Pansexual, Aromantic, Androsexual, Asexual, Demisexual, Gynesexual, Polysexual, Queer, Skoliosexual
+        :param is_findom: True or False or None for both
+        :param is_active: in the last seven days
+        :param country: ISO 3166-1 alpha-2 country code, https://api.chaster.app/data/countries
+        :param region:
+        :param limit:
+        :param last_id: for pagination, last user id in the list
+        :param cursor: for pagination, it is received in the previous request
         """
-        response = self._post('/public-locks/search', data=params.dump())
+
+        data = {
+            'limit': limit,
+            'criteria': {
+                'search': search,
+                'duration': {
+                    'minDuration': min_duration,
+                    'maxDuration': max_duration
+                },
+                'maxLimitDuration': {
+                    'minDuration': min_limit_duration,
+                    "maxDuration": max_limit_duration
+                },
+                'extensions': {
+                    'all': match_all_extensions,
+                    'extensions': ([] if extensions is None else extensions),
+                    'excludedExtensions': ([] if excluded_extensions is None else excluded_extensions),
+                },
+                'tags': ([] if tags is None else tags),
+                'matchAllTags': match_all_tags,
+                'user': self._append_user_filters({},
+                                                  min_age=min_age,
+                                                  max_age=max_age,
+                                                  keyholder=keyholder,
+                                                  wearer=wearer,
+                                                  genders=genders,
+                                                  sexual_orientations=sexual_orientations,
+                                                  is_findom=is_findom,
+                                                  is_active=is_active,
+                                                  country=country,
+                                                  region=region)
+            }
+        }
+
+        if is_findom_lock is not None:
+            data['criteria']['isFindom'] = {
+                'isFindom': is_findom_lock
+            }
+
+        if last_id is not None:
+            data['lastId'] = last_id
+        if cursor is not None:
+            data['cursor'] = cursor
+
+        response = self._post('/public-locks/search', data=data)
 
         data = None
         if response.status_code == 200:
@@ -1342,17 +1447,36 @@ class ChasterAPI:
     """
 
     def get_blocked_users(self) -> tuple[requests.models.Response, user.BlockedUsers]:
+        """
+        `endpoint <https://api.chaster.app/api#/Blocks/BlockController_findBlocks>`_
+        :return:
+        """
         return self._tester_get_wrapper('/blocks', user.BlockedUsers().update)
 
     def block_user(self, user_id: str) -> requests.models.Response:
+        """
+        `endpoint <https://api.chaster.app/api#/Blocks/BlockController_blockUser>`_
+        :param user_id:
+        :return:
+        """
         return self._post('/blocks', data={
             'targetUserId': user_id
         })
 
     def get_blocked_interaction(self, user_id: str) -> tuple[requests.models.Response, user.BlockageReason]:
+        """
+        `endpoint <https://api.chaster.app/api#/Blocks/BlockController_getBlockInteraction>`_
+        :param user_id:
+        :return:
+        """
         return self._tester_get_wrapper(f'/blocks/block-interaction/{user_id}', user.BlockageReason().update)
 
     def unblock_user(self, user_id: str) -> requests.models.Response:
+        """
+        `endpoint <https://api.chaster.app/api#/Blocks/BlockController_unblockUser>`_
+        :param user_id:
+        :return:
+        """
         return self._post('/blocks/unblock', data={
             'targetUserId': user_id
         })

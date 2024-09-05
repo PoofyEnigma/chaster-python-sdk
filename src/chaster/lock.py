@@ -426,10 +426,11 @@ class SharedLock:
 
 class PaginatedSharedLockList:
     def __init__(self):
-        self.lastId: str = ''
         self.hasMore: bool = True
         self.count: int = 0
         self.results: list[SharedLock] = []
+        self.lastId: str = ''
+        self.cursor: str = ''
 
     def update(self, obj):
         self.__dict__ = obj.__dict__.copy()
@@ -563,94 +564,6 @@ class ExplorePageLock:
     @staticmethod
     def generate_array(obj_list):
         return [ExplorePageLock().update(account) for account in obj_list]
-
-
-class SearchPublicLockCriteriaDuration:
-    def __init__(self):
-        self.minDuration: int = -1
-        self.maxDuration: int = -1
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        obj = self.__dict__.copy()
-        return obj
-
-
-class SearchPublicLockCriteriaExtensions:
-    def __init__(self):
-        self.extensions: list[str] = []
-        self.all: bool = False
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        obj = self.__dict__.copy()
-        return obj
-
-
-class SearchPublicLockCriteriaFindom:
-    def __init__(self):
-        self.isFindom: bool = True
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        return self
-
-    def dump(self):
-        obj = self.__dict__.copy()
-        return obj
-
-
-class SearchPublicLockCriteria:
-    def __init__(self):
-        self.extensions: SearchPublicLockCriteriaExtensions = None
-        self.isFindom: SearchPublicLockCriteriaFindom = None
-        self.duration: SearchPublicLockCriteriaDuration = None
-
-    def dump(self):
-        obj = {}
-        if 'extensions' in self.__dict__:
-            obj['extensions'] = self.extensions.dump()
-        if 'isFindom' in self.__dict__:
-            obj['isFindom'] = self.isFindom.dump()
-        if 'duration' in self.__dict__:
-            obj['duration'] = self.duration.dump()
-        return obj
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        if 'extensions' in obj.__dict__:
-            self.extensions = SearchPublicLockCriteriaExtensions().update(obj.extensions)
-        if 'isFindom' in obj.__dict__:
-            self.isFindom = SearchPublicLockCriteriaFindom().update(obj.isFindom)
-        if 'duration' in obj.__dict__:
-            self.duration = SearchPublicLockCriteriaDuration().update(obj.duration)
-
-        return self
-
-
-class SearchPublicLock:
-    def __init__(self):
-        self.limit: int = 15
-        self.lastId: str = None
-        self.criteria: SearchPublicLockCriteria = None
-
-    def dump(self):
-        obj = self.__dict__.copy()
-        obj['criteria'] = {}
-        if self.criteria is not None:
-            obj['criteria'] = self.criteria.dump()
-        return obj
-
-    def update(self, obj):
-        self.__dict__ = obj.__dict__.copy()
-        self.criteria = SearchPublicLockCriteria().update(obj.criteria)
-        return self
 
 
 class VerificationPhotoHistoryVotes:
