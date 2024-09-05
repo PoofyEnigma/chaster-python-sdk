@@ -5,7 +5,7 @@ Test Data Transfer Objects
 import json
 import unittest
 from types import SimpleNamespace
-from src.chaster import conversation, extensions, lock, triggers, user
+from src.chaster import conversation, extensions, lock, triggers, user, util
 from . import response_examples
 
 
@@ -327,3 +327,17 @@ class DTOsTest(unittest.TestCase):
         base = json.loads(response_examples.blocked_reason)
         cmp = user.BlockageReason()
         self.compare_obj_params(cmp, base)
+
+    """
+    Data
+    """
+
+    def test_CountryRegions_params(self):
+        base = json.loads(response_examples.country_regions)
+        cmp = util.CountryRegions()
+        self.compare_obj_params(cmp, base)
+
+    def test_Country_params(self):
+        base = json.loads(response_examples.countries)
+        cmp = util.Country()
+        self.compare_obj_params(cmp, base[0])

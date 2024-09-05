@@ -1480,3 +1480,13 @@ class ChasterAPI:
         return self._post('/blocks/unblock', data={
             'targetUserId': user_id
         })
+
+    """
+    Data
+    """
+
+    def get_countries(self) -> tuple[requests.models.Response, list[util.Country]]:
+        return self._tester_get_wrapper('/data/countries', util.Country.update_array)
+
+    def get_regions(self, country_short_code) -> tuple[requests.models.Response, util.CountryRegions]:
+        return self._tester_get_wrapper(f'/data/countries/{country_short_code}', util.CountryRegions().update)
