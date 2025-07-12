@@ -11,7 +11,7 @@ test: ## Test the code
 
 test_integration: ## Test the code
 	@type coverage >/dev/null 2>&1 || (echo "Run '$(PIP) install coverage' first." >&2 ; exit 1)
-	@coverage run --source . -m $(SRC_TEST).integration.test_api_integration
+	@coverage run --source . -m $(SRC_TEST).test_api_integration
 	@coverage report
 
 clean: ## Cleanup
